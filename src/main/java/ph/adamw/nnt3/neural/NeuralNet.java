@@ -37,51 +37,39 @@ import java.util.Random;
 public abstract class NeuralNet implements Runnable {
 	// --- Evaluation properties ---
 
+	private final NeuralNetSettings settings;
 	@Getter
-	protected double score = 0;
+	private final List<NeuronLayer> allLayers = new ArrayList<>();
 
+	// --- Threading ---
+	@Getter
+	protected double fitness = 0;
 	@Getter
 	private boolean isDone = false;
 
-	// --- Threading ---
-
+	// -- Evolutionary stuff ---
 	@Getter
 	@Setter
 	private String threadName;
 
-	private Thread thread;
-
-	// -- Evolutionary stuff ---
-
-	@Getter
-	@Setter
-	private NeuralNet parent = null;
-
-	private final NeuralNetSettings settings;
-
 	// --- Layers ---
-
+	private Thread thread;
 	@Getter
 	private NeuronLayer inputLayer;
-
 	@Getter
 	private List<NeuronLayer> hiddenLayers = new ArrayList<>();
-
 	@Getter
 	private NeuronLayer outputLayer;
 
-	@Getter
-	private final List<NeuronLayer> allLayers = new ArrayList<>();
-
 	// ------
 
-	public NeuralNet() {
-		settings = getSettings();
+	public NeuralNet(NeuralNetSettings settings) {
+		this.settings = settings;
 	}
 
-	public abstract NeuralNetSettings getSettings();
+	public void init(NeuralNet parent, String threadName) {
+		setThreadName(threadName);
 
-	public void init() {
 		inputLayer = new NeuronLayer(settings.getInputs(), settings.getActivationFunction());
 		allLayers.add(inputLayer);
 
@@ -119,10 +107,7 @@ public abstract class NeuralNet implements Runnable {
 			return;
 		}
 
-		mutateWeights(parent);
-	}
-
-	private void mutateWeights(NeuralNet parent) {
+		// Mutate the weights from the parent if it is not null
 		for (int i = 0; i < getAllLayers().size(); i++) {
 			for (int j = 0; j < getAllLayers().get(i).size(); j++) {
 				Neuron thisNeuron = getAllLayers().get(i).get(j);
@@ -157,18 +142,18 @@ public abstract class NeuralNet implements Runnable {
 		if (thread == null && threaded) {
 			thread = new Thread(this, threadName);
 			thread.start();
-		} else if(!threaded) {
+		} else if (!threaded) {
 			run();
 		}
 	}
 
 	@Override
 	public void run() {
-		score();
+		calculateFitness();
 		isDone = true;
 	}
 
-	protected abstract void score();
+	protected abstract void calculateFitness();
 
 	private static class Utils {
 		private static final Random random = new Random();

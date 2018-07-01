@@ -1,7 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="afea0e38-d819-4b1e-a512-3b50724db69b" name="Default" comment="" />
+    <list default="true" id="afea0e38-d819-4b1e-a512-3b50724db69b" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/Main.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/evolution/Evolution.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/evolution/Generation.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/twoway/TwoWayEvolution.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/TwoWayNeuralNet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/twoway/TwoWayNeuralNet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/evolution/generation/AutoGeneration.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/evolution/generation/Generation.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/evolution/generation/ManualGeneration.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/neural/NeuralNet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/neural/NeuralNet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/neural/neuron/ActivationFunction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/neural/neuron/ActivationFunction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/neural/neuron/Neuron.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/neural/neuron/Neuron.java" afterDir="false" />
+    </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -19,28 +33,37 @@
     </option>
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="ManualGeneration.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/evolution/generation/ManualGeneration.java">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="TwoWayEvolution.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/twoway/TwoWayEvolution.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="48">
-              <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
+            <state relative-caret-position="112">
+              <caret line="7" column="16" selection-start-line="7" selection-start-column="16" selection-end-line="7" selection-end-column="16" />
               <folding>
-                <element signature="e#211#212#0" expanded="true" />
-                <element signature="e#236#237#0" expanded="true" />
+                <element signature="e#178#179#0" expanded="true" />
+                <element signature="e#255#256#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Generation.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/evolution/generation/Generation.java">
+      <file leaf-file-name="Neuron.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/neural/neuron/Neuron.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="224">
-              <caret line="14" column="25" lean-forward="true" selection-start-line="14" selection-start-column="25" selection-end-line="14" selection-end-column="25" />
+            <state relative-caret-position="160">
+              <caret line="32" column="13" selection-start-line="32" selection-start-column="13" selection-end-line="32" selection-end-column="13" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Main.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/Main.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="272">
+              <caret line="17" lean-forward="true" selection-start-line="17" selection-end-line="17" />
             </state>
           </provider>
         </entry>
@@ -49,19 +72,30 @@
         <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/neural/neuron/NeuronLayer.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="304">
-              <caret line="42" column="5" lean-forward="true" selection-start-line="42" selection-start-column="5" selection-end-line="42" selection-end-column="5" />
+              <caret line="42" column="5" selection-start-line="42" selection-start-column="5" selection-end-line="42" selection-end-column="5" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="NeuralNetSettings.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/neural/NeuralNetSettings.java">
+      <file leaf-file-name="TwoWayNeuralNet.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/twoway/TwoWayNeuralNet.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="112">
-              <caret line="7" column="7" selection-start-line="7" selection-start-column="7" selection-end-line="7" selection-end-column="7" />
+            <state relative-caret-position="208">
+              <caret line="13" column="27" selection-start-line="13" selection-start-column="27" selection-end-line="13" selection-end-column="27" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#1249#1250#0" expanded="true" />
+                <element signature="e#1271#1272#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Evolution.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/evolution/Evolution.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="64">
+              <caret line="4" column="54" selection-start-line="4" selection-start-column="54" selection-end-line="4" selection-end-column="54" />
             </state>
           </provider>
         </entry>
@@ -79,7 +113,19 @@
   <component name="FindInProjectRecents">
     <findStrings>
       <find>mutateWei</find>
+      <find>unch</find>
+      <find>(T)</find>
+      <find>parent</find>
+      <find>threadName</find>
+      <find>abs</find>
+      <find>mutation</find>
+      <find>NeuralNet</find>
+      <find>score</find>
+      <find>networkType</find>
     </findStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -91,17 +137,26 @@
         <option value="$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/evolution/GenerationSettings.java" />
         <option value="$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/evolution/IGeneration.java" />
         <option value="$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/evolution/PopulatedGeneration.java" />
-        <option value="$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/neural/NeuralNet.java" />
-        <option value="$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/evolution/Generation.java" />
         <option value="$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/evolution/ManualGeneration.java" />
         <option value="$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/evolution/AutoGeneration.java" />
         <option value="$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/neural/NeuralNetSettings.java" />
         <option value="$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/TwoWayNeuralNet.java" />
         <option value="$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/evolution/EvolutionSettings.java" />
+        <option value="$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/evolution/AutoEvoltion.java" />
+        <option value="$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/evolution/IEvolution.java" />
+        <option value="$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/evolution/AutoEvolution.java" />
         <option value="$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/evolution/generation/ManualGeneration.java" />
         <option value="$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/evolution/generation/AutoGeneration.java" />
-        <option value="$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/evolution/generation/Generation.java" />
+        <option value="$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/basic/TwoWayNeuralNet.java" />
+        <option value="$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/basic/TwoWayEvolution.java" />
+        <option value="$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/basic/Main.java" />
         <option value="$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/evolution/Evolution.java" />
+        <option value="$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/twoway/TwoWayEvolution.java" />
+        <option value="$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/evolution/generation/Generation.java" />
+        <option value="$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/Main.java" />
+        <option value="$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/twoway/TwoWayNeuralNet.java" />
+        <option value="$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/neural/NeuralNet.java" />
+        <option value="$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/evolution/Generation.java" />
       </list>
     </option>
   </component>
@@ -132,9 +187,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
-      <pane id="AndroidView" />
-      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -168,19 +220,13 @@
               <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="nnt3" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="nnt3" type="b2602c69:ProjectViewProjectNode" />
-              <item name="nnt3" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="nnt3" type="462c0819:PsiDirectoryNode" />
-              <item name="neural" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
+      <pane id="AndroidView" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -213,6 +259,17 @@
   <component name="RunManager">
     <configuration default="true" type="Applet" factoryName="Applet">
       <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+    </configuration>
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="ph.adamw.nnt3.Main" />
+      <module name="nnt3" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="ph.adamw.nnt3.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
@@ -255,6 +312,11 @@
       <properties />
       <listeners />
     </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Main" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -267,42 +329,45 @@
       <option name="presentableId" value="Default" />
       <updated>1529506996244</updated>
       <workItem from="1529506999191" duration="3861000" />
+      <workItem from="1529609704363" duration="4587000" />
+      <workItem from="1529681430824" duration="2601000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="3861000" />
+    <option name="totallyTimeSpent" value="11049000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info anchor="right" id="Palette" />
+      <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="right" id="Palette&#9;" />
-      <window_info id="Image Layers" />
-      <window_info anchor="right" id="Capture Analysis" />
-      <window_info anchor="bottom" id="Event Log" side_tool="true" />
-      <window_info anchor="right" id="Maven Projects" />
-      <window_info anchor="bottom" id="Database Changes" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Run" order="2" />
-      <window_info anchor="bottom" id="Version Control" show_stripe_button="false" />
-      <window_info anchor="bottom" id="CheckStyle" />
-      <window_info anchor="bottom" id="Terminal" />
-      <window_info id="Capture Tool" />
-      <window_info id="Designer" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.15831557" />
-      <window_info anchor="right" id="Database" />
-      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Messages" order="7" />
+      <window_info anchor="right" id="Palette&#9;" order="3" />
+      <window_info id="Image Layers" order="2" />
+      <window_info anchor="right" id="Capture Analysis" order="3" />
+      <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
+      <window_info anchor="right" id="Maven Projects" order="3" />
+      <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="7" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.32897604" />
+      <window_info anchor="bottom" id="CheckStyle" order="7" />
+      <window_info anchor="bottom" id="Terminal" order="7" />
+      <window_info id="Capture Tool" order="2" />
+      <window_info id="Designer" order="2" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.16151386" />
+      <window_info anchor="right" id="Database" order="3" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32897604" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info id="UI Designer" />
-      <window_info anchor="right" id="Theme Preview" />
+      <window_info id="UI Designer" order="2" />
+      <window_info anchor="right" id="Theme Preview" order="3" />
+      <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
-      <window_info id="Favorites" side_tool="true" />
-      <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
     </layout>
@@ -314,6 +379,109 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/twoway/TwoWayEvolution.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="64">
+          <caret line="4" column="54" selection-start-line="4" selection-start-column="54" selection-end-line="4" selection-end-column="54" />
+          <folding>
+            <element signature="e#178#179#0" expanded="true" />
+            <element signature="e#255#256#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/evolution/Generation.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="64">
+          <caret line="10" column="13" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/neural/neuron/ActivationFunction.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="64">
+          <caret line="26" column="22" selection-start-line="26" selection-start-column="22" selection-end-line="26" selection-end-column="22" />
+          <folding>
+            <element signature="e#1548#1669#0" expanded="true" />
+            <element signature="e#1668#1669#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="176">
+          <caret line="11" column="84" selection-start-line="11" selection-start-column="84" selection-end-line="11" selection-end-column="84" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/neural/neuron/NeuronLayer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="304">
+          <caret line="42" column="5" selection-start-line="42" selection-start-column="5" selection-end-line="42" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/evolution/Evolution.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="64">
+          <caret line="4" column="54" selection-start-line="4" selection-start-column="54" selection-end-line="4" selection-end-column="54" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/twoway/TwoWayNeuralNet.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="80">
+          <caret line="14" column="25" selection-start-line="14" selection-start-column="25" selection-end-line="14" selection-end-column="25" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1249#1250#0" expanded="true" />
+            <element signature="e#1271#1272#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/neural/neuron/Neuron.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="96">
+          <caret line="32" column="13" selection-start-line="32" selection-start-column="13" selection-end-line="32" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/evolution/generation/ManualGeneration.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/neural/neuron/NeuronLayer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="304">
+          <caret line="42" column="5" lean-forward="true" selection-start-line="42" selection-start-column="5" selection-end-line="42" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/neural/NeuralNetSettings.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="80">
+          <caret line="7" column="7" selection-start-line="7" selection-start-column="7" selection-end-line="7" selection-end-column="7" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/evolution/Generation.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="144">
+          <caret line="14" column="25" lean-forward="true" selection-start-line="14" selection-start-column="25" selection-end-line="14" selection-end-column="25" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="336">
@@ -324,80 +492,21 @@
     <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/neural/neuron/NeuronConnection.java">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/neural/neuron/ActivationFunction.java">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/neural/neuron/Neuron.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/neural/NetworkFactory.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="80">
-          <caret line="27" lean-forward="true" selection-start-line="27" selection-end-line="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/evolution/IGeneration.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="64">
-          <caret line="4" column="17" selection-start-line="4" selection-start-column="17" selection-end-line="4" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/evolution/GenerationSettings.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="80">
-          <caret line="5" column="33" lean-forward="true" selection-start-line="5" selection-start-column="33" selection-end-line="5" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/neural/NetworkFactory.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/evolution/IGeneration.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/evolution/GenerationSettings.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/evolution/EvolutionSettings.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/evolution/AutoEvolution.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/evolution/IEvolution.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/evolution/AutoEvolution.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/evolution/generation/AutoGeneration.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/evolution/generation/ManualGeneration.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/neural/NeuralNetSettings.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="112">
-          <caret line="7" column="7" selection-start-line="7" selection-start-column="7" selection-end-line="7" selection-end-column="7" />
+        <state relative-caret-position="128">
+          <caret line="8" column="13" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
           <folding>
             <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/TwoWayNeuralNet.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="336">
-          <caret line="21" column="34" lean-forward="true" selection-start-line="21" selection-start-column="34" selection-end-line="21" selection-end-column="34" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#439#440#0" expanded="true" />
-            <element signature="e#461#462#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/neural/NeuralNet.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="832">
-          <caret line="82" lean-forward="true" selection-start-line="82" selection-end-line="82" />
-          <folding>
-            <element signature="e#2105#2106#0" expanded="true" />
-            <element signature="e#2135#2136#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/evolution/EvolutionSettings.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="224">
-          <caret line="14" column="39" selection-start-line="14" selection-start-column="39" selection-end-line="14" selection-end-column="39" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#321#322#0" expanded="true" />
-            <element signature="e#357#358#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -405,45 +514,86 @@
     <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/neural/neuron/NeuronLayer.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="304">
-          <caret line="42" column="5" lean-forward="true" selection-start-line="42" selection-start-column="5" selection-end-line="42" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/evolution/generation/AutoGeneration.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="112">
-          <caret line="7" column="52" lean-forward="true" selection-start-line="7" selection-start-column="52" selection-end-line="7" selection-end-column="52" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/evolution/generation/ManualGeneration.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="48">
-          <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
-          <folding>
-            <element signature="e#211#212#0" expanded="true" />
-            <element signature="e#236#237#0" expanded="true" />
-          </folding>
+          <caret line="42" column="5" selection-start-line="42" selection-start-column="5" selection-end-line="42" selection-end-column="5" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/evolution/Evolution.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="64">
-          <caret line="4" column="22" selection-start-line="4" selection-start-column="22" selection-end-line="4" selection-end-column="22" />
+          <caret line="4" column="54" selection-start-line="4" selection-start-column="54" selection-end-line="4" selection-end-column="54" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/evolution/generation/Generation.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/twoway/TwoWayNeuralNet.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="224">
-          <caret line="14" column="25" lean-forward="true" selection-start-line="14" selection-start-column="25" selection-end-line="14" selection-end-column="25" />
+        <state relative-caret-position="208">
+          <caret line="13" column="27" selection-start-line="13" selection-start-column="27" selection-end-line="13" selection-end-column="27" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1249#1250#0" expanded="true" />
+            <element signature="e#1271#1272#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/neural/NeuralNet.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret line="75" column="5" selection-start-line="75" selection-start-column="5" selection-end-line="75" selection-end-column="5" />
+          <folding>
+            <element signature="e#2080#2081#0" expanded="true" />
+            <element signature="e#2110#2111#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/neural/neuron/ActivationFunction.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="352">
+          <caret line="49" lean-forward="true" selection-start-line="49" selection-end-line="49" />
+          <folding>
+            <element signature="e#1548#1669#0" expanded="true" />
+            <element signature="e#1668#1669#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/evolution/Generation.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="262">
+          <caret line="49" column="107" lean-forward="true" selection-start-line="49" selection-start-column="107" selection-end-line="49" selection-end-column="107" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/twoway/TwoWayEvolution.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="112">
+          <caret line="7" column="16" selection-start-line="7" selection-start-column="16" selection-end-line="7" selection-end-column="16" />
+          <folding>
+            <element signature="e#178#179#0" expanded="true" />
+            <element signature="e#255#256#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/neural/neuron/Neuron.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="160">
+          <caret line="32" column="13" selection-start-line="32" selection-start-column="13" selection-end-line="32" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/ph/adamw/nnt3/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="17" lean-forward="true" selection-start-line="17" selection-end-line="17" />
         </state>
       </provider>
     </entry>

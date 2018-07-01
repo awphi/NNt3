@@ -25,8 +25,6 @@
 package ph.adamw.nnt3.neural.neuron;
 
 public abstract class ActivationFunction {
-	public abstract double activate(double value);
-
 	/*
 		DEFAULT ACTIVATION FUNCTIONS
 	 */
@@ -56,4 +54,6 @@ public abstract class ActivationFunction {
 			}
 		};
 	}
+
+	public abstract double activate(double value);
 }

@@ -31,14 +31,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Neuron {
+	private final ActivationFunction activationFunction;
+	@Getter
+	protected List<NeuronConnection> connections = new ArrayList<>();
 	@Getter
 	@Setter
 	private double value = 0;
-
-	@Getter
-	protected List<NeuronConnection> connections = new ArrayList<>();
-
-	private final ActivationFunction activationFunction;
 
 	public Neuron(ActivationFunction activationFunction) {
 		this.activationFunction = activationFunction;
