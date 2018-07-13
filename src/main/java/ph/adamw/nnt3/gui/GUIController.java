@@ -1,28 +1,27 @@
 package ph.adamw.nnt3.gui;
 
 import javafx.fxml.FXML;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.BorderPane;
 import lombok.NoArgsConstructor;
+import ph.adamw.nnt3.gui.grid.GameGrid;
 import ph.adamw.nnt3.gui.grid.GridState;
 
 @NoArgsConstructor
 public class GUIController {
-	@FXML
-	private GridPane grid;
+    @FXML
+    private BorderPane borderPane;
+
+	private GameGrid grid = new GameGrid();
 
 	private boolean isRunning = false;
 	private GridState drawingState;
 
 	@FXML
 	private void initialize() {
-		RowConstraints n = new RowConstraints();
-
-		n.setPrefHeight(30);
-		n.setMinHeight(10);
-		n.setVgrow(Priority.ALWAYS);
-
-		grid.getRowConstraints().add(n);
+	    grid.addCol();
+	    grid.addCol();
+	    grid.addRow();
+	    grid.addRow();
+	    borderPane.setCenter(grid);
 	}
 }
