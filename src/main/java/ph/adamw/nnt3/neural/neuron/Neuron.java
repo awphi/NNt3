@@ -38,11 +38,11 @@ public class Neuron {
 	@Setter
 	private double value = 0;
 
-	public Neuron(ActivationFunction activationFunction) {
+	Neuron(ActivationFunction activationFunction) {
 		this.activationFunction = activationFunction;
 	}
 
-	public void feedForward() {
+	void feedForward() {
 		for (NeuronConnection connection : connections) {
 			setValue(getValue() + connection.getFrom().getValue() * connection.getWeight());
 		}
