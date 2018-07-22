@@ -41,9 +41,9 @@ public class DrawingMazerEntity extends MazerEntity {
 	}
 
 	@Override
-	public void move(int[] ints) {
+	public void move(Double[] vals) {
 		//TODO remove old drawn character here @ datagrid pos
-		super.move(ints);
+		super.move(vals);
 		//TODO draw character here @ datagrid pos
 	}
 }
