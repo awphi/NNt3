@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018 AWPH-I
+ * Copyright (c) 2018 awphi
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,36 +22,53 @@
  * SOFTWARE.
  */
 
-package ph.adamw.nnt3.neural.neuron;
+package ph.adamw.nnt3.gui.grid;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
+import ph.adamw.nnt3.brain.EntityDirection;
 
-import java.util.ArrayList;
-import java.util.List;
+/**
+ * Data class to store information required to load, save and runOneGeneration game grids. To display a DataGrid
+ * in a GUI there also must be a LiveGrid to operate on.
+ */
+@Getter
+@AllArgsConstructor
+public class DataGrid {
+	private final int width;
+	private final int height;
 
-public class Neuron {
-	private final ActivationFunction activationFunction;
-	@Getter
-	protected List<NeuronConnection> connections = new ArrayList<>();
-	@Getter
-	@Setter
-	private double value = 0;
+	private final Cell[][] cells;
 
-	Neuron(ActivationFunction activationFunction) {
-		this.activationFunction = activationFunction;
-	}
+	private final Cell start;
+	private final Cell goal;
 
-	void feedForward() {
-		for (NeuronConnection connection : connections) {
-			setValue(getValue() + connection.getFrom().getValue() * connection.getWeight());
+	public int getDistanceToNextObstacle(Cell from, EntityDirection dir) {
+		// Finds out if the movement is left/right or up/down
+		final boolean xBased = dir.getX() != 0;
+
+		final int startX = from.getCol();
+		final int startY = from.getRow();
+
+		boolean hit = false;
+		int x = 0;
+		int y = 0;
+
+
+		while(!hit) {
+			hit = cells[startX + x][startY + y].getState() != GridState.EMPTY;
+
+			if(xBased) {
+				x += dir.getX();
+			} else {
+				y += dir.getY();
+			}
 		}
 
-		setValue(activationFunction.activate(getValue()));
+		if(xBased) {
+			return x - 1;
+		} else {
+			return y - 1;
+		}
 	}
-
-	void addConnection(NeuronConnection connection) {
-		connections.add(connection);
-	}
-
 }

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018 AWPH-I
+ * Copyright (c) 2018 awphi
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,45 +22,43 @@
  * SOFTWARE.
  */
 
-package ph.adamw.nnt3.neural.neuron;
+package ph.adamw.nnt3.brain;
 
-import java.util.ArrayList;
-import java.util.List;
+import lombok.Setter;
+import ph.adamw.nnt3.evolution.Evolution;
+import ph.adamw.nnt3.evolution.Generation;
+import ph.adamw.nnt3.evolution.neural.NeuralNetSettings;
+import ph.adamw.nnt3.gui.grid.DataGrid;
 
-public class NeuronLayer extends ArrayList<Neuron> {
-	public NeuronLayer(int size, ActivationFunction activationFunction) {
-		for (int i = 0; i < size; i++) {
-			add(new Neuron(activationFunction));
-		}
+public class MazerEvolution extends Evolution<Mazer> {
+	private final NeuralNetSettings currentSettings;
+
+	@Setter
+	private int genSize = 10;
+
+	private final DataGrid dataGrid;
+
+	public MazerEvolution(DataGrid dataGrid, NeuralNetSettings currentSettings) {
+		this.dataGrid = dataGrid;
+		this.currentSettings = currentSettings;
 	}
 
-	public List<Double> getValues() {
-		List<Double> values = new ArrayList<>();
-		for (Neuron i : this) {
-			values.add(i.getValue());
+	@Override
+	protected Generation<Mazer> populate(Generation<Mazer> generation) {
+		generation.setSize(genSize);
+
+		for(int i = 0; i < generation.getSize(); i ++) {
+			Mazer brain = new Mazer(currentSettings);
+			brain.setEntity(new MazerEntity(dataGrid));
+			brain.init(parent, "mazer" + i);
+
+			generation.add(brain);
 		}
-		return values;
+
+		return generation;
 	}
 
-	public void setValues(List<Double> inputs) {
-		for (int i = 0; i < size(); i++) {
-			get(i).setValue(inputs.get(i));
-		}
-	}
-
-	public void connectToLayer(NeuronLayer other) {
-		for (Neuron t : this) {
-			for (Neuron anOther : other) {
-				// Creates a backwards connection i.e. h0 <- h1
-				// this is then used in h1 to iterate it's connections and pull all the data required
-				t.addConnection(new NeuronConnection(anOther));
-			}
-		}
-	}
-
-	public void feedForward() {
-		for (Neuron i : this) {
-			i.feedForward();
-		}
+	public void start(int generations) {
+		start(generations, true);
 	}
 }

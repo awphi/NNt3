@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018 AWPH-I
+ * Copyright (c) 2018 awphi
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,38 +22,22 @@
  * SOFTWARE.
  */
 
-package ph.adamw.nnt3.neural.neuron;
+package ph.adamw.nnt3.evolution.neural;
 
-public abstract class ActivationFunction {
-	/*
-		DEFAULT ACTIVATION FUNCTIONS
-	 */
-	public static ActivationFunction getSigmoid() {
-		return new ActivationFunction() {
-			@Override
-			public double activate(double value) {
-				return 1 / (1 + Math.exp(-value));
-			}
-		};
-	}
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import ph.adamw.nnt3.evolution.neural.neuron.ActivationFunction;
 
-	public static ActivationFunction getStep() {
-		return new ActivationFunction() {
-			@Override
-			public double activate(double value) {
-				return value >= 0 ? 1 : 0;
-			}
-		};
-	}
+@AllArgsConstructor
+@Getter
+public class NeuralNetSettings {
+	private final int inputs;
+	private final int hiddenLayersAmount;
+	private final int hiddenLayersSize;
+	private final int outputs;
 
-	public static ActivationFunction getTanh() {
-		return new ActivationFunction() {
-			@Override
-			public double activate(double value) {
-				return Math.tanh(value);
-			}
-		};
-	}
+	private final double mutationRate;
 
-	public abstract double activate(double value);
+	private final ActivationFunction activationFunction;
 }

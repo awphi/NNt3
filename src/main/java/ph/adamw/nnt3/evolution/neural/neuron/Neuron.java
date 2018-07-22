@@ -22,28 +22,36 @@
  * SOFTWARE.
  */
 
-package ph.adamw.nnt3.gui.grid;
+package ph.adamw.nnt3.evolution.neural.neuron;
 
 import lombok.Getter;
+import lombok.Setter;
 
-public enum GridState {
-	EMPTY(0, "none", null),
-	WALL(1, "black", null),
-	CHARACTER(2, "red", null),
-	START(3, "lime", "Start"),
-	GOAL(4, "green", "Goal");
+import java.util.ArrayList;
+import java.util.List;
 
-	private final int index;
-
+public class Neuron {
+	private final ActivationFunction activationFunction;
 	@Getter
-	private final String color;
-
+	protected List<NeuronConnection> connections = new ArrayList<>();
 	@Getter
-	private final String text;
+	@Setter
+	private double value = 0;
 
-	GridState(int index, String color, String text) {
-		this.index = index;
-		this.color = color;
-		this.text = text;
+	Neuron(ActivationFunction activationFunction) {
+		this.activationFunction = activationFunction;
 	}
+
+	void feedForward() {
+		for (NeuronConnection connection : connections) {
+			setValue(getValue() + connection.getFrom().getValue() * connection.getWeight());
+		}
+
+		setValue(activationFunction.activate(getValue()));
+	}
+
+	void addConnection(NeuronConnection connection) {
+		connections.add(connection);
+	}
+
 }

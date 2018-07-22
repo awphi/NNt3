@@ -22,28 +22,32 @@
  * SOFTWARE.
  */
 
-package ph.adamw.nnt3.gui.grid;
+package ph.adamw.nnt3.brain;
 
 import lombok.Getter;
 
-public enum GridState {
-	EMPTY(0, "none", null),
-	WALL(1, "black", null),
-	CHARACTER(2, "red", null),
-	START(3, "lime", "Start"),
-	GOAL(4, "green", "Goal");
+public enum EntityDirection {
+	UP(0, 0, -1),
+	RIGHT(1, 1, 0),
+	DOWN(2, 0, 1),
+	LEFT(3, -1, 0);
 
-	private final int index;
-
-	@Getter
-	private final String color;
+	private final int ord;
 
 	@Getter
-	private final String text;
+	private final int x;
+	@Getter
+	private final int y;
 
-	GridState(int index, String color, String text) {
-		this.index = index;
-		this.color = color;
-		this.text = text;
+	public static final EntityDirection[] VALUES = values();
+
+	EntityDirection(int ord, int x, int y) {
+		this.ord = ord;
+		this.x = x;
+		this.y = y;
+	}
+
+	public static EntityDirection get(int o) {
+		return VALUES[o];
 	}
 }

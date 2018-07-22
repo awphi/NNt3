@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018 AWPH-I
+ * Copyright (c) 2018 awphi
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,20 +22,28 @@
  * SOFTWARE.
  */
 
-package ph.adamw.nnt3.neural.neuron;
+package ph.adamw.nnt3.brain;
 
-import lombok.Getter;
-import lombok.Setter;
+import ph.adamw.nnt3.gui.grid.DataGrid;
+import ph.adamw.nnt3.gui.grid.LiveGrid;
 
-public class NeuronConnection {
-	@Getter
-	@Setter
-	private double weight;
+/**
+ * Overrides MazerEntity's moving method to also draw to a live game grid after moving, used when a single network
+ * is ran in preview mode.
+ */
+public class DrawingMazerEntity extends MazerEntity {
+	private final LiveGrid liveGrid;
 
-	@Getter
-	private Neuron from;
+	public DrawingMazerEntity(DataGrid dataGrid, LiveGrid liveGrid) {
+		super(dataGrid);
+		this.liveGrid = liveGrid;
+		//TODO draw character here @ datagrid pos
+	}
 
-	public NeuronConnection(Neuron from) {
-		this.from = from;
+	@Override
+	public void move(int[] ints) {
+		//TODO remove old drawn character here @ datagrid pos
+		super.move(ints);
+		//TODO draw character here @ datagrid pos
 	}
 }

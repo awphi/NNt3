@@ -61,7 +61,7 @@
                         </descriptorRefs>
                         <archive>
                             <manifest>
-                                <mainClass>ph.adamw.nnt2creatures.ui.Applet</mainClass>
+                                <mainClass>ph.adamw.nnt3.gui.Main</mainClass>
                             </manifest>
                         </archive>
                     </configuration>

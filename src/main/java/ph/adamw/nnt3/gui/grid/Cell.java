@@ -24,26 +24,45 @@
 
 package ph.adamw.nnt3.gui.grid;
 
+import javafx.scene.layout.BorderPane;
+import javafx.scene.text.Text;
 import lombok.Getter;
 
-public enum GridState {
-	EMPTY(0, "none", null),
-	WALL(1, "black", null),
-	CHARACTER(2, "red", null),
-	START(3, "lime", "Start"),
-	GOAL(4, "green", "Goal");
-
-	private final int index;
+public class Cell extends BorderPane {
+	@Getter
+	private final int col;
 
 	@Getter
-	private final String color;
+	private final int row;
 
 	@Getter
-	private final String text;
+	private GridState state;
 
-	GridState(int index, String color, String text) {
-		this.index = index;
-		this.color = color;
-		this.text = text;
+	public Cell(int row, int col, GridState state) {
+		super();
+
+		this.col = col;
+		this.row = row;
+
+		setState(state);
+	}
+
+	public void setState(GridState state) {
+		this.state = state;
+		setStyle("-fx-background-color: " + state.getColor() + ";");
+
+		final String txt = state.getText();
+		if(txt != null) {
+			setCenter((new Text(txt)));
+		} else {
+			setCenter(null);
+		}
+	}
+
+	public void switchState() {
+		switch (getState()) {
+			case WALL: setState(GridState.EMPTY); break;
+			case EMPTY: setState(GridState.WALL); break;
+		}
 	}
 }

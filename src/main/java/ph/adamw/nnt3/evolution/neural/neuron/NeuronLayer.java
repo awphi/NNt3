@@ -22,28 +22,45 @@
  * SOFTWARE.
  */
 
-package ph.adamw.nnt3.gui.grid;
+package ph.adamw.nnt3.evolution.neural.neuron;
 
-import lombok.Getter;
+import java.util.ArrayList;
+import java.util.List;
 
-public enum GridState {
-	EMPTY(0, "none", null),
-	WALL(1, "black", null),
-	CHARACTER(2, "red", null),
-	START(3, "lime", "Start"),
-	GOAL(4, "green", "Goal");
+public class NeuronLayer extends ArrayList<Neuron> {
+	public NeuronLayer(int size, ActivationFunction activationFunction) {
+		for (int i = 0; i < size; i++) {
+			add(new Neuron(activationFunction));
+		}
+	}
 
-	private final int index;
+	public List<Double> getValues() {
+		List<Double> values = new ArrayList<>();
+		for (Neuron i : this) {
+			values.add(i.getValue());
+		}
+		return values;
+	}
 
-	@Getter
-	private final String color;
+	public void setValues(List<Double> inputs) {
+		for (int i = 0; i < size(); i++) {
+			get(i).setValue(inputs.get(i));
+		}
+	}
 
-	@Getter
-	private final String text;
+	public void connectToLayer(NeuronLayer other) {
+		for (Neuron t : this) {
+			for (Neuron anOther : other) {
+				// Creates a backwards connection i.e. h0 <- h1
+				// this is then used in h1 to iterate it's connections and pull all the data required
+				t.addConnection(new NeuronConnection(anOther));
+			}
+		}
+	}
 
-	GridState(int index, String color, String text) {
-		this.index = index;
-		this.color = color;
-		this.text = text;
+	public void feedForward() {
+		for (Neuron i : this) {
+			i.feedForward();
+		}
 	}
 }

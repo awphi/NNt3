@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018 AWPH-I
+ * Copyright (c) 2018 awphi
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,13 +22,13 @@
  * SOFTWARE.
  */
 
-package ph.adamw.nnt3.neural;
+package ph.adamw.nnt3.evolution.neural;
 
 import lombok.Getter;
 import lombok.Setter;
-import ph.adamw.nnt3.neural.neuron.Neuron;
-import ph.adamw.nnt3.neural.neuron.NeuronConnection;
-import ph.adamw.nnt3.neural.neuron.NeuronLayer;
+import ph.adamw.nnt3.evolution.neural.neuron.Neuron;
+import ph.adamw.nnt3.evolution.neural.neuron.NeuronConnection;
+import ph.adamw.nnt3.evolution.neural.neuron.NeuronLayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -139,10 +139,10 @@ public abstract class NeuralNet implements Runnable {
 	}
 
 	public void start(boolean threaded) {
-		if (thread == null && threaded) {
+		if (threaded) {
 			thread = new Thread(this, threadName);
 			thread.start();
-		} else if (!threaded) {
+		} else {
 			run();
 		}
 	}
@@ -150,7 +150,10 @@ public abstract class NeuralNet implements Runnable {
 	@Override
 	public void run() {
 		calculateFitness();
-		isDone = true;
+		synchronized (this) {
+			isDone = true;
+			notifyAll();
+		}
 	}
 
 	protected abstract void calculateFitness();

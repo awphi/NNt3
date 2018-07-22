@@ -22,56 +22,48 @@
  * SOFTWARE.
  */
 
-package ph.adamw.nnt3.evolution;
-
+package ph.adamw.nnt3.brain;
 import lombok.Getter;
-import lombok.Setter;
-import ph.adamw.nnt3.evolution.neural.NeuralNet;
+import ph.adamw.nnt3.gui.grid.Cell;
+import ph.adamw.nnt3.gui.grid.DataGrid;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+/**
+ * Class to allow the Mazer and DataGrid to interface with an entity between them. Also used
+ * to add ease of switching between a non-drawing and drawing entity.
+ */
+public class MazerEntity {
+	protected Cell current;
 
-public class Generation<T extends NeuralNet> {
-	protected final Map<T, Double> map = new HashMap<>();
+	protected final DataGrid dataGrid;
 
 	@Getter
-	@Setter
-	public int size = 10;
+	private int stationaryCount = 0;
 
-	public void run(boolean threaded) {
-		if (map.keySet().size() <= 0) {
-			throw new RuntimeException("No neural networks provided for generation to populate!");
-		}
-
-		if(map.keySet().size() != size) {
-			throw new RuntimeException("Generation is under-populated! Expected " + size + " networks but only got " + map.keySet().size() + "!");
-		}
-
-		for (NeuralNet network : map.keySet()) {
-			network.start(threaded);
-		}
+	public MazerEntity(DataGrid dataGrid) {
+		this.dataGrid = dataGrid;
+		current = dataGrid.getStart();
 	}
 
-	public T getBestPerformer() {
-		T best = null;
-		for (T key : map.keySet()) {
-			synchronized (key) {
-				if(!key.isDone()) {
-					try {
-						key.wait();
-					} catch (InterruptedException ignored) {}
-				}
-			}
-
-			if (best == null || key.getFitness() >= best.getFitness()) {
-				best = key;
-			}
+	public void move(Double[] values) {
+		if(values.length != 4) {
+			throw new RuntimeException("Unexpected number of mazer outputs given to entity!");
 		}
-		return best;
-	}
 
-	public void add (T network) {
-		map.put(network, null);
+		int maxIndex = 0;
+
+		// Finds the most wanted movement
+		for(int i = 0; i < values.length; i ++) {
+			maxIndex = Math.max(values[maxIndex], values[i]) == values[maxIndex] ? maxIndex : i;
+		}
+
+		final EntityDirection direction = EntityDirection.get(maxIndex);
+
+		// Checks for collision
+		if(dataGrid.getDistanceToNextObstacle(current, direction) != 0) {
+			current = dataGrid.getCells()[current.getCol() + direction.getX()][current.getRow() + direction.getY()];
+			stationaryCount = 0;
+		} else {
+			stationaryCount ++;
+		}
 	}
 }

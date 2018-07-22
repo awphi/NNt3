@@ -22,28 +22,20 @@
  * SOFTWARE.
  */
 
-package ph.adamw.nnt3.gui.grid;
+package ph.adamw.nnt3.evolution.neural.neuron;
 
 import lombok.Getter;
+import lombok.Setter;
 
-public enum GridState {
-	EMPTY(0, "none", null),
-	WALL(1, "black", null),
-	CHARACTER(2, "red", null),
-	START(3, "lime", "Start"),
-	GOAL(4, "green", "Goal");
-
-	private final int index;
+public class NeuronConnection {
+	@Getter
+	@Setter
+	private double weight;
 
 	@Getter
-	private final String color;
+	private Neuron from;
 
-	@Getter
-	private final String text;
-
-	GridState(int index, String color, String text) {
-		this.index = index;
-		this.color = color;
-		this.text = text;
+	public NeuronConnection(Neuron from) {
+		this.from = from;
 	}
 }
