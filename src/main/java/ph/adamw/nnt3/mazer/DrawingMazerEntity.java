@@ -22,9 +22,12 @@
  * SOFTWARE.
  */
 
-package ph.adamw.nnt3.brain;
+package ph.adamw.nnt3.mazer;
 
-import ph.adamw.nnt3.gui.grid.DataGrid;
+import javafx.application.Platform;
+import lombok.Getter;
+import ph.adamw.nnt3.gui.grid.GridState;
+import ph.adamw.nnt3.gui.grid.data.DataGrid;
 import ph.adamw.nnt3.gui.grid.LiveGrid;
 
 /**
@@ -34,16 +37,38 @@ import ph.adamw.nnt3.gui.grid.LiveGrid;
 public class DrawingMazerEntity extends MazerEntity {
 	private final LiveGrid liveGrid;
 
-	public DrawingMazerEntity(DataGrid dataGrid, LiveGrid liveGrid) {
+	@Getter
+	private final int interval;
+
+	public DrawingMazerEntity(DataGrid dataGrid, LiveGrid liveGrid, int interval) {
 		super(dataGrid);
 		this.liveGrid = liveGrid;
-		//TODO draw character here @ datagrid pos
+		this.interval = interval;
+
+		drawState(GridState.CHARACTER);
 	}
 
 	@Override
 	public void move(Double[] vals) {
-		//TODO remove old drawn character here @ datagrid pos
+		drawState(getStateBehindCurrent());
 		super.move(vals);
-		//TODO draw character here @ datagrid pos
+		drawState(GridState.CHARACTER);
+	}
+
+	private void drawState(GridState state) {
+		final int x = currentCol;
+		final int y = currentRow;
+
+		Platform.runLater(() -> liveGrid.drawStateAt(x, y, state));
+	}
+
+	@Override
+	public void reset() {
+		// Not wrapped in a runLater as it's only to be executed from the main thread anyway
+		liveGrid.drawStateAt(currentCol, currentRow, getStateBehindCurrent());
+	}
+
+	private GridState getStateBehindCurrent() {
+		return dataGrid.getCells()[currentCol][currentRow].getState();
 	}
 }

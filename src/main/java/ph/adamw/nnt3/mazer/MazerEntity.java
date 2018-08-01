@@ -22,17 +22,19 @@
  * SOFTWARE.
  */
 
-package ph.adamw.nnt3.brain;
+package ph.adamw.nnt3.mazer;
 import lombok.Getter;
-import ph.adamw.nnt3.gui.grid.Cell;
-import ph.adamw.nnt3.gui.grid.DataGrid;
+import ph.adamw.nnt3.gui.grid.data.DataCell;
+import ph.adamw.nnt3.gui.grid.data.DataGrid;
 
 /**
  * Class to allow the Mazer and DataGrid to interface with an entity between them. Also used
  * to add ease of switching between a non-drawing and drawing entity.
  */
 public class MazerEntity {
-	protected Cell current;
+	// Stored as a just a location since it's an entity - not a state of a cell
+	protected int currentCol;
+	protected int currentRow;
 
 	protected final DataGrid dataGrid;
 
@@ -41,12 +43,13 @@ public class MazerEntity {
 
 	public MazerEntity(DataGrid dataGrid) {
 		this.dataGrid = dataGrid;
-		current = dataGrid.getStart();
+
+		resetPosition();
 	}
 
 	public void move(Double[] values) {
-		if(values.length != 4) {
-			throw new RuntimeException("Unexpected number of mazer outputs given to entity!");
+		if(values.length != Mazer.STATIC_SETTINGS.getOutputs()) {
+			throw new RuntimeException("Unexpected number of mazer outputs given to entity! Expected " + Mazer.STATIC_SETTINGS.getOutputs() +" but got: " + values.length + "!");
 		}
 
 		int maxIndex = 0;
@@ -59,11 +62,23 @@ public class MazerEntity {
 		final EntityDirection direction = EntityDirection.get(maxIndex);
 
 		// Checks for collision
-		if(dataGrid.getDistanceToNextObstacle(current, direction) != 0) {
-			current = dataGrid.getCells()[current.getCol() + direction.getX()][current.getRow() + direction.getY()];
+		if(dataGrid.getDistanceToNextObstacle(currentCol, currentRow, direction) != 0) {
+			currentCol += direction.getX();
+			currentRow += direction.getY();
 			stationaryCount = 0;
 		} else {
 			stationaryCount ++;
 		}
+	}
+
+	public void reset() {
+		resetPosition();
+	}
+
+	// reset() cannot be called in the constructor due to DrawingMazerEntity's call to it
+	private void resetPosition() {
+		final DataCell c = dataGrid.getStart();
+		currentCol = c.getCol();
+		currentRow = c.getRow();
 	}
 }

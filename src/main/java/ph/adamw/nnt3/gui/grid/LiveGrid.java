@@ -29,13 +29,14 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.layout.*;
+import lombok.Getter;
 import lombok.Setter;
-
-import java.util.HashSet;
-import java.util.Set;
+import ph.adamw.nnt3.gui.grid.data.DataCell;
+import ph.adamw.nnt3.gui.grid.data.DataGrid;
 
 public class LiveGrid extends GridPane {
     @Setter
+    @Getter
     private boolean isEditable = true;
 
     private GridState dragOverrideState;
@@ -60,36 +61,38 @@ public class LiveGrid extends GridPane {
             final Node hoveredNode = event.getPickResult().getIntersectedNode();
             final EventTarget target = event.getTarget();
 
-            if(!(target instanceof Cell && hoveredNode instanceof Cell && isEditable)) {
+            if(!(target instanceof CellPane && hoveredNode instanceof CellPane && isEditable)) {
                 return;
             }
 
-            final Cell hoveredCell = ((Cell) hoveredNode);
-            final Cell targetCell = ((Cell) target);
+            final CellPane hoveredPane = ((CellPane) hoveredNode);
+            final CellPane targetPane = ((CellPane) target);
 
             if(dragOverrideState == null) {
-                switch (targetCell.getState()) {
+                switch (targetPane.getCell().getState()) {
                     case EMPTY: dragOverrideState = GridState.WALL; break;
                     case WALL: dragOverrideState = GridState.EMPTY; break;
                 }
             }
 
-            if(hoveredCell.getState() == dragOverrideState && targetCell != hoveredCell) {
-                hoveredCell.switchState();
+            if(hoveredPane.getCell().getState() == dragOverrideState && targetPane != hoveredPane) {
+                hoveredPane.switchState();
             }
         });
 
         setOnMousePressed(event -> {
-            if(event.getTarget() instanceof Cell && isEditable) {
-                final Cell cell = (Cell) event.getTarget();
+        	System.out.println(event.getTarget());
+            if(event.getTarget() instanceof CellPane && isEditable) {
+                final CellPane targetPane = (CellPane) event.getTarget();
 
                 switch(event.getButton()) {
-                    case PRIMARY: cell.switchState(); break;
+                    case PRIMARY: targetPane.switchState(); break;
                     case SECONDARY: {
                         if(containsState(GridState.GOAL)) {
-                            removeStartFinish();
-                        } else if (cell.getState() == GridState.EMPTY) {
-                            cell.setState(getNextStartFinish());
+                            emptyFirstStateFound(GridState.START);
+                            emptyFirstStateFound(GridState.GOAL);
+                        } else if (targetPane.getCell().getState() == GridState.EMPTY) {
+                            targetPane.setState(nextRightClickState());
                         }
                     } break;
                 }
@@ -100,16 +103,7 @@ public class LiveGrid extends GridPane {
     public void setSize(int cols, int rows) {
         getRowConstraints().clear();
         getColumnConstraints().clear();
-
-        final Set<Node> toRemove = new HashSet<>();
-
-        for(Node i : getChildren()) {
-            if(i instanceof Cell) {
-                toRemove.add(i);
-            }
-        }
-
-        getChildren().removeAll(toRemove);
+        getChildren().removeAll(getChildren().filtered(node -> node instanceof CellPane));
 
         addCols(cols);
         addRows(rows);
@@ -123,6 +117,46 @@ public class LiveGrid extends GridPane {
         return getColumnConstraints().size();
     }
 
+    public void drawStateAt(int col, int row, GridState state) {
+        ((CellPane) getManagedChildren().get((row * getRows()) + col)).drawState(state);
+    }
+
+    public void emptyFirstStateFound(GridState state) {
+    	final CellPane d = getFirstState(state);
+    	if(d != null) {
+			d.setState(GridState.EMPTY);
+		}
+    }
+
+    public boolean isValid() {
+        return containsState(GridState.GOAL) && containsState(GridState.START);
+    }
+
+    public DataGrid asDataGrid() {
+        if(!isValid()) {
+            throw new RuntimeException("To produce a DataGrid, a LiveGrid must have a start node and a goal node!");
+        }
+
+        final DataCell[][] dataCells = new DataCell[getCols()][getRows()];
+
+        int colCount = 0;
+        int rowCount = 0;
+
+        for(Node i : getManagedChildren()) {
+            dataCells[colCount][rowCount] = ((CellPane) i).getCell();
+            colCount ++;
+
+            if(colCount == getCols()) {
+                rowCount ++;
+                colCount = 0;
+            }
+        }
+
+        // Inspection disabled as isValid() method guarantees we have a START and GOAL
+        //noinspection ConstantConditions
+        return new DataGrid(getCols(), getRows(), dataCells, getFirstState(GridState.START).getCell(), getFirstState(GridState.GOAL).getCell());
+    }
+
     private void addRows(int rows) {
         for(int i = 0; i < rows; i ++) {
             RowConstraints n = new RowConstraints();
@@ -133,9 +167,9 @@ public class LiveGrid extends GridPane {
 
             getRowConstraints().add(n);
 
-            final Cell[] panes = new Cell[getCols()];
+            final CellPane[] panes = new CellPane[getCols()];
             for(int j = 0; j < panes.length; j ++) {
-                panes[j] = new Cell(getRows() - 1, j, GridState.EMPTY);
+                panes[j] = new CellPane(new DataCell(getRows() - 1, j, GridState.EMPTY));
                 setHalignment(panes[j], HPos.CENTER);
             }
 
@@ -159,34 +193,17 @@ public class LiveGrid extends GridPane {
         return getFirstState(state) != null;
     }
 
-    private Cell getFirstState(GridState state) {
-        for(Node i : getChildren()) {
-            if(i instanceof Cell && ((Cell) i).getState() == state) {
-                return (Cell) i;
+    private CellPane getFirstState(GridState state) {
+        for(Node i : getManagedChildren()) {
+            if(((CellPane) i).getCell().getState() == state) {
+                return ((CellPane) i);
             }
         }
 
         return null;
     }
 
-    private void removeStartFinish() {
-        int returnEarly = 0;
-
-        for(Node i : getChildren()) {
-            if(i instanceof Cell) {
-                final Cell cell = (Cell) i;
-                if(cell.getState() == GridState.START || cell.getState() == GridState.GOAL) {
-                    cell.setState(GridState.EMPTY);
-                    returnEarly ++;
-                    if(returnEarly == 2) {
-                        return;
-                    }
-                }
-            }
-        }
-    }
-
-    private GridState getNextStartFinish() {
+    private GridState nextRightClickState() {
         final GridState ret = nextStartFinish;
 
         switch(ret) {
@@ -195,30 +212,5 @@ public class LiveGrid extends GridPane {
         }
 
         return ret;
-    }
-
-    public DataGrid getDataGrid() {
-        if(!containsState(GridState.GOAL) || !containsState(GridState.START)) {
-            throw new RuntimeException("To produce a DataGrid, a LiveGrid must have a start and finish!");
-        }
-
-        final Cell[][] cells = new Cell[getCols()][getRows()];
-
-        int colCount = 0;
-        int rowCount = 0;
-
-        for(Node i : getChildren()) {
-            if(i instanceof Cell) {
-                cells[colCount][rowCount] = (Cell) i;
-                colCount ++;
-            }
-
-            if(colCount == getCols()) {
-                rowCount ++;
-                colCount = 0;
-            }
-        }
-
-        return new DataGrid(getCols(), getRows(), cells, getFirstState(GridState.START), getFirstState(GridState.GOAL));
     }
 }

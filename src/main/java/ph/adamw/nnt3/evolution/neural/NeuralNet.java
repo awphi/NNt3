@@ -53,7 +53,7 @@ public abstract class NeuralNet implements Runnable {
 	private String threadName;
 
 	// --- Layers ---
-	private Thread thread;
+	protected Thread thread;
 	@Getter
 	private NeuronLayer inputLayer;
 	@Getter

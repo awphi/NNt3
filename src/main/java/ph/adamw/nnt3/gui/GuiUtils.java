@@ -22,27 +22,43 @@
  * SOFTWARE.
  */
 
-package ph.adamw.nnt3.gui.grid;
+package ph.adamw.nnt3.gui;
 
-import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
-import lombok.Getter;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 
-public enum GridState {
-	EMPTY(Color.TRANSPARENT, null),
-	WALL(Color.BLACK, null),
-	CHARACTER(Color.RED, null),
-	START(Color.LIME, new Text("Start")),
-	GOAL(Color.GREEN, new Text("Goal"));
+import java.util.Arrays;
+import java.util.function.UnaryOperator;
 
-	@Getter
-	private final Color color;
+class GuiUtils {
+	static final UnaryOperator<TextFormatter.Change> NUMBER_FIELD_OPERATOR = change -> {
+		String text = change.getText();
 
-	@Getter
-	private final Text text;
+		if (text.matches("[0-9]*")) {
+			return change;
+		}
 
-	GridState(Color color, Text text) {
-		this.color = color;
-		this.text = text;
+		return null;
+	};
+
+	private static Integer getNumberFieldValue(TextField field) {
+		if(field.getTextFormatter().getFilter() == NUMBER_FIELD_OPERATOR && !field.getText().isEmpty()) {
+			return Integer.parseInt(field.getText());
+		}
+
+		return null;
+	}
+
+	static boolean anyObjectNull(Object... objs) {
+		return Arrays.asList(objs).contains(null);
+	}
+
+	static Integer getBoundedIntFromField(TextField field, int upper, int lower) {
+		Integer i = getNumberFieldValue(field);
+		if(i != null) {
+			return Math.min(Math.max(i, lower), upper);
+		}
+
+		return null;
 	}
 }

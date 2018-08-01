@@ -22,47 +22,27 @@
  * SOFTWARE.
  */
 
-package ph.adamw.nnt3.gui.grid;
+package ph.adamw.nnt3.gui.grid.data;
 
-import javafx.scene.layout.BorderPane;
-import javafx.scene.text.Text;
 import lombok.Getter;
+import lombok.Setter;
+import ph.adamw.nnt3.gui.grid.GridState;
 
-public class Cell extends BorderPane {
+public class DataCell {
 	@Getter
-	private final int col;
+	protected final int col;
 
 	@Getter
-	private final int row;
+	protected final int row;
 
+	@Setter
 	@Getter
-	private GridState state;
+	protected GridState state;
 
-	public Cell(int row, int col, GridState state) {
-		super();
-
+	public DataCell(int row, int col, GridState state) {
 		this.col = col;
 		this.row = row;
 
 		setState(state);
-	}
-
-	public void setState(GridState state) {
-		this.state = state;
-		setStyle("-fx-background-color: " + state.getColor() + ";");
-
-		final String txt = state.getText();
-		if(txt != null) {
-			setCenter((new Text(txt)));
-		} else {
-			setCenter(null);
-		}
-	}
-
-	public void switchState() {
-		switch (getState()) {
-			case WALL: setState(GridState.EMPTY); break;
-			case EMPTY: setState(GridState.WALL); break;
-		}
 	}
 }

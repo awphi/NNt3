@@ -22,8 +22,7 @@
  * SOFTWARE.
  */
 
-package ph.adamw.nnt3.brain;
-
+package ph.adamw.nnt3.mazer;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -37,9 +36,13 @@ import java.util.List;
 
 public class Mazer extends NeuralNet {
 	@Setter
+	@Getter
 	private MazerEntity entity;
 
+	private boolean killed = false;
+
 	private static final int CYCLE_MULTIPLIER = 4;
+	private static final int FITNESS_MULTIPLIER = 100;
 
 	/**
 	 * 6 INPUTS = * 4-directional distance to closest obstacle (starts from up then goes clockwise)
@@ -49,8 +52,7 @@ public class Mazer extends NeuralNet {
 	 * 4 OUTPUTS = * 4-directional output (starts from up then goes clockwise) (evaluated and acted upon by character)
 	 *
 	 */
-	@Getter
-	private static final NeuralNetSettings staticSettings =
+	public static final NeuralNetSettings STATIC_SETTINGS =
 			new NeuralNetSettings(6, 0, 0, 4, 0.05, ActivationFunction.getSigmoid());
 
 
@@ -61,32 +63,51 @@ public class Mazer extends NeuralNet {
 	@Override
 	protected void calculateFitness() {
 		final int cycles = ((int) Math.sqrt(entity.dataGrid.getHeight() * entity.dataGrid.getWidth())) * CYCLE_MULTIPLIER;
+		killed = false;
 
 		for(int i = 0; i < cycles; i ++) {
+			// If the thread is terminated (mainly used by the GUI) then we return without modifying the fitness
+			if(killed) {
+				return;
+			}
+
 			List<Double> inputs = new ArrayList<>();
 
 			// 4-directional inputs
 			for(EntityDirection dir : EntityDirection.VALUES) {
-				inputs.add((double) entity.dataGrid.getDistanceToNextObstacle(entity.current, dir));
+				inputs.add((double) entity.dataGrid.getDistanceToNextObstacle(entity.currentCol, entity.currentRow, dir));
 			}
 
-			// Distance from start to finish
-			final double colDiff = Math.pow((double) entity.current.getCol() - (double) entity.dataGrid.getGoal().getCol(), 2);
-			final double rowDiff = Math.pow((double) entity.current.getRow() - (double) entity.dataGrid.getGoal().getRow(), 2);
-			inputs.add(Math.sqrt(colDiff + rowDiff));
+			inputs.add(MazerUtils.distanceBetween(entity.currentCol, entity.currentRow, entity.dataGrid.getGoal()));
 
 			// Number of cycles in a row that the entity hasn't moved
 			inputs.add((double) entity.getStationaryCount());
 
-			entity.move(evaluate(inputs).toArray(new Double[6]));
+			entity.move(evaluate(inputs).toArray(new Double[STATIC_SETTINGS.getOutputs()]));
+
+			if(entity instanceof DrawingMazerEntity) {
+				try {
+					Thread.sleep(((DrawingMazerEntity) entity).getInterval());
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 
-		// TODO set fitness accordingly here (using repiprocal of distance from pos to goal?)
-		fitness = 0;
+		fitness = FITNESS_MULTIPLIER / MazerUtils.distanceBetween(entity.currentCol, entity.currentRow, entity.dataGrid.getGoal());
 	}
 
-	public void playOnGrid(LiveGrid liveGrid) {
-		entity = new DrawingMazerEntity(entity.dataGrid, liveGrid);
+	/**
+	 * Runs a thread that draws a mazer entity onto a LiveGrid step by step.
+	 * @param liveGrid the grid you wish to play this mazer's actions back onto
+	 */
+	public void playOnGrid(LiveGrid liveGrid, int interval) {
+		entity = new DrawingMazerEntity(entity.dataGrid, liveGrid, interval);
 		start(true);
+	}
+
+	public void stop() {
+		killed = true;
+		entity.reset();
 	}
 }

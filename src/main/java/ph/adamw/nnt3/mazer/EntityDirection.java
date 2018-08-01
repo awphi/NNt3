@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package ph.adamw.nnt3.brain;
+package ph.adamw.nnt3.mazer;
 
 import lombok.Getter;
 

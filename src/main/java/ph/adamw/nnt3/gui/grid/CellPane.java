@@ -24,51 +24,41 @@
 
 package ph.adamw.nnt3.gui.grid;
 
-import lombok.AllArgsConstructor;
+import javafx.geometry.Insets;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Paint;
 import lombok.Getter;
-import ph.adamw.nnt3.brain.EntityDirection;
+import static ph.adamw.nnt3.gui.grid.GridState.EMPTY;
+import static ph.adamw.nnt3.gui.grid.GridState.WALL;
+import ph.adamw.nnt3.gui.grid.data.DataCell;
 
-/**
- * Data class to store information required to load, save and runOneGeneration game grids. To display a DataGrid
- * in a GUI there also must be a LiveGrid to operate on.
- */
-@Getter
-@AllArgsConstructor
-public class DataGrid {
-	private final int width;
-	private final int height;
+public class CellPane extends BorderPane {
+	@Getter
+	private final DataCell cell;
 
-	private final Cell[][] cells;
+	private static final Insets INSETS_2 = new Insets(2, 2, 2, 2);
 
-	private final Cell start;
-	private final Cell goal;
+	public CellPane(DataCell cell) {
+		this.cell = cell;
+	}
 
-	public int getDistanceToNextObstacle(Cell from, EntityDirection dir) {
-		// Finds out if the movement is left/right or up/down
-		final boolean xBased = dir.getX() != 0;
+	public void setState(GridState state) {
+		cell.setState(state);
+		drawState(state);
+	}
 
-		final int startX = from.getCol();
-		final int startY = from.getRow();
+	public void drawState(GridState state) {
+		setBackground(new Background(new BackgroundFill(Paint.valueOf(state.getColor().toString()), CornerRadii.EMPTY, INSETS_2)));
+		setCenter(state.getText());
+	}
 
-		boolean hit = false;
-		int x = 0;
-		int y = 0;
-
-
-		while(!hit) {
-			hit = cells[startX + x][startY + y].getState() != GridState.EMPTY;
-
-			if(xBased) {
-				x += dir.getX();
-			} else {
-				y += dir.getY();
-			}
-		}
-
-		if(xBased) {
-			return x - 1;
-		} else {
-			return y - 1;
+	public void switchState() {
+		switch (cell.getState()) {
+			case WALL: setState(EMPTY); break;
+			case EMPTY: setState(WALL); break;
 		}
 	}
 }

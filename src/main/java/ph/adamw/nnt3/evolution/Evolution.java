@@ -29,9 +29,13 @@ import ph.adamw.nnt3.evolution.neural.NeuralNet;
 
 public abstract class Evolution<T extends NeuralNet> implements Runnable {
 	protected T parent;
-	protected int generationCount = -1;
 
+	@Getter
+	protected int generationCount = 0;
+
+	@Getter
 	private Generation<T> generation;
+
 	private Thread thread;
 	private int nextGen;
 	private boolean nextThreadNetworks;
@@ -40,14 +44,6 @@ public abstract class Evolution<T extends NeuralNet> implements Runnable {
 	protected boolean isDone = false;
 
 	protected abstract Generation<T> populate(Generation<T> generation);
-
-	public T getHighestPerformer() {
-		if (generation == null) {
-			return null;
-		} else {
-			return generation.getBestPerformer();
-		}
-	}
 
 	private void runGenerations(int number, boolean threaded) {
 		for (int i = 0; i < number; i++) {

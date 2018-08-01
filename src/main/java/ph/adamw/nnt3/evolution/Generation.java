@@ -28,9 +28,10 @@ import lombok.Getter;
 import lombok.Setter;
 import ph.adamw.nnt3.evolution.neural.NeuralNet;
 
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class Generation<T extends NeuralNet> {
 	protected final Map<T, Double> map = new HashMap<>();
@@ -51,6 +52,11 @@ public class Generation<T extends NeuralNet> {
 		for (NeuralNet network : map.keySet()) {
 			network.start(threaded);
 		}
+	}
+
+	public Set<T> getMembers() {
+		// Feed them a non-modifiable version as it's just used for visual displays etc.
+		return Collections.unmodifiableSet(map.keySet());
 	}
 
 	public T getBestPerformer() {

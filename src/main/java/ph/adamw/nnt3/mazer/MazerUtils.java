@@ -22,27 +22,15 @@
  * SOFTWARE.
  */
 
-package ph.adamw.nnt3.gui.grid;
+package ph.adamw.nnt3.mazer;
 
-import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
-import lombok.Getter;
+import ph.adamw.nnt3.gui.grid.data.DataCell;
 
-public enum GridState {
-	EMPTY(Color.TRANSPARENT, null),
-	WALL(Color.BLACK, null),
-	CHARACTER(Color.RED, null),
-	START(Color.LIME, new Text("Start")),
-	GOAL(Color.GREEN, new Text("Goal"));
+public class MazerUtils {
+	public static double distanceBetween(int col, int row, DataCell other) {
+		final double colDiff = Math.pow((double) col - (double) other.getCol(), 2);
+		final double rowDiff = Math.pow((double) row - (double) other.getRow(), 2);
 
-	@Getter
-	private final Color color;
-
-	@Getter
-	private final Text text;
-
-	GridState(Color color, Text text) {
-		this.color = color;
-		this.text = text;
+		return Math.sqrt(colDiff + rowDiff);
 	}
 }

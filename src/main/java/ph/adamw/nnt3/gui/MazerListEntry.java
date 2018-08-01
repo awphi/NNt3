@@ -22,27 +22,19 @@
  * SOFTWARE.
  */
 
-package ph.adamw.nnt3.gui.grid;
+package ph.adamw.nnt3.gui;
 
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import lombok.Getter;
+import ph.adamw.nnt3.mazer.Mazer;
 
-public enum GridState {
-	EMPTY(Color.TRANSPARENT, null),
-	WALL(Color.BLACK, null),
-	CHARACTER(Color.RED, null),
-	START(Color.LIME, new Text("Start")),
-	GOAL(Color.GREEN, new Text("Goal"));
-
+public class MazerListEntry extends Text {
 	@Getter
-	private final Color color;
+	private final Mazer mazer;
 
-	@Getter
-	private final Text text;
+	public MazerListEntry(String text, Mazer mazer) {
+		super(text);
 
-	GridState(Color color, Text text) {
-		this.color = color;
-		this.text = text;
+		this.mazer = mazer;
 	}
 }
