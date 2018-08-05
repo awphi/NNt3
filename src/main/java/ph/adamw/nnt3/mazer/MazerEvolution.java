@@ -28,6 +28,7 @@ import ph.adamw.nnt3.evolution.Evolution;
 import ph.adamw.nnt3.evolution.Generation;
 import ph.adamw.nnt3.evolution.neural.NeuralNetSettings;
 import ph.adamw.nnt3.gui.grid.data.DataGrid;
+import ph.adamw.nnt3.mazer.entity.MazerEntity;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

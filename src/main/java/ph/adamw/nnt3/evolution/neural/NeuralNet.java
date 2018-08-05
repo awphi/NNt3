@@ -36,7 +36,6 @@ import java.util.Random;
 
 public abstract class NeuralNet implements Runnable {
 	// --- Evaluation properties ---
-
 	private final NeuralNetSettings settings;
 	@Getter
 	private final List<NeuronLayer> allLayers = new ArrayList<>();
@@ -149,14 +148,17 @@ public abstract class NeuralNet implements Runnable {
 
 	@Override
 	public void run() {
-		calculateFitness();
+		isDone = false;
+
+		execute();
+
 		synchronized (this) {
 			isDone = true;
 			notifyAll();
 		}
 	}
 
-	protected abstract void calculateFitness();
+	protected abstract void execute();
 
 	private static class Utils {
 		private static final Random random = new Random();

@@ -22,10 +22,11 @@
  * SOFTWARE.
  */
 
-package ph.adamw.nnt3.mazer;
+package ph.adamw.nnt3.mazer.entity;
 import lombok.Getter;
 import ph.adamw.nnt3.gui.grid.data.DataCell;
 import ph.adamw.nnt3.gui.grid.data.DataGrid;
+import ph.adamw.nnt3.mazer.Mazer;
 
 /**
  * Class to allow the Mazer and DataGrid to interface with an entity between them. Also used
@@ -33,9 +34,13 @@ import ph.adamw.nnt3.gui.grid.data.DataGrid;
  */
 public class MazerEntity {
 	// Stored as a just a location since it's an entity - not a state of a cell
+	@Getter
 	protected int currentCol;
+
+	@Getter
 	protected int currentRow;
 
+	@Getter
 	protected final DataGrid dataGrid;
 
 	@Getter
@@ -73,6 +78,10 @@ public class MazerEntity {
 
 	public void reset() {
 		resetPosition();
+	}
+
+	public int getInterval() {
+		return 0;
 	}
 
 	// reset() cannot be called in the constructor due to DrawingMazerEntity's call to it

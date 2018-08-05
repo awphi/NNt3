@@ -26,7 +26,6 @@ package ph.adamw.nnt3.evolution.neural;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 import ph.adamw.nnt3.evolution.neural.neuron.ActivationFunction;
 
 @AllArgsConstructor

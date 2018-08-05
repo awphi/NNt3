@@ -45,20 +45,20 @@ public class CellPane extends BorderPane {
 		this.cell = cell;
 	}
 
-	public void setState(GridState state) {
-		cell.setState(state);
-		drawState(state);
-	}
-
 	public void drawState(GridState state) {
 		setBackground(new Background(new BackgroundFill(Paint.valueOf(state.getColor().toString()), CornerRadii.EMPTY, INSETS_2)));
 		setCenter(state.getText());
 	}
 
-	public void switchState() {
+	public void setAndDrawState(GridState state) {
+		cell.setState(state);
+		drawState(state);
+	}
+
+	public void switchAndDrawState() {
 		switch (cell.getState()) {
-			case WALL: setState(EMPTY); break;
-			case EMPTY: setState(WALL); break;
+			case WALL: setAndDrawState(EMPTY); break;
+			case EMPTY: setAndDrawState(WALL); break;
 		}
 	}
 }

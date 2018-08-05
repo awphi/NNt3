@@ -22,10 +22,10 @@
  * SOFTWARE.
  */
 
-package ph.adamw.nnt3.mazer;
+package ph.adamw.nnt3.mazer.entity;
 
 import javafx.application.Platform;
-import lombok.Getter;
+import lombok.Setter;
 import ph.adamw.nnt3.gui.grid.GridState;
 import ph.adamw.nnt3.gui.grid.data.DataGrid;
 import ph.adamw.nnt3.gui.grid.LiveGrid;
@@ -34,11 +34,11 @@ import ph.adamw.nnt3.gui.grid.LiveGrid;
  * Overrides MazerEntity's moving method to also draw to a live game grid after moving, used when a single network
  * is ran in preview mode.
  */
-public class DrawingMazerEntity extends MazerEntity {
+public class 	DrawingMazerEntity extends MazerEntity {
 	private final LiveGrid liveGrid;
 
-	@Getter
-	private final int interval;
+	@Setter
+	private int interval;
 
 	public DrawingMazerEntity(DataGrid dataGrid, LiveGrid liveGrid, int interval) {
 		super(dataGrid);
@@ -48,6 +48,28 @@ public class DrawingMazerEntity extends MazerEntity {
 		drawState(GridState.CHARACTER);
 	}
 
+	private void drawState(GridState state) {
+		// Cache the values for the runLater
+		final int x = currentCol;
+		final int y = currentRow;
+
+		Platform.runLater(() -> liveGrid.drawStateAt(x, y, state));
+	}
+
+	private GridState getStateBehindCurrent() {
+		return dataGrid.getCells()[currentCol][currentRow].getState();
+	}
+
+	@Override
+	public void reset() {
+		if(!Platform.isFxApplicationThread()) {
+			throw new RuntimeException("DrawingMazerEntity reset from outside the fx thread! Called from: " + Thread.currentThread().getName() + "!");
+		}
+
+		liveGrid.drawStateAt(currentCol, currentRow, getStateBehindCurrent());
+		super.reset();
+	}
+
 	@Override
 	public void move(Double[] vals) {
 		drawState(getStateBehindCurrent());
@@ -55,20 +77,8 @@ public class DrawingMazerEntity extends MazerEntity {
 		drawState(GridState.CHARACTER);
 	}
 
-	private void drawState(GridState state) {
-		final int x = currentCol;
-		final int y = currentRow;
-
-		Platform.runLater(() -> liveGrid.drawStateAt(x, y, state));
-	}
-
 	@Override
-	public void reset() {
-		// Not wrapped in a runLater as it's only to be executed from the main thread anyway
-		liveGrid.drawStateAt(currentCol, currentRow, getStateBehindCurrent());
-	}
-
-	private GridState getStateBehindCurrent() {
-		return dataGrid.getCells()[currentCol][currentRow].getState();
+	public int getInterval() {
+		return interval;
 	}
 }

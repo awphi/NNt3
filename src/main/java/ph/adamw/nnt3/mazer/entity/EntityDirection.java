@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package ph.adamw.nnt3.mazer;
+package ph.adamw.nnt3.mazer.entity;
 
 import lombok.Getter;
 

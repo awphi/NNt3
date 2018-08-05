@@ -27,7 +27,7 @@ package ph.adamw.nnt3.evolution;
 import lombok.Getter;
 import ph.adamw.nnt3.evolution.neural.NeuralNet;
 
-public abstract class Evolution<T extends NeuralNet> implements Runnable {
+public abstract class Evolution<T extends NeuralNet> {
 	protected T parent;
 
 	@Getter
@@ -36,41 +36,16 @@ public abstract class Evolution<T extends NeuralNet> implements Runnable {
 	@Getter
 	private Generation<T> generation;
 
-	private Thread thread;
-	private int nextGen;
-	private boolean nextThreadNetworks;
-
-	@Getter
-	protected boolean isDone = false;
-
 	protected abstract Generation<T> populate(Generation<T> generation);
 
-	private void runGenerations(int number, boolean threaded) {
-		for (int i = 0; i < number; i++) {
+	public void run(int generations, boolean threadNetworks) {
+		for (int i = 0; i < generations; i++) {
 			generation = populate(new Generation<>());
 
-			generation.run(threaded);
-			generationCount ++;
-
+			generation.run(threadNetworks);
 			parent = generation.getBestPerformer();
-		}
-	}
 
-	public void start(int generations, boolean threadNetworks) {
-		nextGen = generations;
-		nextThreadNetworks = threadNetworks;
-
-		thread = new Thread(this, getClass().getSimpleName() + getClass().hashCode() + "thread");
-		thread.start();
-	}
-
-	@Override
-	public void run() {
-		runGenerations(nextGen, nextThreadNetworks);
-
-		synchronized (this) {
-			isDone = true;
-			notifyAll();
+			generationCount ++;
 		}
 	}
 }

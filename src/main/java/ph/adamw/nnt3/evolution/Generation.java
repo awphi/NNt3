@@ -61,6 +61,7 @@ public class Generation<T extends NeuralNet> {
 
 	public T getBestPerformer() {
 		T best = null;
+
 		for (T key : map.keySet()) {
 			synchronized (key) {
 				if(!key.isDone()) {
@@ -74,6 +75,7 @@ public class Generation<T extends NeuralNet> {
 				best = key;
 			}
 		}
+
 		return best;
 	}
 

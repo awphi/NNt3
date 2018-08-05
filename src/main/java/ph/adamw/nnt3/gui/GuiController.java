@@ -24,7 +24,7 @@
 
 package ph.adamw.nnt3.gui;
 
-import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -42,10 +42,14 @@ import ph.adamw.nnt3.mazer.MazerEvolution;
 import ph.adamw.nnt3.evolution.neural.NeuralNetSettings;
 import ph.adamw.nnt3.gui.grid.LiveGrid;
 
-import java.text.DecimalFormat;
-
 @NoArgsConstructor
 public class GuiController {
+	@FXML
+	private VBox gridSizeControlsBox;
+
+	@FXML
+	private Button skipGenerationsButton;
+
 	@FXML
 	private ListView<MazerListEntry> mazerListView;
 	// -- Number Fields --
@@ -76,8 +80,6 @@ public class GuiController {
 	private final LiveGrid grid = new LiveGrid(6, 6);
 
 	private MazerEvolution mainEvo;
-
-	private final static DecimalFormat TWO_DP = new DecimalFormat("##.00");
 
 	@Getter
 	private Mazer playingMazer;
@@ -117,77 +119,82 @@ public class GuiController {
 		gridRowsField.setText(r.toString());
 	}
 
-	@SuppressWarnings("SynchronizeOnNonFinalField")
-	public void onNextGenPressed(ActionEvent actionEvent) {
+	private void runGenerations(int amount) {
 		if(mainEvo != null) {
-			//TODO clear the old list view here
-			mainEvo.start(1, true);
+			evolutionControlsBox.setDisable(true);
+
+			Task<Boolean> task = new Task<Boolean>() {
+				@Override
+				protected Boolean call() throws Exception {
+					mainEvo.run(amount, true);
+					return true;
+				}
+			};
+
+			task.setOnSucceeded(e -> {
+				evolutionControlsBox.setDisable(false);
+				nextGenButton.setText("Run Generation " + mainEvo.getGenerationCount());
+
+				//TODO (FUN) store the evolutionary path of each winner so we can see a sort of family tree, this could store just names or the Mazers themselves
+				mazerListView.getItems().clear();
+
+				for(Mazer i : mainEvo.getGeneration().getMembers()) {
+					mazerListView.getItems().add(mazerListView.getItems().size(), new MazerListEntry(i));
+				}
+			});
+
+			new Thread(task).start();
 		} else {
-			if(!grid.isValid()) {
+			if (!grid.isValid()) {
 				//TODO throw error message in bar here
 				return;
 			}
 
-			final Integer amount = GuiUtils.getBoundedIntFromField(hiddenLayersAmountField, 5, 1);
-			final Integer size = GuiUtils.getBoundedIntFromField(hiddenLayersSizeField, 5, 1);
-			final Integer genSize = GuiUtils.getBoundedIntFromField(generationSizeField, 24, 1);
+			final Integer hiddenAmount = GuiUtils.getBoundedIntFromField(hiddenLayersAmountField, 10, 1);
+			final Integer hiddenSize = GuiUtils.getBoundedIntFromField(hiddenLayersSizeField, 10, 1);
+			final Integer genSize = GuiUtils.getBoundedIntFromField(generationSizeField, 100, 1);
 
-			if(GuiUtils.anyObjectNull(amount, size, genSize)) {
+			if (GuiUtils.anyObjectNull(hiddenAmount, hiddenSize, genSize)) {
 				//TODO throw error message in bar here
 				return;
 			}
+
+			grid.setEditable(false);
+			evolutionControlsBox.getChildren().remove(genZeroConfigBox);
+			gridSizeControlsBox.setDisable(true);
 
 			final NeuralNetSettings s = Mazer.STATIC_SETTINGS;
 			final NeuralNetSettings settings =
-					new NeuralNetSettings(s.getInputs(), amount, size, s.getOutputs(), s.getMutationRate(), s.getActivationFunction());
+					new NeuralNetSettings(s.getInputs(), hiddenAmount, hiddenSize, s.getOutputs(), s.getMutationRate(), s.getActivationFunction());
 
 			mainEvo = new MazerEvolution(grid.asDataGrid(), settings, genSize);
-			mainEvo.start(1, true);
 
-			grid.setEditable(false);
-
-			evolutionControlsBox.getChildren().remove(genZeroConfigBox);
-
-			//TODO add new buttons to evo button box - run 5 generations and run X generations
-		}
-
-		nextGenButton.setDisable(true);
-
-		synchronized (mainEvo) {
-			if(!mainEvo.isDone()) {
-				try {
-					mainEvo.wait();
-				} catch (InterruptedException ignored) {}
-			}
-		}
-
-		nextGenButton.setText("Run Generation " + mainEvo.getGenerationCount());
-		nextGenButton.setDisable(false);
-
-		//TODO (FUN) store the evolutionary path of each winner so we can see a sort of family tree, this could store just names or the Mazers themselves
-
-		// Remove old items
-		mazerListView.getItems().clear();
-		// They're done - add them to the ListView ready for previews!
-		for(Mazer i : mainEvo.getGeneration().getMembers()) {
-			mazerListView.getItems().add(mazerListView.getItems().size(),
-					new MazerListEntry(i.getThreadName() + " @ " + TWO_DP.format(i.getFitness()) + " fit", i));
+			skipGenerationsButton.setDisable(false);
+			runGenerations(1);
 		}
 	}
 
 	public void mazerListViewClicked(MouseEvent mouseEvent) {
-		if(mouseEvent.getTarget() instanceof MazerListEntry) {
-			grid.setEditable(false);
+		grid.setEditable(false);
 
-			final MazerListEntry e = (MazerListEntry) mouseEvent.getTarget();
+		final MazerListEntry e = mazerListView.getSelectionModel().getSelectedItem();
 
-			if(playingMazer != null) {
-				playingMazer.stop();
-			}
-
-			playingMazer = e.getMazer();
-			//TODO read in interval information here
-			playingMazer.playOnGrid(grid, 100);
+		if(playingMazer != null) {
+			playingMazer.stop();
 		}
+
+		playingMazer = e.getMazer();
+
+		//TODO read in interval information here
+		playingMazer.playOnGrid(grid, 100);
+	}
+
+	public void onNextGenPressed(ActionEvent actionEvent) {
+		runGenerations(1);
+	}
+
+	public void onSkipGensPressed(ActionEvent actionEvent) {
+		//TODO read in X from a slider
+		runGenerations(10);
 	}
 }

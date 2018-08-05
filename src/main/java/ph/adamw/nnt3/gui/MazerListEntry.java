@@ -28,13 +28,23 @@ import javafx.scene.text.Text;
 import lombok.Getter;
 import ph.adamw.nnt3.mazer.Mazer;
 
+import java.text.DecimalFormat;
+
 public class MazerListEntry extends Text {
 	@Getter
 	private final Mazer mazer;
 
-	public MazerListEntry(String text, Mazer mazer) {
-		super(text);
+	private static final int MAX_NAME_LENGTH = 30;
+
+	private final static DecimalFormat TWO_DP = new DecimalFormat("0.##");
+
+	public MazerListEntry(Mazer mazer) {
+		super(formatText(mazer));
 
 		this.mazer = mazer;
+	}
+
+	private static String formatText(Mazer mazer) {
+		return mazer.getThreadName() + " @ " + TWO_DP.format(mazer.getFitness()) + " fit";
 	}
 }

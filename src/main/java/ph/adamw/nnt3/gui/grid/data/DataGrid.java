@@ -27,7 +27,7 @@ package ph.adamw.nnt3.gui.grid.data;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import ph.adamw.nnt3.gui.grid.GridState;
-import ph.adamw.nnt3.mazer.EntityDirection;
+import ph.adamw.nnt3.mazer.entity.EntityDirection;
 
 import java.io.Serializable;
 

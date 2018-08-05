@@ -76,23 +76,22 @@ public class LiveGrid extends GridPane {
             }
 
             if(hoveredPane.getCell().getState() == dragOverrideState && targetPane != hoveredPane) {
-                hoveredPane.switchState();
+                hoveredPane.switchAndDrawState();
             }
         });
 
         setOnMousePressed(event -> {
-        	System.out.println(event.getTarget());
             if(event.getTarget() instanceof CellPane && isEditable) {
                 final CellPane targetPane = (CellPane) event.getTarget();
 
                 switch(event.getButton()) {
-                    case PRIMARY: targetPane.switchState(); break;
+                    case PRIMARY: targetPane.switchAndDrawState(); break;
                     case SECONDARY: {
                         if(containsState(GridState.GOAL)) {
                             emptyFirstStateFound(GridState.START);
                             emptyFirstStateFound(GridState.GOAL);
                         } else if (targetPane.getCell().getState() == GridState.EMPTY) {
-                            targetPane.setState(nextRightClickState());
+                            targetPane.setAndDrawState(nextRightClickState());
                         }
                     } break;
                 }
@@ -103,7 +102,7 @@ public class LiveGrid extends GridPane {
     public void setSize(int cols, int rows) {
         getRowConstraints().clear();
         getColumnConstraints().clear();
-        getChildren().removeAll(getChildren().filtered(node -> node instanceof CellPane));
+        getChildren().removeIf(node -> node instanceof CellPane);
 
         addCols(cols);
         addRows(rows);
@@ -124,7 +123,7 @@ public class LiveGrid extends GridPane {
     public void emptyFirstStateFound(GridState state) {
     	final CellPane d = getFirstState(state);
     	if(d != null) {
-			d.setState(GridState.EMPTY);
+			d.setAndDrawState(GridState.EMPTY);
 		}
     }
 
@@ -134,7 +133,7 @@ public class LiveGrid extends GridPane {
 
     public DataGrid asDataGrid() {
         if(!isValid()) {
-            throw new RuntimeException("To produce a DataGrid, a LiveGrid must have a start node and a goal node!");
+            throw new RuntimeException("To produce a DataGrid, a LiveGrid must have a run node and a goal node!");
         }
 
         final DataCell[][] dataCells = new DataCell[getCols()][getRows()];

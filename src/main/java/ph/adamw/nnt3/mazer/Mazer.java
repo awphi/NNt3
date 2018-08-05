@@ -30,6 +30,9 @@ import ph.adamw.nnt3.evolution.neural.NeuralNet;
 import ph.adamw.nnt3.evolution.neural.NeuralNetSettings;
 import ph.adamw.nnt3.evolution.neural.neuron.ActivationFunction;
 import ph.adamw.nnt3.gui.grid.LiveGrid;
+import ph.adamw.nnt3.mazer.entity.DrawingMazerEntity;
+import ph.adamw.nnt3.mazer.entity.EntityDirection;
+import ph.adamw.nnt3.mazer.entity.MazerEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,13 +50,13 @@ public class Mazer extends NeuralNet {
 	/**
 	 * 6 INPUTS = * 4-directional distance to closest obstacle (starts from up then goes clockwise)
 	 * 			  * Distance from current position to goal
-	 * 			  * Turns in a row that the character has not changed location (to prevent wall-walking
+	 * 			  * Turns in a row that the character has not changed location (to try to prevent wall-bashing)
 	 *
 	 * 4 OUTPUTS = * 4-directional output (starts from up then goes clockwise) (evaluated and acted upon by character)
 	 *
 	 */
 	public static final NeuralNetSettings STATIC_SETTINGS =
-			new NeuralNetSettings(6, 0, 0, 4, 0.05, ActivationFunction.getSigmoid());
+			new NeuralNetSettings(6, 0, 0, 4, 0.15, ActivationFunction.getSigmoid());
 
 
 	public Mazer(NeuralNetSettings settings) {
@@ -61,48 +64,49 @@ public class Mazer extends NeuralNet {
 	}
 
 	@Override
-	protected void calculateFitness() {
-		final int cycles = ((int) Math.sqrt(entity.dataGrid.getHeight() * entity.dataGrid.getWidth())) * CYCLE_MULTIPLIER;
+	protected void execute() {
+		final int cycles = ((int) Math.sqrt(entity.getDataGrid().getHeight() * entity.getDataGrid().getWidth())) * CYCLE_MULTIPLIER;
+
 		killed = false;
 
 		for(int i = 0; i < cycles; i ++) {
-			// If the thread is terminated (mainly used by the GUI) then we return without modifying the fitness
+			// If the thread is halted from an outside thread then exit without modifying the fitness
 			if(killed) {
 				return;
 			}
 
-			List<Double> inputs = new ArrayList<>();
+			final List<Double> inputs = new ArrayList<>();
 
 			// 4-directional inputs
 			for(EntityDirection dir : EntityDirection.VALUES) {
-				inputs.add((double) entity.dataGrid.getDistanceToNextObstacle(entity.currentCol, entity.currentRow, dir));
+				inputs.add((double) entity.getDataGrid().getDistanceToNextObstacle(entity.getCurrentCol(), entity.getCurrentRow(), dir));
 			}
 
-			inputs.add(MazerUtils.distanceBetween(entity.currentCol, entity.currentRow, entity.dataGrid.getGoal()));
+			// Distance between entity and the goal
+			inputs.add(MazerUtils.distanceBetween(entity.getCurrentCol(), entity.getCurrentRow(), entity.getDataGrid().getGoal()));
 
 			// Number of cycles in a row that the entity hasn't moved
 			inputs.add((double) entity.getStationaryCount());
 
 			entity.move(evaluate(inputs).toArray(new Double[STATIC_SETTINGS.getOutputs()]));
 
-			if(entity instanceof DrawingMazerEntity) {
+			final int intv = entity.getInterval();
+
+			if(intv > 0) {
 				try {
-					Thread.sleep(((DrawingMazerEntity) entity).getInterval());
+					Thread.sleep(intv);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
+					return;
 				}
 			}
 		}
 
-		fitness = FITNESS_MULTIPLIER / MazerUtils.distanceBetween(entity.currentCol, entity.currentRow, entity.dataGrid.getGoal());
+		fitness = FITNESS_MULTIPLIER / MazerUtils.distanceBetween(entity.getCurrentCol(), entity.getCurrentRow(), entity.getDataGrid().getGoal());
 	}
 
-	/**
-	 * Runs a thread that draws a mazer entity onto a LiveGrid step by step.
-	 * @param liveGrid the grid you wish to play this mazer's actions back onto
-	 */
 	public void playOnGrid(LiveGrid liveGrid, int interval) {
-		entity = new DrawingMazerEntity(entity.dataGrid, liveGrid, interval);
+		entity = new DrawingMazerEntity(entity.getDataGrid(), liveGrid, interval);
 		start(true);
 	}
 
