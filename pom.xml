@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ph.adamw</groupId>
-    <artifactId>nnt3</artifactId>
+    <artifactId>a_mazer</artifactId>
     <version>1.0</version>
 
     <dependencies>
@@ -14,6 +14,12 @@
             <artifactId>lombok</artifactId>
             <version>1.16.20</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 
@@ -29,7 +35,14 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.1.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                        </manifest>
+                    </archive>
+                </configuration>
             </plugin>
 
             <plugin>
@@ -61,7 +74,7 @@
                         </descriptorRefs>
                         <archive>
                             <manifest>
-                                <mainClass>ph.adamw.nnt3.gui.Main</mainClass>
+                                <mainClass>ph.adamw.amazer.Amazer</mainClass>
                             </manifest>
                         </archive>
                     </configuration>
