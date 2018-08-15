@@ -38,11 +38,16 @@ import ph.adamw.amazer.Amazer;
 import java.io.IOException;
 
 @NoArgsConstructor
-public class ErrorController {
+public class ErrorGuiController {
+	@FXML
+	private Label errorTitle;
+
 	@FXML
 	private Label errorText;
 
 	private static String nextErrorMsg;
+	private static String nextErrorTitle;
+
 	private static Stage currentError;
 
 	static void openError(String title, String description) {
@@ -51,32 +56,33 @@ public class ErrorController {
 		}
 
 		nextErrorMsg = description;
+		nextErrorTitle = title;
 		final Parent root;
 
 		try {
-			root = FXMLLoader.load(ErrorController.class.getResource("error.fxml"));
+			root = FXMLLoader.load(ErrorGuiController.class.getResource("error.fxml"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			return;
 		}
 
 		currentError = new Stage();
-		currentError.setTitle(title);
+		currentError.setTitle("a_mazer - Error Information");
 		currentError.initModality(Modality.WINDOW_MODAL);
 		currentError.initOwner(Amazer.getScene().getWindow());
-		currentError.setScene(new Scene(root, 400, 70));
+		currentError.setScene(new Scene(root));
 		currentError.setResizable(false);
 		currentError.show();
-
-		currentError.setAlwaysOnTop(true);
 	}
 
 	@FXML
 	private void initialize() {
+		errorTitle.setText(nextErrorTitle);
 		errorText.setText(nextErrorMsg);
 	}
 
-	public void continueButtonPressed(ActionEvent actionEvent) {
+	@FXML
+	private void continueButtonPressed(ActionEvent actionEvent) {
 		currentError.close();
 	}
 }

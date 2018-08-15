@@ -136,10 +136,6 @@ public class LiveGrid extends GridPane {
     }
 
     public DataGrid asDataGrid() {
-        if(!isValid()) {
-            throw new RuntimeException("To produce a DataGrid, a LiveGrid must have a start node and a goal node!");
-        }
-
         final DataCell[][] dataCells = new DataCell[getCols()][getRows()];
 
         int colCount = 0;
@@ -156,8 +152,12 @@ public class LiveGrid extends GridPane {
         }
 
         // Inspection disabled as isValid() method guarantees we have a START and GOAL
-        //noinspection ConstantConditions
-        return new DataGrid(getCols(), getRows(), dataCells, getFirstState(GridState.START).getCell(), getFirstState(GridState.GOAL).getCell());
+        if(isValid()) {
+            //noinspection ConstantConditions
+            return new DataGrid(getCols(), getRows(), dataCells, getFirstState(GridState.START).getCell(), getFirstState(GridState.GOAL).getCell());
+        } else {
+            return null;
+        }
     }
 
     public void loadDataGrid(DataGrid grid) {

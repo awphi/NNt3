@@ -34,14 +34,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.DirectoryChooser;
 import lombok.NoArgsConstructor;
+import ph.adamw.amazer.Amazer;
 import ph.adamw.amazer.FileUtils;
+import ph.adamw.amazer.gui.grid.data.DataGrid;
 import ph.adamw.amazer.mazer.Mazer;
-import ph.adamw.amazer.mazer.MazerEvolution;
-import ph.adamw.amazer.nnt3.neural.NeuralNetSettings;
 import ph.adamw.amazer.gui.grid.LiveGrid;
 
 import java.io.File;
@@ -59,13 +57,7 @@ public class MainGuiController {
 
 	@FXML
 	private ListView<MazerListEntry> mazerListView;
-	// -- Number Fields --
-	@FXML
-	private TextField hiddenLayersSizeField;
-	@FXML
-	private TextField hiddenLayersAmountField;
-	@FXML
-	private TextField generationSizeField;
+	// -- Number Fields --;
     @FXML
 	private TextField gridRowsField;
     @FXML
@@ -76,9 +68,6 @@ public class MainGuiController {
 	private VBox evolutionControlsBox;
 
 	@FXML
-	private HBox genZeroConfigBox;
-
-	@FXML
 	private Button nextGenButton;
 
 	@FXML
@@ -86,88 +75,71 @@ public class MainGuiController {
 
 	private final LiveGrid grid = new LiveGrid(6, 6);
 
-	private static final DirectoryChooser directorChooser = new DirectoryChooser();
-
-	private MazerEvolution mainEvo;
 	private Mazer playingMazer;
 
 	@FXML
 	private void initialize() {
 	    borderPane.setCenter(grid);
 
-		gridColsField.setText(grid.getCols() + "");
-		gridRowsField.setText(grid.getRows() + "");
+		gridColsField.setText(String.valueOf(grid.getCols()));
+		gridRowsField.setText(String.valueOf(grid.getRows()));
 
-	    final TextField[] numberFields = {hiddenLayersSizeField, hiddenLayersAmountField, generationSizeField, gridRowsField, gridColsField};
-
-		for (TextField numberField : numberFields) {
-			numberField.setTextFormatter(new TextFormatter<>(GuiUtils.NUMBER_FIELD_OPERATOR));
-		}
+		gridColsField.setTextFormatter(new TextFormatter<>(GuiUtils.NUMBER_FIELD_OPERATOR));
+		gridRowsField.setTextFormatter(new TextFormatter<>(GuiUtils.NUMBER_FIELD_OPERATOR));
 
 		skipGenerationsSlider.valueProperty().addListener(e ->
 				skipGenerationsButton.textProperty().setValue("Skip " + (int) skipGenerationsSlider.getValue() + " Generations"));
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	private void runGenerations(int amount) {
-		if(mainEvo != null) {
-			evolutionControlsBox.setDisable(true);
-
-			Task<Boolean> task = new Task<Boolean>() {
-				@Override
-				protected Boolean call() throws Exception {
-					mainEvo.run(amount, true);
-					return true;
-				}
-			};
-
-			task.setOnSucceeded(e -> {
-				evolutionControlsBox.setDisable(false);
-				nextGenButton.setText("Run Generation " + mainEvo.getGenerationCount());
-
-				//TODO (FUN) store the evolutionary path of each winner so we can see a sort of family tree, this could store just names or the Mazers themselves
-				mazerListView.getItems().clear();
-
-				for(Mazer i : mainEvo.getGeneration().getSortedCopyOfMembers()) {
-					mazerListView.getItems().add(mazerListView.getItems().size(), new MazerListEntry(i));
-				}
-			});
-
-			new Thread(task).start();
-		} else {
+		if(Amazer.getEvolution() == null) {
 			if (!grid.isValid()) {
-				ErrorController.openError("Grid Invalid", "The grid is currently invalid. It must contain a start and a goal to be valid.");
+				ErrorGuiController.openError("The current grid form is invalid.", "The grid must contain a start and goal node in order to be solved.");
 				return;
 			}
 
-			final Integer hiddenAmount = GuiUtils.getBoundedIntFromField(hiddenLayersAmountField, 10, 1);
-			final Integer hiddenSize = GuiUtils.getBoundedIntFromField(hiddenLayersSizeField, 10, 1);
-			final Integer genSize = GuiUtils.getBoundedIntFromField(generationSizeField, 1000, 1);
-			//TODO add mutation rate to these options
+			// Opens a menu to create the evolution
+			Amazer.openSplash(grid.asDataGrid());
+			return;
+		}
 
-			if (GuiUtils.anyObjectNull(hiddenAmount, hiddenSize, genSize)) {
-				ErrorController.openError("Missing Parameters", "All parameters must be filled in order to run a generation.");
-				return;
+		grid.setEditable(false);
+		gridSizeControlsBox.setDisable(true);
+
+		evolutionControlsBox.setDisable(true);
+
+		Task<Boolean> task = new Task<Boolean>() {
+			@Override
+			protected Boolean call() throws Exception {
+				Amazer.getEvolution().run(amount, true);
+				return true;
 			}
+		};
 
-			grid.setEditable(false);
-			evolutionControlsBox.getChildren().remove(genZeroConfigBox);
-			gridSizeControlsBox.setDisable(true);
-
-			final NeuralNetSettings s = Mazer.STATIC_SETTINGS;
-			final NeuralNetSettings settings =
-					new NeuralNetSettings(s.getInputs(), hiddenAmount, hiddenSize, s.getOutputs(), s.getMutationRate(), s.getActivationFunction());
-
-			mainEvo = new MazerEvolution(grid.asDataGrid(), settings, genSize);
+		task.setOnSucceeded(e -> {
+			evolutionControlsBox.setDisable(false);
 
 			skipGenerationsButton.setDisable(false);
 			skipGenerationsSlider.setDisable(false);
-			runGenerations(1);
-		}
+
+			nextGenButton.setText("Run Generation " + Amazer.getEvolution().getGenerationCount());
+
+			//TODO (FUN) store the evolutionary path of each winner so we can see a sort of family tree, this could store just names or the Mazers themselves
+			mazerListView.getItems().clear();
+
+			for(Mazer i : Amazer.getEvolution().getGeneration().getSortedCopyOfMembers()) {
+				mazerListView.getItems().add(mazerListView.getItems().size(), new MazerListEntry(i));
+			}
+		});
+
+		new Thread(task).start();
 	}
 
-	public void onUpdateGridPressed(ActionEvent actionEvent) {
+	@FXML
+	private void onUpdateGridPressed(ActionEvent actionEvent) {
 		if(!grid.isEditable()) {
-			ErrorController.openError("Grid Locked", "The grid is currently edit-locked. Please reset the program to unlock it.");
+			ErrorGuiController.openError("The grid is currently locked", "The grid is currently edit-locked. Please reset the program to unlock it.");
 			return;
 		}
 
@@ -176,7 +148,7 @@ public class MainGuiController {
 		final Integer r = GuiUtils.getBoundedIntFromField(gridRowsField, 48, 6);
 
 		if(GuiUtils.anyObjectNull(c, r)) {
-			ErrorController.openError("Missing Parameters", "All parameters must be filled in order to change the grid size.");
+			ErrorGuiController.openError("There are empty parameters", "A height and width must be given in order to change the grid size.");
 			return;
 		}
 
@@ -186,7 +158,8 @@ public class MainGuiController {
 		gridRowsField.setText(r.toString());
 	}
 
-	public void onMazerListClicked(MouseEvent mouseEvent) {
+	@FXML
+	private void onMazerListClicked(MouseEvent mouseEvent) {
 		final MazerListEntry e = mazerListView.getSelectionModel().getSelectedItem();
 
 		if(e == null) {
@@ -201,21 +174,59 @@ public class MainGuiController {
 		playingMazer.playOnGrid(grid, 100);
 	}
 
-	public void onNextGenPressed(ActionEvent actionEvent) {
+	@FXML
+	private void onNextGenPressed(ActionEvent actionEvent) {
 		runGenerations(1);
 	}
 
-	public void onSkipGensPressed(ActionEvent actionEvent) {
+	@FXML
+	private void onSkipGensPressed(ActionEvent actionEvent) {
 		runGenerations((int) skipGenerationsSlider.getValue());
 	}
 
-	public void onExportMazePressed(ActionEvent actionEvent) {
-		//TODO use file saver window to decide where to save to
-		FileUtils.writeDataGrid(new File("D:/"), "super", grid.asDataGrid());
+	@FXML
+	private void onExportMazePressed(ActionEvent actionEvent) {
+		//Show save file dialog
+		final File file = FileUtils.getMazeChooser().showSaveDialog(Amazer.getStage());
+
+		if(file == null) {
+			return;
+		}
+
+		if(!FileUtils.writeObjectToFile(file, grid.asDataGrid())) {
+			ErrorGuiController.openError("Failed to export maze.", "Please ensure the maze contains a start and goal node and that a_mazer has appropriate permissions to save files.");
+		}
 	}
 
-	public void onImportMazePressed(ActionEvent actionEvent) {
-		//TODO use a file picker here to decide where to read from
-		grid.loadDataGrid(FileUtils.readDataGrid(new File("D:/super.maz")));
+	@FXML
+	private void onImportMazePressed(ActionEvent actionEvent) {
+		final File file = FileUtils.getMazeChooser().showOpenDialog(Amazer.getStage());
+
+		if(file == null || !file.exists()) {
+			return;
+		}
+
+		final DataGrid dg = FileUtils.readObjectFromFile(file);
+
+		if(dg != null) {
+			grid.loadDataGrid(dg);
+		} else {
+			ErrorGuiController.openError("Failed to import maze.", "The maze file may have been corrupted or a_mazer does not have the appropriate write permissions to access the given file.");
+		}
+	}
+
+	@FXML
+	private void onAboutMenuPressed(ActionEvent actionEvent) {
+		//TODO provide some about info a little window here
+	}
+
+	@FXML
+	private void onLoadEvolutionPressed(ActionEvent actionEvent) {
+
+	}
+
+	@FXML
+	private void onExportEvolutionPressed(ActionEvent actionEvent) {
+
 	}
 }

@@ -28,13 +28,29 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import lombok.Getter;
+import lombok.Setter;
 import ph.adamw.amazer.gui.MainGuiController;
+import ph.adamw.amazer.gui.SplashGuiController;
+import ph.adamw.amazer.gui.grid.data.DataGrid;
+import ph.adamw.amazer.mazer.MazerEvolution;
+
+import java.io.IOException;
 
 public class Amazer extends Application {
 	@Getter
 	private static Scene scene;
+
+	@Getter
+	private static Stage stage;
+
+	private static Stage splashStage;
+
+	@Setter
+	@Getter
+	private static MazerEvolution evolution;
 
 	public static void main(String[] args) {
 		Application.launch(args);
@@ -43,12 +59,33 @@ public class Amazer extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 		Parent root = FXMLLoader.load(MainGuiController.class.getResource("main.fxml"));
-
 		scene = new Scene(root, 1280, 760);
 
-		stage.setTitle("a_mazer by awphi");
-		//stage.setResizable(false);
+		Amazer.stage = stage;
+		stage.setTitle("a_mazer");
 		stage.setScene(scene);
 		stage.show();
+	}
+
+	public static void openSplash(DataGrid grid) {
+		final Parent splash;
+		final FXMLLoader loader = new FXMLLoader();
+
+		try {
+			splash = loader.load(SplashGuiController.class.getResource("splash.fxml").openStream());
+		} catch (IOException e) {
+			e.printStackTrace();
+			return;
+		}
+
+		((SplashGuiController) loader.getController()).setGrid(grid);
+
+		splashStage = new Stage();
+		splashStage.setTitle("a_mazer - Create New Evolution");
+		splashStage.initModality(Modality.WINDOW_MODAL);
+		splashStage.initOwner(scene.getWindow());
+		splashStage.setScene(new Scene(splash));
+		splashStage.setResizable(false);
+		splashStage.show();
 	}
 }

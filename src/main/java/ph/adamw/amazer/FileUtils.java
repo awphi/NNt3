@@ -24,6 +24,8 @@
 
 package ph.adamw.amazer;
 
+import javafx.stage.FileChooser;
+import lombok.Getter;
 import ph.adamw.amazer.gui.grid.data.DataGrid;
 
 import java.io.File;
@@ -32,19 +34,41 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.URISyntaxException;
 
 public class FileUtils {
-	public static boolean writeDataGrid(File path, String name, DataGrid grid) {
-		if(!path.isDirectory()) {
+	@Getter
+	private static FileChooser mazeChooser = new FileChooser();
+
+	@Getter
+	private static FileChooser evolutionChooser = new FileChooser();
+
+	static {
+		FileChooser.ExtensionFilter mazeExtFilter = new FileChooser.ExtensionFilter("MAZE files (*.maz)", "*.maz");
+		mazeChooser.getExtensionFilters().add(mazeExtFilter);
+
+		FileChooser.ExtensionFilter evoExtFilter = new FileChooser.ExtensionFilter("MAZER EVOLUTION files (*.evo)", "*.evo");
+		evolutionChooser.getExtensionFilters().add(evoExtFilter);
+
+		try {
+			final File dir = new File(new File(FileUtils.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile().getPath());
+
+			mazeChooser.setInitialDirectory(dir);
+			evolutionChooser.setInitialDirectory(dir);
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static boolean writeObjectToFile(File file, DataGrid obj) {
+		if(obj == null) {
 			return false;
 		}
-
-		final File file = new File(path.getAbsolutePath() + "/" + name + ".maz");
 
 		try {
 			FileOutputStream fout = new FileOutputStream(file);
 			ObjectOutputStream oos = new ObjectOutputStream(fout);
-			oos.writeObject(grid);
+			oos.writeObject(obj);
 
 			oos.close();
 		} catch (IOException e) {
@@ -55,23 +79,27 @@ public class FileUtils {
 		return true;
 	}
 
-	public static DataGrid readDataGrid(File file) {
-		if(!file.exists() || !file.toString().endsWith(".maz")) {
+	@SuppressWarnings("unchecked")
+	public static <T> T readObjectFromFile(File file) {
+		if(!file.exists()) {
 			return null;
 		}
 
-		DataGrid grid = null;
+		T obj = null;
 
 		try {
 			FileInputStream in = new FileInputStream(file);
 			ObjectInputStream ois = new ObjectInputStream(in);
-			grid = (DataGrid) ois.readObject();
+
+			// Unsafe cast usage to avoid creating wrapper methods for every class I want to read/write to
+			// - this shouldn't be an issue regardless
+			obj = (T) ois.readObject();
 
 			ois.close();
-		} catch(IOException | ClassNotFoundException e) {
+		} catch(Exception e) {
 			e.printStackTrace();
 		}
 
-		return grid;
+		return obj;
 	}
 }

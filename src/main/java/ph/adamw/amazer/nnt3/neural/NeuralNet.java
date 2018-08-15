@@ -30,11 +30,12 @@ import ph.adamw.amazer.nnt3.neural.neuron.Neuron;
 import ph.adamw.amazer.nnt3.neural.neuron.NeuronConnection;
 import ph.adamw.amazer.nnt3.neural.neuron.NeuronLayer;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public abstract class NeuralNet implements Runnable, Comparable<NeuralNet> {
+public abstract class NeuralNet implements Runnable, Comparable<NeuralNet>, Serializable {
 	// --- Evaluation properties ---
 	private final NeuralNetSettings settings;
 	@Getter

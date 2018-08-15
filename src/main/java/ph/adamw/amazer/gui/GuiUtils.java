@@ -24,6 +24,7 @@
 
 package ph.adamw.amazer.gui;
 
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 
@@ -61,5 +62,12 @@ class GuiUtils {
 		}
 
 		return null;
+	}
+
+	static void bindIntSliderValueToTextField(Slider s, TextField f) {
+		f.setText((String.valueOf((int) s.getValue())));
+
+		s.valueProperty().addListener((observable, oldValue, newValue)
+				-> f.setText((String.valueOf((int) s.getValue()))));
 	}
 }

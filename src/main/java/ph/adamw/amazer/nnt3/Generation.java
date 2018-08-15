@@ -28,12 +28,13 @@ import lombok.Getter;
 import lombok.Setter;
 import ph.adamw.amazer.nnt3.neural.NeuralNet;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
-public class Generation<T extends NeuralNet> {
+public class Generation<T extends NeuralNet> implements Serializable {
 	private final HashSet<T> members = new HashSet<>();
 
 	@Getter
