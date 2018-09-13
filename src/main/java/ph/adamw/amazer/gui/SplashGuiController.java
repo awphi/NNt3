@@ -63,6 +63,7 @@ public class SplashGuiController {
 
 	@FXML
 	private void initialize() {
+		// Find a less ugly way of doing this
 		GuiUtils.bindIntSliderValueToTextField(hiddenLayersSizeSlider, hiddenLayersSizeTextField);
 		GuiUtils.bindIntSliderValueToTextField(hiddenLayersAmountSlider, hiddenLayersAmountTextField);
 		GuiUtils.bindIntSliderValueToTextField(mutationRateSlider, mutationRateTextField);
@@ -72,6 +73,7 @@ public class SplashGuiController {
 	@FXML
 	private void confirmSettingsPressed(ActionEvent actionEvent) {
 		final NeuralNetSettings s = Mazer.STATIC_SETTINGS;
+		// Possibly change to a builder or factory?
 		final NeuralNetSettings settings =
 				new NeuralNetSettings(
 						s.getInputs(),
