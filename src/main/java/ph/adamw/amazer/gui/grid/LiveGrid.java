@@ -91,7 +91,7 @@ public class LiveGrid extends GridPane {
                             emptyFirstStateFound(GridState.START);
                             emptyFirstStateFound(GridState.GOAL);
                         } else if (targetPane.getCell().getState() == GridState.EMPTY) {
-                            targetPane.setAndDrawState(nextRightClickState());
+                            targetPane.setState(nextRightClickState());
                         }
                     } break;
                 }
@@ -127,7 +127,7 @@ public class LiveGrid extends GridPane {
     public void emptyFirstStateFound(GridState state) {
     	final CellPane d = getFirstState(state);
     	if(d != null) {
-			d.setAndDrawState(GridState.EMPTY);
+			d.setState(GridState.EMPTY);
 		}
     }
 
@@ -167,7 +167,7 @@ public class LiveGrid extends GridPane {
 
         for(int i = 0; i < cache.length; i ++) {
             for(int j = 0; j < cache[i].length; j ++) {
-                getCellAt(i, j).setAndDrawState(cache[i][j].getState());
+                getCellAt(i, j).setState(cache[i][j].getState());
             }
         }
     }

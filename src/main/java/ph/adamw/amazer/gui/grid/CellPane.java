@@ -52,15 +52,15 @@ public class CellPane extends BorderPane {
 		setCenter(state.getText());
 	}
 
-	public void setAndDrawState(GridState state) {
+	public void setState(GridState state) {
 		cell.setState(state);
 		drawState(state);
 	}
 
 	public void switchAndDrawState() {
 		switch (cell.getState()) {
-			case WALL: setAndDrawState(EMPTY); break;
-			case EMPTY: setAndDrawState(WALL); break;
+			case WALL: setState(EMPTY); break;
+			case EMPTY: setState(WALL); break;
 		}
 	}
 }
