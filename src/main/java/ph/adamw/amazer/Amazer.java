@@ -81,7 +81,7 @@ public class Amazer extends Application {
 		((SplashGuiController) loader.getController()).setGrid(grid);
 
 		splashStage = new Stage();
-		splashStage.setTitle("a_mazer - Create New Evolution");
+		splashStage.setTitle("a_mazer - New Evolution");
 		splashStage.initModality(Modality.WINDOW_MODAL);
 		splashStage.initOwner(scene.getWindow());
 		splashStage.setScene(new Scene(splash));

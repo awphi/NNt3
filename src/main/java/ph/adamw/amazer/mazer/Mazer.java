@@ -70,8 +70,6 @@ public class Mazer extends NeuralNet {
 
 		final int cycles = ((int) Math.sqrt(entity.getDataGrid().getHeight() * entity.getDataGrid().getWidth())) * CYCLE_MULTIPLIER;
 
-		boolean exitedEarly = false;
-
 		int cyclesUsed;
 		for(cyclesUsed = 0; cyclesUsed < cycles; cyclesUsed ++) {
 			//TODO look into incremental learning - i.e. only give it X cycles increasing by Y every Z generations so it has to master the first X moves first
@@ -113,6 +111,13 @@ public class Mazer extends NeuralNet {
 
 		//TODO use cyclesUsed here in some way to reward using less
 		fitness = FITNESS_MULTIPLIER / MazerUtils.distanceBetween(entity.getCurrentCol(), entity.getCurrentRow(), entity.getDataGrid().getGoal());
+
+		// VERY experimental feature, needs a system to punish 'repeaters' too
+		/*
+		if(cycles  == cyclesUsed) {
+			fitness -= entity.getStationaryCount();
+		}
+		 */
 	}
 
 	public void playOnGrid(LiveGrid liveGrid, int interval) {

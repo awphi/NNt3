@@ -43,6 +43,9 @@ public class MazerEntity {
 	@Getter
 	protected final DataGrid dataGrid;
 
+	@Getter
+	private int stationaryCount = 0;
+
 	public MazerEntity(DataGrid dataGrid) {
 		this.dataGrid = dataGrid;
 
@@ -67,6 +70,10 @@ public class MazerEntity {
 		if(dataGrid.getDistanceToNextObstacle(currentCol, currentRow, direction) != 0) {
 			currentCol += direction.getX();
 			currentRow += direction.getY();
+
+			stationaryCount = 0;
+		} else {
+			stationaryCount ++;
 		}
 	}
 
