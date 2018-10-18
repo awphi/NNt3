@@ -30,6 +30,7 @@ import lombok.Getter;
 
 import java.io.Serializable;
 
+@Getter
 public enum GridState implements Serializable {
 	EMPTY(Color.TRANSPARENT, null),
 	WALL(Color.BLACK, null),
@@ -37,10 +38,8 @@ public enum GridState implements Serializable {
 	START(Color.LIME, new Text("Start")),
 	GOAL(Color.GREEN, new Text("Goal"));
 
-	@Getter
 	private final Color color;
 
-	@Getter
 	private final Text text;
 
 	GridState(Color color, Text text) {

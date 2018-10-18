@@ -24,6 +24,7 @@
 
 package ph.adamw.amazer.mazer;
 
+import lombok.Getter;
 import ph.adamw.amazer.nnt3.Evolution;
 import ph.adamw.amazer.nnt3.Generation;
 import ph.adamw.amazer.nnt3.neural.NeuralNetSettings;
@@ -36,8 +37,10 @@ import java.io.Serializable;
 import java.net.URL;
 import java.net.URLConnection;
 
-public class MazerEvolution extends Evolution<Mazer> implements Serializable {
+public class MazerEvolution extends Evolution<Mazer> {
 	private final NeuralNetSettings currentSettings;
+
+	@Getter
 	private final DataGrid dataGrid;
 	private final int generationSize;
 
@@ -55,11 +58,8 @@ public class MazerEvolution extends Evolution<Mazer> implements Serializable {
 		final String[] names = getRandomNames(generationSize);
 
 		for(int i = 0; i < generation.getSize(); i ++) {
-			final Mazer brain = new Mazer(currentSettings);
+			final Mazer brain = new Mazer(currentSettings, parent, names == null ? "Mazer" + offlineNameCount : names[i]);
 			brain.setEntity(new MazerEntity(dataGrid));
-
-			final String name = names == null ? "Mazer" + offlineNameCount : names[i];
-			brain.init(parent, name);
 
 			generation.add(brain);
 

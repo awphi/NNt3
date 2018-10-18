@@ -46,20 +46,23 @@ public class Amazer extends Application {
 	@Getter
 	private static Stage stage;
 
-	private static Stage splashStage;
-
-	@Setter
 	@Getter
 	private static MazerEvolution evolution;
+
+	private static MainGuiController gui;
 
 	public static void main(String[] args) {
 		Application.launch(args);
 	}
 
 	@Override
-	public void start(Stage stage) throws Exception {
-		Parent root = FXMLLoader.load(MainGuiController.class.getResource("main.fxml"));
-		scene = new Scene(root, 1280, 760);
+	public void start(Stage stage) throws IOException {
+		final Parent root;
+		final FXMLLoader loader = new FXMLLoader();
+		root = loader.load(MainGuiController.class.getResource("main.fxml").openStream());
+		gui = loader.getController();
+
+		scene = new Scene(root);
 
 		Amazer.stage = stage;
 		stage.setTitle("a_mazer");
@@ -78,14 +81,30 @@ public class Amazer extends Application {
 			return;
 		}
 
+		// Quick cast as it's only used once
 		((SplashGuiController) loader.getController()).setGrid(grid);
 
-		splashStage = new Stage();
+		final Stage splashStage = new Stage();
 		splashStage.setTitle("a_mazer - New Evolution");
 		splashStage.initModality(Modality.WINDOW_MODAL);
 		splashStage.initOwner(scene.getWindow());
 		splashStage.setScene(new Scene(splash));
 		splashStage.setResizable(false);
 		splashStage.show();
+	}
+
+	public static void loadEvolution(MazerEvolution evo) {
+		gui.setGridEditable(false);
+		gui.loadGrid(evo.getDataGrid());
+
+		evolution = evo;
+
+		// Simple logic switch, if it's a newly created evolution we run the next (1st) gen on load, otherwise we just load the current state in
+		// i.e. if it's from disk
+		if(evo.getGeneration() != null) {
+			gui.occupyGenerationList(evo.getGeneration().getSortedCopyOfMembers());
+		} else {
+			gui.onNextGenPressed(null);
+		}
 	}
 }

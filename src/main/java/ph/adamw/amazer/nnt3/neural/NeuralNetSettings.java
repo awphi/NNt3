@@ -28,9 +28,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import ph.adamw.amazer.nnt3.neural.neuron.ActivationFunction;
 
+import java.io.Serializable;
+
 @AllArgsConstructor
 @Getter
-public class NeuralNetSettings {
+public class NeuralNetSettings implements Serializable {
 	private final int inputs;
 	private final int hiddenLayersAmount;
 	private final int hiddenLayersSize;

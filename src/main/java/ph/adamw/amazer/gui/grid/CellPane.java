@@ -41,23 +41,23 @@ public class CellPane extends BorderPane {
 
 	private static final Insets INSETS_2 = new Insets(2, 2, 2, 2);
 
-	public CellPane(DataCell cell) {
+	CellPane(DataCell cell) {
 		this.cell = cell;
 
 		drawState(cell.getState());
 	}
 
-	public void drawState(GridState state) {
+	void drawState(GridState state) {
 		setBackground(new Background(new BackgroundFill(Paint.valueOf(state.getColor().toString()), CornerRadii.EMPTY, INSETS_2)));
 		setCenter(state.getText());
 	}
 
-	public void setState(GridState state) {
+	void setState(GridState state) {
 		cell.setState(state);
 		drawState(state);
 	}
 
-	public void switchAndDrawState() {
+	void switchAndDrawState() {
 		switch (cell.getState()) {
 			case WALL: setState(EMPTY); break;
 			case EMPTY: setState(WALL); break;

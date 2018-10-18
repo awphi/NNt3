@@ -33,6 +33,8 @@ import lombok.Getter;
 import lombok.Setter;
 import ph.adamw.amazer.gui.grid.data.DataCell;
 import ph.adamw.amazer.gui.grid.data.DataGrid;
+import ph.adamw.amazer.mazer.Mazer;
+import ph.adamw.amazer.mazer.entity.DrawingMazerEntity;
 
 public class LiveGrid extends GridPane {
     @Setter
@@ -227,5 +229,13 @@ public class LiveGrid extends GridPane {
         }
 
         return ret;
+    }
+
+    public Mazer playMazer(Mazer mazer, int interval) {
+        // If we're loading form the same session i.e. we have a DataGrid compiled already don't bother remaking it
+        mazer.setEntity(new DrawingMazerEntity(mazer.getEntity() == null ? asDataGrid() : mazer.getEntity().getDataGrid(), this, interval));
+        mazer.start(true);
+
+        return mazer;
     }
 }

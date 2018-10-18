@@ -30,7 +30,7 @@ import ph.adamw.amazer.gui.grid.GridState;
 import ph.adamw.amazer.gui.grid.data.DataGrid;
 import ph.adamw.amazer.gui.grid.LiveGrid;
 
-/**
+/*
  * Overrides MazerEntity's moving method to also draw to a live game grid after moving, used when a single network
  * is ran in preview mode.
  */
@@ -40,8 +40,8 @@ public class DrawingMazerEntity extends MazerEntity {
 	@Setter
 	private int interval;
 
-	public DrawingMazerEntity(DataGrid dataGrid, LiveGrid liveGrid, int interval) {
-		super(dataGrid);
+	public DrawingMazerEntity(DataGrid dg, LiveGrid liveGrid, int interval) {
+		super(dg);
 		this.liveGrid = liveGrid;
 		this.interval = interval;
 

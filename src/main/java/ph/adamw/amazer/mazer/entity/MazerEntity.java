@@ -28,7 +28,9 @@ import ph.adamw.amazer.gui.grid.data.DataCell;
 import ph.adamw.amazer.gui.grid.data.DataGrid;
 import ph.adamw.amazer.mazer.Mazer;
 
-/**
+import java.io.Serializable;
+
+/*
  * Class to allow the Mazer and DataGrid to interface with an entity between them. Also used
  * to add ease of switching between a non-drawing and drawing entity.
  */
@@ -53,27 +55,27 @@ public class MazerEntity {
 	}
 
 	public void move(Double[] values) {
-		if(values.length != Mazer.STATIC_SETTINGS.getOutputs()) {
-			throw new RuntimeException("Unexpected number of mazer outputs given to entity! Expected " + Mazer.STATIC_SETTINGS.getOutputs() +" but got: " + values.length + "!");
+		if (values.length != Mazer.OUTPUTS) {
+			throw new RuntimeException("Unexpected number of mazer outputs given to entity! Expected " + Mazer.OUTPUTS + " but got: " + values.length + "!");
 		}
 
 		int maxIndex = 0;
 
 		// Finds the most wanted movement
-		for(int i = 0; i < values.length; i ++) {
+		for (int i = 0; i < values.length; i++) {
 			maxIndex = Math.max(values[maxIndex], values[i]) == values[maxIndex] ? maxIndex : i;
 		}
 
 		final EntityDirection direction = EntityDirection.get(maxIndex);
 
 		// Checks for collision
-		if(dataGrid.getDistanceToNextObstacle(currentCol, currentRow, direction) != 0) {
+		if (dataGrid.getDistanceToNextObstacle(currentCol, currentRow, direction) != 0) {
 			currentCol += direction.getX();
 			currentRow += direction.getY();
 
 			stationaryCount = 0;
 		} else {
-			stationaryCount ++;
+			stationaryCount++;
 		}
 	}
 

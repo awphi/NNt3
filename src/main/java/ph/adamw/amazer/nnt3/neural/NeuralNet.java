@@ -36,40 +36,35 @@ import java.util.List;
 import java.util.Random;
 
 public abstract class NeuralNet implements Runnable, Comparable<NeuralNet>, Serializable {
-	// --- Evaluation properties ---
 	private final NeuralNetSettings settings;
+
 	@Getter
 	private final List<NeuronLayer> allLayers = new ArrayList<>();
 
-	// --- Threading ---
 	@Getter
 	protected double fitness = 0;
+
 	@Getter
 	private boolean isDone = false;
 
 	private boolean hasRun = false;
-	// -- Evolutionary stuff ---
+
 	@Getter
-	@Setter
 	private String threadName;
 
-	// --- Layers ---
-	protected Thread thread;
 	@Getter
 	private NeuronLayer inputLayer;
+
 	@Getter
 	private List<NeuronLayer> hiddenLayers = new ArrayList<>();
+
 	@Getter
 	private NeuronLayer outputLayer;
 
-	// ------
-
-	public NeuralNet(NeuralNetSettings settings) {
+	public NeuralNet(NeuralNetSettings settings, NeuralNet parent, String threadName) {
 		this.settings = settings;
-	}
 
-	public void init(NeuralNet parent, String threadName) {
-		setThreadName(threadName);
+		this.threadName = threadName;
 
 		inputLayer = new NeuronLayer(settings.getInputs(), settings.getActivationFunction());
 		allLayers.add(inputLayer);
@@ -105,6 +100,7 @@ public abstract class NeuralNet implements Runnable, Comparable<NeuralNet>, Seri
 						connection.setWeight(random.nextFloat() * 2 - 1);
 					}
 			}
+
 			return;
 		}
 
@@ -142,7 +138,7 @@ public abstract class NeuralNet implements Runnable, Comparable<NeuralNet>, Seri
 
 	public void start(boolean threaded) {
 		if (threaded) {
-			thread = new Thread(this, threadName);
+			Thread thread = new Thread(this, threadName);
 			thread.start();
 		} else {
 			run();
@@ -176,6 +172,14 @@ public abstract class NeuralNet implements Runnable, Comparable<NeuralNet>, Seri
 
 	protected abstract void execute();
 
+	public int compareTo(NeuralNet other) {
+		if(fitness == other.fitness) {
+			return 0;
+		}
+
+		return fitness < other.fitness ? 1 : -1;
+	}
+
 	private static class Utils {
 		private static final Random random = new Random();
 
@@ -184,13 +188,5 @@ public abstract class NeuralNet implements Runnable, Comparable<NeuralNet>, Seri
 			parentWeight += parentWeight * (mutateRate * percent);
 			return parentWeight;
 		}
-	}
-
-	public int compareTo(NeuralNet other) {
-		if(fitness == other.fitness) {
-			return 0;
-		}
-
-		return fitness < other.fitness ? 1 : -1;
 	}
 }

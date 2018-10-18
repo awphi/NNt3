@@ -35,7 +35,7 @@
   ~ SOFTWARE.
   -->
 
-<HBox prefHeight="270.0" prefWidth="660.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ph.adamw.amazer.gui.SplashGuiController">
+<HBox prefHeight="270.0" prefWidth="703.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ph.adamw.amazer.gui.SplashGuiController">
    <children>
       <VBox prefHeight="0.0" prefWidth="330.0" style="-fx-border-color: rgba(0, 0, 0, 0.1); -fx-border-width: 0 2px 0 0; -fx-alignment: top-center;" HBox.hgrow="ALWAYS">
          <padding>
@@ -66,7 +66,7 @@
                               <Insets right="5.0" />
                            </HBox.margin>
                         </Slider>
-                        <TextField fx:id="generationSizeTextField" editable="false" prefHeight="15.0" prefWidth="40.0" />
+                        <TextField fx:id="generationSizeTextField" editable="false" prefHeight="15.0" prefWidth="64.0" />
                      </children>
                      <VBox.margin>
                         <Insets bottom="10.0" />
@@ -87,7 +87,7 @@
                               <Insets right="5.0" />
                            </HBox.margin>
                         </Slider>
-                        <TextField fx:id="mutationRateTextField" editable="false" prefHeight="15.0" prefWidth="40.0" />
+                        <TextField fx:id="mutationRateTextField" editable="false" prefHeight="15.0" prefWidth="64.0" />
                      </children>
                      <VBox.margin>
                         <Insets bottom="10.0" />
@@ -108,7 +108,7 @@
                               <Insets right="5.0" />
                            </HBox.margin>
                         </Slider>
-                        <TextField fx:id="hiddenLayersAmountTextField" editable="false" prefHeight="15.0" prefWidth="40.0" />
+                        <TextField fx:id="hiddenLayersAmountTextField" editable="false" prefHeight="15.0" prefWidth="64.0" />
                      </children>
                      <VBox.margin>
                         <Insets bottom="10.0" />
@@ -129,7 +129,7 @@
                               <Insets right="5.0" />
                            </HBox.margin>
                         </Slider>
-                        <TextField fx:id="hiddenLayersSizeTextField" editable="false" prefHeight="15.0" prefWidth="40.0" />
+                        <TextField fx:id="hiddenLayersSizeTextField" editable="false" prefHeight="27.0" prefWidth="64.0" />
                      </children>
                      <VBox.margin>
                         <Insets bottom="10.0" />

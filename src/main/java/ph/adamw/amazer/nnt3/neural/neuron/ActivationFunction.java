@@ -24,7 +24,9 @@
 
 package ph.adamw.amazer.nnt3.neural.neuron;
 
-public abstract class ActivationFunction {
+import java.io.Serializable;
+
+public abstract class ActivationFunction implements Serializable {
 	/*
 		DEFAULT ACTIVATION FUNCTIONS
 	 */

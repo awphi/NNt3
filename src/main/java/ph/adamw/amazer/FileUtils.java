@@ -28,12 +28,7 @@ import javafx.stage.FileChooser;
 import lombok.Getter;
 import ph.adamw.amazer.gui.grid.data.DataGrid;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.URISyntaxException;
 
 public class FileUtils {
@@ -44,11 +39,8 @@ public class FileUtils {
 	private static FileChooser evolutionChooser = new FileChooser();
 
 	static {
-		FileChooser.ExtensionFilter mazeExtFilter = new FileChooser.ExtensionFilter("MAZE files (*.maz)", "*.maz");
-		mazeChooser.getExtensionFilters().add(mazeExtFilter);
-
-		FileChooser.ExtensionFilter evoExtFilter = new FileChooser.ExtensionFilter("MAZER EVOLUTION files (*.evo)", "*.evo");
-		evolutionChooser.getExtensionFilters().add(evoExtFilter);
+		mazeChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("MAZE files (*.maz)", "*.maz"));
+		evolutionChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("MAZER EVOLUTION files (*.evo)", "*.evo"));
 
 		try {
 			final File dir = new File(new File(FileUtils.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile().getPath());
@@ -60,7 +52,7 @@ public class FileUtils {
 		}
 	}
 
-	public static boolean writeObjectToFile(File file, DataGrid obj) {
+	public static boolean writeObjectToFile(File file, Serializable obj) {
 		if(obj == null) {
 			return false;
 		}

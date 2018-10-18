@@ -27,7 +27,10 @@ package ph.adamw.amazer.gui;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
+import javafx.stage.FileChooser;
+import ph.adamw.amazer.Amazer;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.function.UnaryOperator;
 
@@ -50,12 +53,14 @@ class GuiUtils {
 		return null;
 	}
 
+	// TODO is this the cleanest way of doing this?
 	static boolean anyObjectNull(Object... objs) {
 		return Arrays.asList(objs).contains(null);
 	}
 
+	//TODO remove the whole binding thing
 	static Integer getBoundedIntFromField(TextField field, int upper, int lower) {
-		Integer i = getNumberFieldValue(field);
+		final Integer i = getNumberFieldValue(field);
 
 		if(i != null) {
 			return Math.min(Math.max(i, lower), upper);

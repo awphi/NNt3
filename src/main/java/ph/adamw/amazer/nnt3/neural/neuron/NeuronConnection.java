@@ -27,12 +27,13 @@ package ph.adamw.amazer.nnt3.neural.neuron;
 import lombok.Getter;
 import lombok.Setter;
 
-public class NeuronConnection {
-	@Getter
+import java.io.Serializable;
+
+@Getter
+public class NeuronConnection implements Serializable {
 	@Setter
 	private double weight;
 
-	@Getter
 	private Neuron from;
 
 	public NeuronConnection(Neuron from) {

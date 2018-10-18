@@ -53,6 +53,7 @@ public class NeuronLayer extends ArrayList<Neuron> {
 			for (Neuron anOther : other) {
 				// Creates a backwards connection i.e. h0 <- h1
 				// this is then used in h1 to iterate it's connections and pull all the data required
+				// everything works out a lot nicer when a pull architecture is used over a push
 				t.addConnection(new NeuronConnection(anOther));
 			}
 		}

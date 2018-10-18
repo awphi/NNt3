@@ -40,27 +40,29 @@ import java.util.List;
 public class Mazer extends NeuralNet {
 	@Setter
 	@Getter
-	private MazerEntity entity;
+	private transient MazerEntity entity;
 
 	private boolean killed = false;
 
 	private static final int CYCLE_MULTIPLIER = 6;
 	private static final double FITNESS_MULTIPLIER = 100;
 
-	/**
+	/*
+	 * STATIC CONSTANTS OF THE MAZER
 	 * 6 INPUTS = * 4-directional distance to closest obstacle (starts from up then goes clockwise)
 	 * 			  * Distance from current position to goal
 	 * 			  * Angle from current position to goal => w/ distance we effectively give it an *as the crow flies* vector to the goal
 	 *
-	 * 4 OUTPUTS = * 4-directional output (starts from up then goes clockwise) (evaluated and acted upon by character)
+	 * 4 OUTPUTS = * 4-directional output (starts from up then goes clockwise) (evaluated and acted upon by entity)
 	 *
 	 */
-	public static final NeuralNetSettings STATIC_SETTINGS =
-			new NeuralNetSettings(6, 0, 0, 4, 0.25, ActivationFunction.getSigmoid());
+	public static final int INPUTS = 6;
+	public static final int OUTPUTS = 4;
+	public static ActivationFunction ACTIVATION_FUNCTION = ActivationFunction.getSigmoid();
 
 
-	public Mazer(NeuralNetSettings settings) {
-		super(settings);
+	public Mazer(NeuralNetSettings settings, Mazer parent, String name) {
+		super(settings, parent, name);
 	}
 
 	@Override
@@ -91,7 +93,7 @@ public class Mazer extends NeuralNet {
 			inputs.add(MazerUtils.distanceBetween(entity.getCurrentCol(), entity.getCurrentRow(), entity.getDataGrid().getGoal()));
 			inputs.add(MazerUtils.angle(entity.getCurrentCol(), entity.getCurrentRow(), entity.getDataGrid().getGoal()));
 
-			entity.move(evaluate(inputs).toArray(new Double[STATIC_SETTINGS.getOutputs()]));
+			entity.move(evaluate(inputs).toArray(new Double[OUTPUTS]));
 
 			final int intv = entity.getInterval();
 
@@ -110,7 +112,7 @@ public class Mazer extends NeuralNet {
 		}
 
 		//TODO use cyclesUsed here in some way to reward using less
-		fitness = FITNESS_MULTIPLIER / MazerUtils.distanceBetween(entity.getCurrentCol(), entity.getCurrentRow(), entity.getDataGrid().getGoal());
+		fitness = FITNESS_MULTIPLIER / (MazerUtils.distanceBetween(entity.getCurrentCol(), entity.getCurrentRow(), entity.getDataGrid().getGoal()) + 1);
 
 		// VERY experimental feature, needs a system to punish 'repeaters' too
 		/*
@@ -118,11 +120,6 @@ public class Mazer extends NeuralNet {
 			fitness -= entity.getStationaryCount();
 		}
 		 */
-	}
-
-	public void playOnGrid(LiveGrid liveGrid, int interval) {
-		entity = new DrawingMazerEntity(entity.getDataGrid(), liveGrid, interval);
-		start(true);
 	}
 
 	public void kill() {

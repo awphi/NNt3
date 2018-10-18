@@ -30,15 +30,13 @@ import ph.adamw.amazer.gui.grid.GridState;
 
 import java.io.Serializable;
 
+@Getter
 public class DataCell implements Serializable {
-	@Getter
 	protected final int col;
 
-	@Getter
 	protected final int row;
 
 	@Setter
-	@Getter
 	protected GridState state;
 
 	public DataCell(int col, int row, GridState state) {

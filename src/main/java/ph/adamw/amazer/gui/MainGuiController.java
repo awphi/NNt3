@@ -41,8 +41,11 @@ import ph.adamw.amazer.FileUtils;
 import ph.adamw.amazer.gui.grid.data.DataGrid;
 import ph.adamw.amazer.mazer.Mazer;
 import ph.adamw.amazer.gui.grid.LiveGrid;
+import ph.adamw.amazer.mazer.MazerEvolution;
+import ph.adamw.amazer.nnt3.neural.NeuralNet;
 
 import java.io.File;
+import java.util.List;
 
 @NoArgsConstructor
 public class MainGuiController {
@@ -93,6 +96,7 @@ public class MainGuiController {
 
 	@SuppressWarnings("ConstantConditions")
 	private void runGenerations(int amount) {
+		// Have we loaded one yet? I.e. via import
 		if(Amazer.getEvolution() == null) {
 			if (!grid.isValid()) {
 				ErrorGuiController.openError("The current grid form is invalid.", "The grid must contain a start and goal node in order to be solved.");
@@ -104,7 +108,6 @@ public class MainGuiController {
 			return;
 		}
 
-		grid.setEditable(false);
 		gridSizeControlsBox.setDisable(true);
 
 		evolutionControlsBox.setDisable(true);
@@ -125,15 +128,23 @@ public class MainGuiController {
 
 			nextGenButton.setText("Run Generation " + Amazer.getEvolution().getGenerationCount());
 
-			//TODO (FUN) store the evolutionary path of each winner so we can see a sort of family tree, this could store just names or the Mazers themselves
-			mazerListView.getItems().clear();
-
-			for(Mazer i : Amazer.getEvolution().getGeneration().getSortedCopyOfMembers()) {
-				mazerListView.getItems().add(mazerListView.getItems().size(), new MazerListEntry(i));
-			}
+			occupyGenerationList(Amazer.getEvolution().getGeneration().getSortedCopyOfMembers());
 		});
 
 		new Thread(task).start();
+	}
+
+	public void loadGrid(DataGrid gr) {
+		grid.loadDataGrid(gr);
+	}
+
+	public void occupyGenerationList(List<Mazer> nn) {
+		//TODO (FUN) store the evolutionary path of each winner so we can see a sort of family tree, this could store just names or the Mazers themselves
+		mazerListView.getItems().clear();
+
+		for(Mazer i : nn) {
+			mazerListView.getItems().add(mazerListView.getItems().size(), new MazerListEntry(i));
+		}
 	}
 
 	@FXML
@@ -170,12 +181,10 @@ public class MainGuiController {
 			playingMazer.kill();
 		}
 
-		playingMazer = e.getMazer();
-		playingMazer.playOnGrid(grid, 100);
+		playingMazer = grid.playMazer(e.getMazer(), 100);
 	}
 
-	@FXML
-	private void onNextGenPressed(ActionEvent actionEvent) {
+	public void onNextGenPressed(ActionEvent actionEvent) {
 		runGenerations(1);
 	}
 
@@ -202,7 +211,7 @@ public class MainGuiController {
 	private void onImportMazePressed(ActionEvent actionEvent) {
 		final File file = FileUtils.getMazeChooser().showOpenDialog(Amazer.getStage());
 
-		if(file == null || !file.exists()) {
+		if(file == null) {
 			return;
 		}
 
@@ -211,7 +220,7 @@ public class MainGuiController {
 		if(dg != null) {
 			grid.loadDataGrid(dg);
 		} else {
-			ErrorGuiController.openError("Failed to import maze.", "The maze file may have been corrupted or a_mazer does not have the appropriate write permissions to access the given file.");
+			ErrorGuiController.openError("Failed to import maze.", "The maze file may have been corrupted or a_mazer does not have the appropriate read permissions to access the given file.");
 		}
 	}
 
@@ -222,11 +231,40 @@ public class MainGuiController {
 
 	@FXML
 	private void onLoadEvolutionPressed(ActionEvent actionEvent) {
+		final File file = FileUtils.getEvolutionChooser().showOpenDialog(Amazer.getStage());
 
+		if(file == null) {
+			return;
+		}
+
+		final MazerEvolution evo = FileUtils.readObjectFromFile(file);
+
+		if(evo != null) {
+			Amazer.loadEvolution(evo);
+		} else {
+			ErrorGuiController.openError("Failed to import evolution.", "The file may have been corrupted or a_mazer does not have the appropriate write permissions to access the given file.");
+		}
 	}
 
 	@FXML
 	private void onExportEvolutionPressed(ActionEvent actionEvent) {
+		if(Amazer.getEvolution() == null) {
+			ErrorGuiController.openError("Cannot export evolution.", "Please create an evolution before attempting to export.");
+			return;
+		}
 
+		final File file = FileUtils.getEvolutionChooser().showSaveDialog(Amazer.getStage());
+
+		if(file == null) {
+			return;
+		}
+
+		if(!FileUtils.writeObjectToFile(file, Amazer.getEvolution())) {
+			ErrorGuiController.openError("Failed to export evolution.", "Please ensure that a_mazer has appropriate permissions to save files.");
+		}
+	}
+
+	public void setGridEditable(boolean b) {
+		grid.setEditable(b);
 	}
 }

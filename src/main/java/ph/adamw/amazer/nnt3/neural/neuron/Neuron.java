@@ -27,13 +27,16 @@ package ph.adamw.amazer.nnt3.neural.neuron;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Neuron {
+public class Neuron implements Serializable {
 	private final ActivationFunction activationFunction;
+
 	@Getter
 	protected List<NeuronConnection> connections = new ArrayList<>();
+
 	@Getter
 	@Setter
 	private double value = 0;
@@ -42,6 +45,7 @@ public class Neuron {
 		this.activationFunction = activationFunction;
 	}
 
+	// Used to feed all proceeding neuron values into this neuron and activate the new value
 	void feedForward() {
 		for (NeuronConnection connection : connections) {
 			setValue(getValue() + connection.getFrom().getValue() * connection.getWeight());

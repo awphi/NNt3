@@ -72,19 +72,18 @@ public class SplashGuiController {
 
 	@FXML
 	private void confirmSettingsPressed(ActionEvent actionEvent) {
-		final NeuralNetSettings s = Mazer.STATIC_SETTINGS;
 		// Possibly change to a builder or factory?
 		final NeuralNetSettings settings =
 				new NeuralNetSettings(
-						s.getInputs(),
+						Mazer.INPUTS,
 						(int) hiddenLayersAmountSlider.getValue(),
 						(int) hiddenLayersSizeSlider.getValue(),
-						s.getOutputs(),
+						Mazer.OUTPUTS,
 						(int) mutationRateSlider.getValue(),
-						s.getActivationFunction()
+						Mazer.ACTIVATION_FUNCTION
 				);
 
-		Amazer.setEvolution(new MazerEvolution(grid, settings, (int) generationSizeSlider.getValue()));
+		Amazer.loadEvolution(new MazerEvolution(grid, settings, (int) generationSizeSlider.getValue()));
 
 		final Node source = (Node) actionEvent.getSource();
 		((Stage) source.getScene().getWindow()).close();
