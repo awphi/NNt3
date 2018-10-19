@@ -48,11 +48,8 @@ public class LiveGrid extends GridPane {
 
     public LiveGrid(int col, int row) {
         super();
-
         setGridLinesVisible(true);
-
         setSize(col, row);
-
         setPadding(INSETS_20);
 
         setOnMouseReleased(event -> {
@@ -90,8 +87,8 @@ public class LiveGrid extends GridPane {
                     case PRIMARY: targetPane.switchAndDrawState(); break;
                     case SECONDARY: {
                         if(containsState(GridState.GOAL)) {
-                            emptyFirstStateFound(GridState.START);
-                            emptyFirstStateFound(GridState.GOAL);
+                            clearCellWithState(GridState.START);
+                            clearCellWithState(GridState.GOAL);
                         } else if (targetPane.getCell().getState() == GridState.EMPTY) {
                             targetPane.setState(nextRightClickState());
                         }
@@ -119,14 +116,27 @@ public class LiveGrid extends GridPane {
     }
 
     private CellPane getCellAt(int col, int row) {
-        return ((CellPane) getManagedChildren().get((row * getRows()) + col));
+        for(Node i : getManagedChildren()) {
+            if(!(i instanceof CellPane)) {
+                continue;
+            }
+
+            final DataCell c = ((CellPane) i).getCell();
+
+            if(c.getRow() == row && c.getCol() == col) {
+                return (CellPane) i;
+            }
+        }
+
+        // Relatively safe since
+        return null;
     }
 
     public void drawStateAt(int col, int row, GridState state) {
         getCellAt(col, row).drawState(state);
     }
 
-    public void emptyFirstStateFound(GridState state) {
+    public void clearCellWithState(GridState state) {
     	final CellPane d = getFirstState(state);
     	if(d != null) {
 			d.setState(GridState.EMPTY);
@@ -167,8 +177,9 @@ public class LiveGrid extends GridPane {
 
         final DataCell[][] cache = grid.getCells();
 
-        for(int i = 0; i < cache.length; i ++) {
-            for(int j = 0; j < cache[i].length; j ++) {
+        for(int i = 0; i < getCols(); i ++) {
+            for(int j = 0; j < getRows(); j ++) {
+                //Fix broken cellAt
                 getCellAt(i, j).setState(cache[i][j].getState());
             }
         }

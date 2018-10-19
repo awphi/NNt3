@@ -52,20 +52,18 @@ public class DataGrid implements Serializable {
 
 		int x = 0;
 		int y = 0;
+		boolean xBoundsReached = false;
+		boolean yBoundsReached = false;
 
-		while(true) {
+		while(!(xBoundsReached || yBoundsReached || cells[col + x][row + y].getState() == GridState.WALL)) {
 			if(xBased) {
 				x += dir.getX();
 			} else {
 				y += dir.getY();
 			}
 
-			final boolean xBoundsReached = col + x < 0 || col + x > getHeight() - 1;
-			final boolean yBoundsReached = row + y < 0 || row + y > getWidth() - 1;
-
-			if(xBoundsReached || yBoundsReached || cells[col + x][row + y].getState() == GridState.WALL) {
-				break;
-			}
+			xBoundsReached = col + x < 0 || col + x > getWidth() - 1;
+			yBoundsReached = row + y < 0 || row + y > getHeight() - 1;
 		}
 
 		switch (dir) {

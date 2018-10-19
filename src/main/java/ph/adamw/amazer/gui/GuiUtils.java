@@ -24,6 +24,7 @@
 
 package ph.adamw.amazer.gui;
 
+import javafx.scene.control.Alert;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
@@ -53,26 +54,19 @@ class GuiUtils {
 		return null;
 	}
 
-	// TODO is this the cleanest way of doing this?
-	static boolean anyObjectNull(Object... objs) {
-		return Arrays.asList(objs).contains(null);
-	}
-
-	//TODO remove the whole binding thing
-	static Integer getBoundedIntFromField(TextField field, int upper, int lower) {
-		final Integer i = getNumberFieldValue(field);
-
-		if(i != null) {
-			return Math.min(Math.max(i, lower), upper);
-		}
-
-		return null;
-	}
-
 	static void bindIntSliderValueToTextField(Slider s, TextField f) {
 		f.setText((String.valueOf((int) s.getValue())));
 
 		s.valueProperty().addListener((observable, oldValue, newValue)
 				-> f.setText((String.valueOf((int) s.getValue()))));
+	}
+
+	static void openError(String header, String context) {
+		final Alert alert = new Alert(Alert.AlertType.ERROR);
+		alert.setTitle("a_mazer - Severe Error");
+		alert.setHeaderText(header);
+		alert.setContentText(context);
+
+		alert.showAndWait();
 	}
 }

@@ -24,14 +24,12 @@
 
 package ph.adamw.amazer.gui;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.control.Slider;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
@@ -60,6 +58,7 @@ public class MainGuiController {
 
 	@FXML
 	private ListView<MazerListEntry> mazerListView;
+
 	// -- Number Fields --;
     @FXML
 	private TextField gridRowsField;
@@ -76,13 +75,25 @@ public class MainGuiController {
 	@FXML
 	private BorderPane borderPane;
 
+	@FXML
+	private MenuBar menuBar;
+
 	private final LiveGrid grid = new LiveGrid(6, 6);
 
 	private Mazer playingMazer;
 
 	@FXML
+	private Slider gridRowsSlider;
+
+	@FXML
+	private Slider gridColsSlider;
+
+	@FXML
 	private void initialize() {
 	    borderPane.setCenter(grid);
+
+		final String os = System.getProperty("os.name");
+		if (os != null && os.startsWith("Mac")) menuBar.useSystemMenuBarProperty().set(true);
 
 		gridColsField.setText(String.valueOf(grid.getCols()));
 		gridRowsField.setText(String.valueOf(grid.getRows()));
@@ -92,6 +103,12 @@ public class MainGuiController {
 
 		skipGenerationsSlider.valueProperty().addListener(e ->
 				skipGenerationsButton.textProperty().setValue("Skip " + (int) skipGenerationsSlider.getValue() + " Generations"));
+		
+		GuiUtils.bindIntSliderValueToTextField(gridRowsSlider, gridRowsField);
+		GuiUtils.bindIntSliderValueToTextField(gridColsSlider, gridColsField);
+
+		gridRowsSlider.valueProperty().addListener((observable, oldValue, newValue) -> updateSize());
+		gridColsSlider.valueProperty().addListener((observable, oldValue, newValue) -> updateSize());
 	}
 
 	@SuppressWarnings("ConstantConditions")
@@ -99,7 +116,7 @@ public class MainGuiController {
 		// Have we loaded one yet? I.e. via import
 		if(Amazer.getEvolution() == null) {
 			if (!grid.isValid()) {
-				ErrorGuiController.openError("The current grid form is invalid.", "The grid must contain a start and goal node in order to be solved.");
+				GuiUtils.openError("The current grid form is invalid.", "The grid must contain a start and goal node in order to be solved.");
 				return;
 			}
 
@@ -109,7 +126,6 @@ public class MainGuiController {
 		}
 
 		gridSizeControlsBox.setDisable(true);
-
 		evolutionControlsBox.setDisable(true);
 
 		Task<Boolean> task = new Task<Boolean>() {
@@ -147,26 +163,13 @@ public class MainGuiController {
 		}
 	}
 
-	@FXML
-	private void onUpdateGridPressed(ActionEvent actionEvent) {
+	private void updateSize() {
 		if(!grid.isEditable()) {
-			ErrorGuiController.openError("The grid is currently locked", "The grid is currently edit-locked. Please reset the program to unlock it.");
+			GuiUtils.openError("The grid is currently locked", "The grid is currently edit-locked. Please reset the program to unlock it.");
 			return;
 		}
 
-		//TODO remove ugly and weird dependencies on bounding integers in text fields and switch to sliders/dropdowns or something
-		final Integer c = GuiUtils.getBoundedIntFromField(gridColsField, 48, 6);
-		final Integer r = GuiUtils.getBoundedIntFromField(gridRowsField, 48, 6);
-
-		if(GuiUtils.anyObjectNull(c, r)) {
-			ErrorGuiController.openError("There are empty parameters", "A height and width must be given in order to change the grid size.");
-			return;
-		}
-
-		grid.setSize(c, r);
-
-		gridColsField.setText(c.toString());
-		gridRowsField.setText(r.toString());
+		grid.setSize((int) gridColsSlider.getValue(), (int) gridRowsSlider.getValue());
 	}
 
 	@FXML
@@ -203,7 +206,7 @@ public class MainGuiController {
 		}
 
 		if(!FileUtils.writeObjectToFile(file, grid.asDataGrid())) {
-			ErrorGuiController.openError("Failed to export maze.", "Please ensure the maze contains a start and goal node and that a_mazer has appropriate permissions to save files.");
+			GuiUtils.openError("Failed to export maze.", "Please ensure the maze contains a start and goal node and that a_mazer has appropriate permissions to save files.");
 		}
 	}
 
@@ -220,7 +223,7 @@ public class MainGuiController {
 		if(dg != null) {
 			grid.loadDataGrid(dg);
 		} else {
-			ErrorGuiController.openError("Failed to import maze.", "The maze file may have been corrupted or a_mazer does not have the appropriate read permissions to access the given file.");
+			GuiUtils.openError("Failed to import maze.", "The maze file may have been corrupted or a_mazer does not have the appropriate read permissions to access the given file.");
 		}
 	}
 
@@ -242,14 +245,14 @@ public class MainGuiController {
 		if(evo != null) {
 			Amazer.loadEvolution(evo);
 		} else {
-			ErrorGuiController.openError("Failed to import evolution.", "The file may have been corrupted or a_mazer does not have the appropriate write permissions to access the given file.");
+			GuiUtils.openError("Failed to import evolution.", "The file may have been corrupted or a_mazer does not have the appropriate write permissions to access the given file.");
 		}
 	}
 
 	@FXML
 	private void onExportEvolutionPressed(ActionEvent actionEvent) {
 		if(Amazer.getEvolution() == null) {
-			ErrorGuiController.openError("Cannot export evolution.", "Please create an evolution before attempting to export.");
+			GuiUtils.openError("Cannot export evolution.", "Please create an evolution before attempting to export.");
 			return;
 		}
 
@@ -260,7 +263,7 @@ public class MainGuiController {
 		}
 
 		if(!FileUtils.writeObjectToFile(file, Amazer.getEvolution())) {
-			ErrorGuiController.openError("Failed to export evolution.", "Please ensure that a_mazer has appropriate permissions to save files.");
+			GuiUtils.openError("Failed to export evolution.", "Please ensure that a_mazer has appropriate permissions to save files.");
 		}
 	}
 
