@@ -28,32 +28,10 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
-import javafx.stage.FileChooser;
-import ph.adamw.amazer.Amazer;
 
-import java.io.File;
-import java.util.Arrays;
 import java.util.function.UnaryOperator;
 
 class GuiUtils {
-	static final UnaryOperator<TextFormatter.Change> NUMBER_FIELD_OPERATOR = change -> {
-		String text = change.getText();
-
-		if (text.matches("[0-9]*")) {
-			return change;
-		}
-
-		return null;
-	};
-
-	private static Integer getNumberFieldValue(TextField field) {
-		if(field.getTextFormatter().getFilter() == NUMBER_FIELD_OPERATOR && !field.getText().isEmpty()) {
-			return Integer.parseInt(field.getText());
-		}
-
-		return null;
-	}
-
 	static void bindIntSliderValueToTextField(Slider s, TextField f) {
 		f.setText((String.valueOf((int) s.getValue())));
 

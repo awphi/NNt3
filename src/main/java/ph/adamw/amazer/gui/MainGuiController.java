@@ -93,13 +93,9 @@ public class MainGuiController {
 	    borderPane.setCenter(grid);
 
 		final String os = System.getProperty("os.name");
-		if (os != null && os.startsWith("Mac")) menuBar.useSystemMenuBarProperty().set(true);
-
-		gridColsField.setText(String.valueOf(grid.getCols()));
-		gridRowsField.setText(String.valueOf(grid.getRows()));
-
-		gridColsField.setTextFormatter(new TextFormatter<>(GuiUtils.NUMBER_FIELD_OPERATOR));
-		gridRowsField.setTextFormatter(new TextFormatter<>(GuiUtils.NUMBER_FIELD_OPERATOR));
+		if (os != null && os.startsWith("Mac")) {
+			menuBar.useSystemMenuBarProperty().set(true);
+		}
 
 		skipGenerationsSlider.valueProperty().addListener(e ->
 				skipGenerationsButton.textProperty().setValue("Skip " + (int) skipGenerationsSlider.getValue() + " Generations"));
