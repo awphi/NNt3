@@ -25,7 +25,6 @@
 package ph.adamw.amazer.nnt3.neural;
 
 import lombok.Getter;
-import lombok.Setter;
 import ph.adamw.amazer.nnt3.neural.neuron.Neuron;
 import ph.adamw.amazer.nnt3.neural.neuron.NeuronConnection;
 import ph.adamw.amazer.nnt3.neural.neuron.NeuronLayer;
@@ -35,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public abstract class NeuralNet implements Runnable, Comparable<NeuralNet>, Serializable {
+public abstract class Agent implements Runnable, Comparable<Agent>, Serializable {
 	private final NeuralNetSettings settings;
 
 	@Getter
@@ -61,7 +60,7 @@ public abstract class NeuralNet implements Runnable, Comparable<NeuralNet>, Seri
 	@Getter
 	private NeuronLayer outputLayer;
 
-	public NeuralNet(NeuralNetSettings settings, NeuralNet parent, String threadName) {
+	public Agent(NeuralNetSettings settings, Agent parent, String threadName) {
 		this.settings = settings;
 
 		this.threadName = threadName;
@@ -91,7 +90,7 @@ public abstract class NeuralNet implements Runnable, Comparable<NeuralNet>, Seri
 		randomizeWeights(parent);
 	}
 
-	private void randomizeWeights(NeuralNet parent) {
+	private void randomizeWeights(Agent parent) {
 		if (parent == null) {
 			final Random random = new Random();
 			for (NeuronLayer layer : allLayers) {
@@ -112,7 +111,7 @@ public abstract class NeuralNet implements Runnable, Comparable<NeuralNet>, Seri
 
 				for (int k = 0; k < thisNeuron.getConnections().size(); k++) {
 					double w = parentNeuron.getConnections().get(k).getWeight();
-					double mutatedWeight = NeuralNet.Utils.mutateWeight(w, settings.getMutationRate());
+					double mutatedWeight = Agent.Utils.mutateWeight(w, settings.getMutationRate());
 
 					thisNeuron.getConnections().get(k).setWeight(mutatedWeight);
 				}
@@ -149,7 +148,7 @@ public abstract class NeuralNet implements Runnable, Comparable<NeuralNet>, Seri
 	public void run() {
 		isDone = false;
 
-		// If the NeuralNet is being reused, flush the values so behaviour is consistent
+		// If the Agent is being reused, flush the values so behaviour is consistent
 		if(hasRun) {
 			flushValues();
 		}
@@ -172,7 +171,7 @@ public abstract class NeuralNet implements Runnable, Comparable<NeuralNet>, Seri
 
 	protected abstract void execute();
 
-	public int compareTo(NeuralNet other) {
+	public int compareTo(Agent other) {
 		if(fitness == other.fitness) {
 			return 0;
 		}

@@ -44,7 +44,9 @@ public class CellPane extends BorderPane {
 	CellPane(DataCell cell) {
 		this.cell = cell;
 
-		drawState(cell.getState());
+		try {
+			drawState(cell.getState());
+		} catch (Exception ignored) {}
 	}
 
 	void drawState(GridState state) {

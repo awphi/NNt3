@@ -33,11 +33,10 @@ import ph.adamw.amazer.mazer.entity.MazerEntity;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.io.Serializable;
 import java.net.URL;
 import java.net.URLConnection;
 
-public class MazerEvolution extends Evolution<Mazer> {
+public class MazerEvolution extends Evolution<MazerAgent> {
 	private final NeuralNetSettings currentSettings;
 
 	@Getter
@@ -53,12 +52,12 @@ public class MazerEvolution extends Evolution<Mazer> {
 	}
 
 	@Override
-	protected Generation<Mazer> populate(Generation<Mazer> generation) {
+	protected Generation<MazerAgent> populate(Generation<MazerAgent> generation) {
 		generation.setSize(generationSize);
 		final String[] names = getRandomNames(generationSize);
 
 		for(int i = 0; i < generation.getSize(); i ++) {
-			final Mazer brain = new Mazer(currentSettings, parent, names == null ? "Mazer" + offlineNameCount : names[i]);
+			final MazerAgent brain = new MazerAgent(currentSettings, parent, names == null ? "MazerAgent" + offlineNameCount : names[i]);
 			brain.setEntity(new MazerEntity(dataGrid));
 
 			generation.add(brain);

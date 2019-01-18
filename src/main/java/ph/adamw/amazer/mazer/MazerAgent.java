@@ -26,18 +26,16 @@ package ph.adamw.amazer.mazer;
 
 import lombok.Getter;
 import lombok.Setter;
-import ph.adamw.amazer.nnt3.neural.NeuralNet;
+import ph.adamw.amazer.nnt3.neural.Agent;
 import ph.adamw.amazer.nnt3.neural.NeuralNetSettings;
 import ph.adamw.amazer.nnt3.neural.neuron.ActivationFunction;
-import ph.adamw.amazer.gui.grid.LiveGrid;
-import ph.adamw.amazer.mazer.entity.DrawingMazerEntity;
 import ph.adamw.amazer.mazer.entity.EntityDirection;
 import ph.adamw.amazer.mazer.entity.MazerEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Mazer extends NeuralNet {
+public class MazerAgent extends Agent {
 	@Setter
 	@Getter
 	private transient MazerEntity entity;
@@ -61,7 +59,7 @@ public class Mazer extends NeuralNet {
 	public static ActivationFunction ACTIVATION_FUNCTION = ActivationFunction.getSigmoid();
 
 
-	public Mazer(NeuralNetSettings settings, Mazer parent, String name) {
+	public MazerAgent(NeuralNetSettings settings, MazerAgent parent, String name) {
 		super(settings, parent, name);
 	}
 
@@ -70,10 +68,10 @@ public class Mazer extends NeuralNet {
 		killed = false;
 		entity.reset();
 
-		final int cycles = ((int) Math.sqrt(entity.getDataGrid().getHeight() * entity.getDataGrid().getWidth())) * CYCLE_MULTIPLIER;
+		final int maxCycles = ((int) Math.sqrt(entity.getDataGrid().getHeight() * entity.getDataGrid().getWidth())) * CYCLE_MULTIPLIER;
 
-		int cyclesUsed;
-		for(cyclesUsed = 0; cyclesUsed < cycles; cyclesUsed ++) {
+		int cyclesUsed = 0;
+		while(cyclesUsed < maxCycles && !(entity.getCurrentCol() == entity.getDataGrid().getGoal().getCol() && entity.getCurrentRow() == entity.getDataGrid().getGoal().getRow())) {
 			//TODO look into incremental learning - i.e. only give it X cycles increasing by Y every Z generations so it has to master the first X moves first
 
 			// If the thread is halted from an outside thread then exit without modifying the fitness
@@ -94,25 +92,22 @@ public class Mazer extends NeuralNet {
 			inputs.add(MazerUtils.angle(entity.getCurrentCol(), entity.getCurrentRow(), entity.getDataGrid().getGoal()));
 
 			entity.move(evaluate(inputs).toArray(new Double[OUTPUTS]));
+			cyclesUsed ++;
 
-			final int intv = entity.getInterval();
+			final int interval = entity.getInterval();
 
-			if(intv > 0) {
+			if(interval > 0) {
 				try {
-					Thread.sleep(intv);
+					Thread.sleep(interval);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
-					return;
 				}
-			}
-
-			if(entity.getCurrentCol() == entity.getDataGrid().getGoal().getCol() && entity.getCurrentRow() == entity.getDataGrid().getGoal().getRow()) {
-				break;
 			}
 		}
 
-		//TODO use cyclesUsed here in some way to reward using less
-		fitness = FITNESS_MULTIPLIER / (MazerUtils.distanceBetween(entity.getCurrentCol(), entity.getCurrentRow(), entity.getDataGrid().getGoal()) + 1);
+		//TODO testing cyclesUsed in here
+		final double y = (1 - (cyclesUsed / maxCycles));
+		fitness = (y == 0 ? 1 : y) * (FITNESS_MULTIPLIER / (MazerUtils.distanceBetween(entity.getCurrentCol(), entity.getCurrentRow(), entity.getDataGrid().getGoal()) + 1));
 
 		// VERY experimental feature, needs a system to punish 'repeaters' too
 		/*

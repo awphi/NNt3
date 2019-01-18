@@ -26,23 +26,23 @@ package ph.adamw.amazer.gui;
 
 import javafx.scene.text.Text;
 import lombok.Getter;
-import ph.adamw.amazer.mazer.Mazer;
+import ph.adamw.amazer.mazer.MazerAgent;
 
 import java.text.DecimalFormat;
 
 public class MazerListEntry extends Text {
 	@Getter
-	private final Mazer mazer;
+	private final MazerAgent agent;
 
 	private final static DecimalFormat TWO_DP = new DecimalFormat("0.##");
 
-	public MazerListEntry(Mazer mazer) {
-		super(formatText(mazer));
+	public MazerListEntry(MazerAgent agent) {
+		super(formatText(agent));
 
-		this.mazer = mazer;
+		this.agent = agent;
 	}
 
-	private static String formatText(Mazer mazer) {
-		return mazer.getThreadName() + " @ " + TWO_DP.format(mazer.getFitness()) + " fit";
+	private static String formatText(MazerAgent agent) {
+		return agent.getThreadName() + " @ " + TWO_DP.format(agent.getFitness()) + " fit";
 	}
 }

@@ -26,12 +26,10 @@ package ph.adamw.amazer.mazer.entity;
 import lombok.Getter;
 import ph.adamw.amazer.gui.grid.data.DataCell;
 import ph.adamw.amazer.gui.grid.data.DataGrid;
-import ph.adamw.amazer.mazer.Mazer;
-
-import java.io.Serializable;
+import ph.adamw.amazer.mazer.MazerAgent;
 
 /*
- * Class to allow the Mazer and DataGrid to interface with an entity between them. Also used
+ * Class to allow the MazerAgent and DataGrid to interface with an entity between them. Also used
  * to add ease of switching between a non-drawing and drawing entity.
  */
 public class MazerEntity {
@@ -55,24 +53,25 @@ public class MazerEntity {
 	}
 
 	public void move(Double[] values) {
-		if (values.length != Mazer.OUTPUTS) {
-			throw new RuntimeException("Unexpected number of mazer outputs given to entity! Expected " + Mazer.OUTPUTS + " but got: " + values.length + "!");
+		if (values.length != MazerAgent.OUTPUTS) {
+			throw new RuntimeException("Unexpected number of mazer outputs given to entity! Expected " + MazerAgent.OUTPUTS + " but got: " + values.length + "!");
 		}
 
 		int maxIndex = 0;
 
-		// Finds the most wanted movement
+		// Finds the 'most wanted' movement i.e. the direction with the highest weight
 		for (int i = 0; i < values.length; i++) {
 			maxIndex = Math.max(values[maxIndex], values[i]) == values[maxIndex] ? maxIndex : i;
 		}
 
 		final EntityDirection direction = EntityDirection.get(maxIndex);
 
-		// Checks for collision
+		// Collision detection
 		if (dataGrid.getDistanceToNextObstacle(currentCol, currentRow, direction) != 0) {
 			currentCol += direction.getX();
 			currentRow += direction.getY();
 
+			// Used to 'push' the agent into doing something by changing it's inputs even if it hits a wall
 			stationaryCount = 0;
 		} else {
 			stationaryCount++;

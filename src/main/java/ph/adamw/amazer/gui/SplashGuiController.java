@@ -33,7 +33,7 @@ import javafx.stage.Stage;
 import lombok.Setter;
 import ph.adamw.amazer.Amazer;
 import ph.adamw.amazer.gui.grid.data.DataGrid;
-import ph.adamw.amazer.mazer.Mazer;
+import ph.adamw.amazer.mazer.MazerAgent;
 import ph.adamw.amazer.mazer.MazerEvolution;
 import ph.adamw.amazer.nnt3.neural.NeuralNetSettings;
 
@@ -63,7 +63,7 @@ public class SplashGuiController {
 
 	@FXML
 	private void initialize() {
-		// Find a less ugly way of doing this
+		//TODO Find a less ugly way of doing this
 		GuiUtils.bindIntSliderValueToTextField(hiddenLayersSizeSlider, hiddenLayersSizeTextField);
 		GuiUtils.bindIntSliderValueToTextField(hiddenLayersAmountSlider, hiddenLayersAmountTextField);
 		GuiUtils.bindIntSliderValueToTextField(mutationRateSlider, mutationRateTextField);
@@ -72,15 +72,14 @@ public class SplashGuiController {
 
 	@FXML
 	private void confirmSettingsPressed(ActionEvent actionEvent) {
-		// Possibly change to a builder or factory?
 		final NeuralNetSettings settings =
 				new NeuralNetSettings(
-						Mazer.INPUTS,
+						MazerAgent.INPUTS,
 						(int) hiddenLayersAmountSlider.getValue(),
 						(int) hiddenLayersSizeSlider.getValue(),
-						Mazer.OUTPUTS,
+						MazerAgent.OUTPUTS,
 						(int) mutationRateSlider.getValue(),
-						Mazer.ACTIVATION_FUNCTION
+						MazerAgent.ACTIVATION_FUNCTION
 				);
 
 		Amazer.loadEvolution(new MazerEvolution(grid, settings, (int) generationSizeSlider.getValue()));

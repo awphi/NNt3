@@ -26,7 +26,6 @@ package ph.adamw.amazer;
 
 import javafx.stage.FileChooser;
 import lombok.Getter;
-import ph.adamw.amazer.gui.grid.data.DataGrid;
 
 import java.io.*;
 import java.net.URISyntaxException;

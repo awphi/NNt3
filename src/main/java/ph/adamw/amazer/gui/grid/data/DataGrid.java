@@ -46,6 +46,35 @@ public class DataGrid implements Serializable {
 	private final DataCell start;
 	private final DataCell goal;
 
+	public boolean findPath(int col, int row) {
+		final DataCell right = cells[col + 1][row];
+		final DataCell left = cells[col - 1][row];
+		final DataCell up = cells[col][row - 1];
+		final DataCell down = cells[col][row + 1];
+
+		if (right.getState() == GridState.GOAL || up.getState() == GridState.GOAL || left.getState() == GridState.GOAL || down.getState() == GridState.GOAL) {
+			return true;
+		}
+
+		if (right.getState() == GridState.EMPTY) {
+			return findPath(col + 1, row);
+		}
+
+		if (down.getState() == GridState.EMPTY) {
+			return findPath(col, row + 1);
+		}
+
+		if (left.getState() == GridState.EMPTY) {
+			return findPath(col - 1, row);
+		}
+
+		if (up.getState() == GridState.EMPTY) {
+			return findPath(col, row - 1);
+		}
+
+		return false;
+	}
+
 	public int getDistanceToNextObstacle(int col, int row, EntityDirection dir) {
 		// Finds out if the movement is left/right or up/down
 		final boolean xBased = dir.getX() != 0;

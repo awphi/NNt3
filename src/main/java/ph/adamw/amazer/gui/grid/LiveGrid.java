@@ -33,7 +33,7 @@ import lombok.Getter;
 import lombok.Setter;
 import ph.adamw.amazer.gui.grid.data.DataCell;
 import ph.adamw.amazer.gui.grid.data.DataGrid;
-import ph.adamw.amazer.mazer.Mazer;
+import ph.adamw.amazer.mazer.MazerAgent;
 import ph.adamw.amazer.mazer.entity.DrawingMazerEntity;
 
 public class LiveGrid extends GridPane {
@@ -129,7 +129,7 @@ public class LiveGrid extends GridPane {
         }
 
         // Relatively safe since
-        return null;
+        return new CellPane(new DataCell(-1, -1, null));
     }
 
     public void drawStateAt(int col, int row, GridState state) {
@@ -144,7 +144,8 @@ public class LiveGrid extends GridPane {
     }
 
     public boolean isValid() {
-        return containsState(GridState.GOAL) && containsState(GridState.START);
+        final DataCell cell = getFirstState(GridState.START).getCell();
+        return /*asDataGrid().findPath(cell.getCol(), cell.getRow()) &&*/ containsState(GridState.GOAL) && containsState(GridState.START);
     }
 
     public DataGrid asDataGrid() {
@@ -163,7 +164,6 @@ public class LiveGrid extends GridPane {
             }
         }
 
-        // Inspection disabled as isValid() method guarantees we have a START and GOAL
         if(isValid()) {
             //noinspection ConstantConditions
             return new DataGrid(getCols(), getRows(), dataCells, getFirstState(GridState.START).getCell(), getFirstState(GridState.GOAL).getCell());
@@ -179,7 +179,6 @@ public class LiveGrid extends GridPane {
 
         for(int i = 0; i < getCols(); i ++) {
             for(int j = 0; j < getRows(); j ++) {
-                //Fix broken cellAt
                 getCellAt(i, j).setState(cache[i][j].getState());
             }
         }
@@ -242,11 +241,11 @@ public class LiveGrid extends GridPane {
         return ret;
     }
 
-    public Mazer playMazer(Mazer mazer, int interval) {
+    public MazerAgent playMazer(MazerAgent agent, int interval) {
         // If we're loading form the same session i.e. we have a DataGrid compiled already don't bother remaking it
-        mazer.setEntity(new DrawingMazerEntity(mazer.getEntity() == null ? asDataGrid() : mazer.getEntity().getDataGrid(), this, interval));
-        mazer.start(true);
+        agent.setEntity(new DrawingMazerEntity(agent.getEntity() == null ? asDataGrid() : agent.getEntity().getDataGrid(), this, interval));
+        agent.start(true);
 
-        return mazer;
+        return agent;
     }
 }

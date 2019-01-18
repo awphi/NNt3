@@ -26,7 +26,7 @@ package ph.adamw.amazer.nnt3;
 
 import lombok.Getter;
 import lombok.Setter;
-import ph.adamw.amazer.nnt3.neural.NeuralNet;
+import ph.adamw.amazer.nnt3.neural.Agent;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
-public class Generation<T extends NeuralNet> implements Serializable {
+public class Generation<T extends Agent> implements Serializable {
 	private final HashSet<T> members = new HashSet<>();
 
 	@Getter

@@ -24,8 +24,6 @@
 
 package ph.adamw.amazer.gui;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -37,10 +35,9 @@ import lombok.NoArgsConstructor;
 import ph.adamw.amazer.Amazer;
 import ph.adamw.amazer.FileUtils;
 import ph.adamw.amazer.gui.grid.data.DataGrid;
-import ph.adamw.amazer.mazer.Mazer;
+import ph.adamw.amazer.mazer.MazerAgent;
 import ph.adamw.amazer.gui.grid.LiveGrid;
 import ph.adamw.amazer.mazer.MazerEvolution;
-import ph.adamw.amazer.nnt3.neural.NeuralNet;
 
 import java.io.File;
 import java.util.List;
@@ -80,7 +77,7 @@ public class MainGuiController {
 
 	private final LiveGrid grid = new LiveGrid(6, 6);
 
-	private Mazer playingMazer;
+	private MazerAgent agent;
 
 	@FXML
 	private Slider gridRowsSlider;
@@ -116,7 +113,7 @@ public class MainGuiController {
 		// Have we loaded one yet? I.e. via import
 		if(Amazer.getEvolution() == null) {
 			if (!grid.isValid()) {
-				GuiUtils.openError("The current grid form is invalid.", "The grid must contain a start and goal node in order to be solved.");
+				GuiUtils.openError("The current grid form is invalid.", "The grid must contain a start node, a goal node and be possible to solve.");
 				return;
 			}
 
@@ -154,11 +151,11 @@ public class MainGuiController {
 		grid.loadDataGrid(gr);
 	}
 
-	public void occupyGenerationList(List<Mazer> nn) {
+	public void occupyGenerationList(List<MazerAgent> nn) {
 		//TODO (FUN) store the evolutionary path of each winner so we can see a sort of family tree, this could store just names or the Mazers themselves
 		mazerListView.getItems().clear();
 
-		for(Mazer i : nn) {
+		for(MazerAgent i : nn) {
 			mazerListView.getItems().add(mazerListView.getItems().size(), new MazerListEntry(i));
 		}
 	}
@@ -180,11 +177,11 @@ public class MainGuiController {
 			return;
 		}
 
-		if(playingMazer != null) {
-			playingMazer.kill();
+		if(agent != null) {
+			agent.kill();
 		}
 
-		playingMazer = grid.playMazer(e.getMazer(), 100);
+		agent = grid.playMazer(e.getAgent(), 100);
 	}
 
 	public void onNextGenPressed(ActionEvent actionEvent) {

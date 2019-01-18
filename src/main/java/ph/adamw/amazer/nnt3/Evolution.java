@@ -25,11 +25,11 @@
 package ph.adamw.amazer.nnt3;
 
 import lombok.Getter;
-import ph.adamw.amazer.nnt3.neural.NeuralNet;
+import ph.adamw.amazer.nnt3.neural.Agent;
 
 import java.io.Serializable;
 
-public abstract class Evolution<T extends NeuralNet> implements Serializable {
+public abstract class Evolution<T extends Agent> implements Serializable {
 	protected T parent;
 
 	@Getter
