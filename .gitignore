@@ -48,6 +48,9 @@
 .idea/*.iml
 .idea/modules
 
+.DS_Store
+*/**/.DS_Store
+
 # CMake
 cmake-build-*/
 
