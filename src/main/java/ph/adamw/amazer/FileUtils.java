@@ -70,7 +70,6 @@ public class FileUtils {
 		return true;
 	}
 
-	@SuppressWarnings("unchecked")
 	public static <T> T readObjectFromFile(File file) {
 		if(!file.exists()) {
 			return null;

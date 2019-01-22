@@ -27,32 +27,11 @@ package ph.adamw.amazer.nnt3.neural.neuron;
 import java.io.Serializable;
 
 public abstract class ActivationFunction implements Serializable {
-	/*
-		DEFAULT ACTIVATION FUNCTIONS
-	 */
 	public static ActivationFunction getSigmoid() {
 		return new ActivationFunction() {
 			@Override
 			public double activate(double value) {
 				return 1 / (1 + Math.exp(-value));
-			}
-		};
-	}
-
-	public static ActivationFunction getStep() {
-		return new ActivationFunction() {
-			@Override
-			public double activate(double value) {
-				return value >= 0 ? 1 : 0;
-			}
-		};
-	}
-
-	public static ActivationFunction getTanh() {
-		return new ActivationFunction() {
-			@Override
-			public double activate(double value) {
-				return Math.tanh(value);
 			}
 		};
 	}

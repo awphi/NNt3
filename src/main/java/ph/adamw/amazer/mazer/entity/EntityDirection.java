@@ -27,12 +27,10 @@ package ph.adamw.amazer.mazer.entity;
 import lombok.Getter;
 
 public enum EntityDirection {
-	UP(0, 0, -1),
-	RIGHT(1, 1, 0),
-	DOWN(2, 0, 1),
-	LEFT(3, -1, 0);
-
-	private final int ord;
+	UP(0, -1),
+	RIGHT(1, 0),
+	DOWN(0, 1),
+	LEFT(-1, 0);
 
 	@Getter
 	private final int x;
@@ -41,8 +39,7 @@ public enum EntityDirection {
 
 	public static final EntityDirection[] VALUES = values();
 
-	EntityDirection(int ord, int x, int y) {
-		this.ord = ord;
+	EntityDirection(int x, int y) {
 		this.x = x;
 		this.y = y;
 	}

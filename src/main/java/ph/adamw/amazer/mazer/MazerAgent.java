@@ -56,7 +56,7 @@ public class MazerAgent extends Agent {
 	 */
 	public static final int INPUTS = 6;
 	public static final int OUTPUTS = 4;
-	public static ActivationFunction ACTIVATION_FUNCTION = ActivationFunction.getSigmoid();
+	public static final ActivationFunction ACTIVATION_FUNCTION = ActivationFunction.getSigmoid();
 
 
 	public MazerAgent(NeuralNetSettings settings, MazerAgent parent, String name) {
@@ -73,7 +73,6 @@ public class MazerAgent extends Agent {
 		int cyclesUsed = 0;
 		while(cyclesUsed < maxCycles && !(entity.getCurrentCol() == entity.getDataGrid().getGoal().getCol() && entity.getCurrentRow() == entity.getDataGrid().getGoal().getRow())) {
 			//TODO look into incremental learning - i.e. only give it X cycles increasing by Y every Z generations so it has to master the first X moves first
-
 			// If the thread is halted from an outside thread then exit without modifying the fitness
 			if(killed) {
 				entity.reset();
@@ -92,11 +91,9 @@ public class MazerAgent extends Agent {
 			inputs.add(MazerUtils.bearing(entity.getCurrentCol(), entity.getCurrentRow(), entity.getDataGrid().getGoal()));
 
 			entity.move(evaluate(inputs).toArray(new Double[OUTPUTS]));
-
 			cyclesUsed ++;
 
 			final int interval = entity.getInterval();
-
 			if(interval > 0) {
 				try {
 					Thread.sleep(interval);
@@ -108,7 +105,6 @@ public class MazerAgent extends Agent {
 
 		final double y = -(1 / maxCycles) * cyclesUsed + 1;
 		final double distanceFromCurrent = MazerUtils.distanceBetween(entity.getCurrentCol(), entity.getCurrentRow(), entity.getDataGrid().getGoal()) + 1;
-
 		fitness = y * (FITNESS_MULTIPLIER / distanceFromCurrent);
 		//TODO look into an elasticity fitness score i.e. increasing tension rewards a little, decreasing tension rewards alot
 	}

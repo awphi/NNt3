@@ -63,7 +63,7 @@ public class SplashGuiController {
 
 	@FXML
 	private void initialize() {
-		//TODO Find a less ugly way of doing this
+		//TODO Find a less ugly way of doing this (i.e. band them together into 1 componentpair)
 		GuiUtils.bindIntSliderValueToTextField(hiddenLayersSizeSlider, hiddenLayersSizeTextField);
 		GuiUtils.bindIntSliderValueToTextField(hiddenLayersAmountSlider, hiddenLayersAmountTextField);
 		GuiUtils.bindIntSliderValueToTextField(mutationRateSlider, mutationRateTextField);
