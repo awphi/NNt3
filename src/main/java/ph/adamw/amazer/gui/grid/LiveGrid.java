@@ -144,32 +144,25 @@ public class LiveGrid extends GridPane {
     }
 
     public boolean isValid() {
-        final DataCell cell = getFirstState(GridState.START).getCell();
-        return /*asDataGrid().findPath(cell.getCol(), cell.getRow()) &&*/ containsState(GridState.GOAL) && containsState(GridState.START);
+        return containsState(GridState.GOAL) && containsState(GridState.START);
     }
 
     public DataGrid asDataGrid() {
         final DataCell[][] dataCells = new DataCell[getCols()][getRows()];
 
-        int colCount = 0;
-        int rowCount = 0;
-
         for(Node i : getManagedChildren()) {
-            dataCells[colCount][rowCount] = ((CellPane) i).getCell();
-            colCount ++;
-
-            if(colCount == getCols()) {
-                rowCount ++;
-                colCount = 0;
+            if(i instanceof CellPane) {
+                final DataCell dc = ((CellPane) i).getCell();
+                dataCells[dc.getCol()][dc.getRow()] = dc;
             }
         }
 
         if(isValid()) {
             //noinspection ConstantConditions
             return new DataGrid(getCols(), getRows(), dataCells, getFirstState(GridState.START).getCell(), getFirstState(GridState.GOAL).getCell());
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     public void loadDataGrid(DataGrid grid) {

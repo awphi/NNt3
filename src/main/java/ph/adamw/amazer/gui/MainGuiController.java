@@ -112,7 +112,8 @@ public class MainGuiController {
 	private void runGenerations(int amount) {
 		// Have we loaded one yet? I.e. via import
 		if(Amazer.getEvolution() == null) {
-			if (!grid.isValid()) {
+			final DataGrid dg = grid.asDataGrid();
+			if (!grid.isValid() || !dg.findPath(new boolean[grid.getCols()][grid.getRows()], dg.getStart().getCol(), dg.getStart().getRow())) {
 				GuiUtils.openError("The current grid form is invalid.", "The grid must contain a start node, a goal node and be possible to solve.");
 				return;
 			}
@@ -153,7 +154,8 @@ public class MainGuiController {
 
 	public void occupyGenerationList(List<MazerAgent> nn) {
 		//TODO (FUN) store the evolutionary path of each winner so we can see a sort of family tree, this could store just names or the Mazers themselves
-		mazerListView.getItems().clear();
+		// this would exponentially increase memory usage though
+        mazerListView.getItems().clear();
 
 		for(MazerAgent i : nn) {
 			mazerListView.getItems().add(mazerListView.getItems().size(), new MazerListEntry(i));

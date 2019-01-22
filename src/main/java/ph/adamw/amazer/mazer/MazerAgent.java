@@ -87,11 +87,12 @@ public class MazerAgent extends Agent {
 				inputs.add((double) entity.getDataGrid().getDistanceToNextObstacle(entity.getCurrentCol(), entity.getCurrentRow(), dir));
 			}
 
-			// Distance and angle (a vector) between entity and the goal
+			// Distance and bearing (a vector) between entity and the goal
 			inputs.add(MazerUtils.distanceBetween(entity.getCurrentCol(), entity.getCurrentRow(), entity.getDataGrid().getGoal()));
-			inputs.add(MazerUtils.angle(entity.getCurrentCol(), entity.getCurrentRow(), entity.getDataGrid().getGoal()));
+			inputs.add(MazerUtils.bearing(entity.getCurrentCol(), entity.getCurrentRow(), entity.getDataGrid().getGoal()));
 
 			entity.move(evaluate(inputs).toArray(new Double[OUTPUTS]));
+
 			cyclesUsed ++;
 
 			final int interval = entity.getInterval();
@@ -105,16 +106,11 @@ public class MazerAgent extends Agent {
 			}
 		}
 
-		//TODO testing cyclesUsed in here
-		final double y = (1 - (cyclesUsed / maxCycles));
-		fitness = (y == 0 ? 1 : y) * (FITNESS_MULTIPLIER / (MazerUtils.distanceBetween(entity.getCurrentCol(), entity.getCurrentRow(), entity.getDataGrid().getGoal()) + 1));
+		final double y = -(1 / maxCycles) * cyclesUsed + 1;
+		final double distanceFromCurrent = MazerUtils.distanceBetween(entity.getCurrentCol(), entity.getCurrentRow(), entity.getDataGrid().getGoal()) + 1;
 
-		// VERY experimental feature, needs a system to punish 'repeaters' too
-		/*
-		if(cycles  == cyclesUsed) {
-			fitness -= entity.getStationaryCount();
-		}
-		 */
+		fitness = y * (FITNESS_MULTIPLIER / distanceFromCurrent);
+		//TODO look into an elasticity fitness score i.e. increasing tension rewards a little, decreasing tension rewards alot
 	}
 
 	public void kill() {

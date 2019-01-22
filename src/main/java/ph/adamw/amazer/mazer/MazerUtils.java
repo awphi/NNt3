@@ -34,7 +34,7 @@ class MazerUtils {
 		return Math.sqrt(colDiff + rowDiff);
 	}
 
-	static double angle(int col, int row, DataCell other) {
+	static double bearing(int col, int row, DataCell other) {
 		final double deltaY = (row - other.getRow());
 		final double deltaX = (other.getCol() - col);
 		return Math.atan2(deltaX, deltaY);
