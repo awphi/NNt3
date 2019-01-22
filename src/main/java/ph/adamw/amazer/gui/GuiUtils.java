@@ -33,15 +33,28 @@ import java.util.function.UnaryOperator;
 
 class GuiUtils {
 	static void bindIntSliderValueToTextField(Slider s, TextField f) {
+		f.setEditable(false);
 		f.setText((String.valueOf((int) s.getValue())));
 
 		s.valueProperty().addListener((observable, oldValue, newValue)
 				-> f.setText((String.valueOf((int) s.getValue()))));
 	}
 
-	static void openError(String header, String context) {
-		final Alert alert = new Alert(Alert.AlertType.ERROR);
-		alert.setTitle("a_mazer - Severe Error");
+	private static String getNameOfAlert(Alert.AlertType type) {
+		switch (type) {
+			case INFORMATION: return "Information";
+			case ERROR: return "Error";
+			case WARNING: return "Warning";
+			case CONFIRMATION: return "Confirmation";
+		}
+
+		return "";
+	}
+
+	static void alert(Alert.AlertType type, String header, String context) {
+		final Alert alert = new Alert(type);
+		final String name = getNameOfAlert(type);
+		alert.setTitle("a_mazer" + (name.length() > 0 ? " - " + name : ""));
 		alert.setHeaderText(header);
 		alert.setContentText(context);
 

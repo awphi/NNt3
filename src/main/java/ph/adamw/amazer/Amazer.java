@@ -31,13 +31,15 @@ import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import lombok.Getter;
-import lombok.Setter;
 import ph.adamw.amazer.gui.MainGuiController;
 import ph.adamw.amazer.gui.SplashGuiController;
 import ph.adamw.amazer.gui.grid.data.DataGrid;
 import ph.adamw.amazer.mazer.MazerEvolution;
 
+import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
+import java.net.URL;
 
 public class Amazer extends Application {
 	@Getter

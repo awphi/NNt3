@@ -71,7 +71,6 @@ public class MazerEntity {
 			currentCol += direction.getX();
 			currentRow += direction.getY();
 
-			// Used to 'push' the agent into doing something by changing it's inputs even if it hits a wall
 			stationaryCount = 0;
 		} else {
 			stationaryCount++;
@@ -86,7 +85,7 @@ public class MazerEntity {
 		return 0;
 	}
 
-	public void resetPosition() {
+	private void resetPosition() {
 		final DataCell c = dataGrid.getStart();
 		currentCol = c.getCol();
 		currentRow = c.getRow();

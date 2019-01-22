@@ -75,7 +75,7 @@ public class LiveGrid extends GridPane {
             }
 
             if(hoveredPane.getCell().getState() == dragOverrideState && targetPane != hoveredPane) {
-                hoveredPane.switchAndDrawState();
+                hoveredPane.switchState();
             }
         });
 
@@ -84,7 +84,7 @@ public class LiveGrid extends GridPane {
                 final CellPane targetPane = (CellPane) event.getTarget();
 
                 switch(event.getButton()) {
-                    case PRIMARY: targetPane.switchAndDrawState(); break;
+                    case PRIMARY: targetPane.switchState(); break;
                     case SECONDARY: {
                         if(containsState(GridState.GOAL)) {
                             clearCellWithState(GridState.START);

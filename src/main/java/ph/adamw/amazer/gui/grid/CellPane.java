@@ -59,7 +59,7 @@ public class CellPane extends BorderPane {
 		drawState(state);
 	}
 
-	void switchAndDrawState() {
+	void switchState() {
 		switch (cell.getState()) {
 			case WALL: setState(EMPTY); break;
 			case EMPTY: setState(WALL); break;

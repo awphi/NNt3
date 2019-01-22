@@ -110,7 +110,7 @@ public class MainGuiController {
 		if(Amazer.getEvolution() == null) {
 			final DataGrid dg = grid.asDataGrid();
 			if (!grid.isValid() || !dg.findPath(new boolean[grid.getCols()][grid.getRows()], dg.getStart().getCol(), dg.getStart().getRow())) {
-				GuiUtils.openError("The current grid form is invalid.", "The grid must contain a start node, a goal node and be possible to solve.");
+				GuiUtils.alert(Alert.AlertType.ERROR,"The current grid form is invalid.", "The grid must contain a start node, a goal node and be possible to solve.");
 				return;
 			}
 
@@ -160,7 +160,7 @@ public class MainGuiController {
 
 	private void updateSize() {
 		if(!grid.isEditable()) {
-			GuiUtils.openError("The grid is currently locked", "The grid is currently edit-locked. Please reset the program to unlock it.");
+			GuiUtils.alert(Alert.AlertType.WARNING,"The grid is currently locked", "The grid is currently edit-locked. Please reset the program to unlock it.");
 			return;
 		}
 
@@ -201,7 +201,7 @@ public class MainGuiController {
 		}
 
 		if(!FileUtils.writeObjectToFile(file, grid.asDataGrid())) {
-			GuiUtils.openError("Failed to export maze.", "Please ensure the maze contains a start and goal node and that a_mazer has appropriate permissions to save files.");
+			GuiUtils.alert(Alert.AlertType.ERROR,"Failed to export maze.", "Please ensure the maze contains a start and goal node and that a_mazer has appropriate permissions to save files.");
 		}
 	}
 
@@ -218,7 +218,7 @@ public class MainGuiController {
 		if(dg != null) {
 			grid.loadDataGrid(dg);
 		} else {
-			GuiUtils.openError("Failed to import maze.", "The maze file may have been corrupted or a_mazer does not have the appropriate read permissions to access the given file.");
+			GuiUtils.alert(Alert.AlertType.ERROR,"Failed to import maze.", "The maze file may have been corrupted or a_mazer does not have the appropriate read permissions to access the given file.");
 		}
 	}
 
@@ -240,14 +240,14 @@ public class MainGuiController {
 		if(evo != null) {
 			Amazer.loadEvolution(evo);
 		} else {
-			GuiUtils.openError("Failed to import evolution.", "The file may have been corrupted or a_mazer does not have the appropriate write permissions to access the given file.");
+			GuiUtils.alert(Alert.AlertType.ERROR,"Failed to import evolution.", "The file may have been corrupted or a_mazer does not have the appropriate write permissions to access the given file.");
 		}
 	}
 
 	@FXML
 	private void onExportEvolutionPressed(ActionEvent actionEvent) {
 		if(Amazer.getEvolution() == null) {
-			GuiUtils.openError("Cannot export evolution.", "Please create an evolution before attempting to export.");
+			GuiUtils.alert(Alert.AlertType.ERROR,"Cannot export evolution.", "Please create an evolution before attempting to export.");
 			return;
 		}
 
@@ -258,7 +258,7 @@ public class MainGuiController {
 		}
 
 		if(!FileUtils.writeObjectToFile(file, Amazer.getEvolution())) {
-			GuiUtils.openError("Failed to export evolution.", "Please ensure that a_mazer has appropriate permissions to save files.");
+			GuiUtils.alert(Alert.AlertType.ERROR,"Failed to export evolution.", "Please ensure that a_mazer has appropriate permissions to save files.");
 		}
 	}
 

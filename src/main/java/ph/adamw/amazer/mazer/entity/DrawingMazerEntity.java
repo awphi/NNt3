@@ -40,8 +40,8 @@ public class DrawingMazerEntity extends MazerEntity {
 	@Setter
 	private int interval;
 
-	public DrawingMazerEntity(DataGrid dg, LiveGrid liveGrid, int interval) {
-		super(dg);
+	public DrawingMazerEntity(DataGrid dataGrid, LiveGrid liveGrid, int interval) {
+		super(dataGrid);
 		this.liveGrid = liveGrid;
 		this.interval = interval;
 
