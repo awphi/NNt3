@@ -22,14 +22,14 @@
  * SOFTWARE.
  */
 
-package ph.adamw.amazer.mazer;
+package ph.adamw.amazer.agent;
 
 import lombok.Getter;
 import ph.adamw.amazer.nnt3.Evolution;
 import ph.adamw.amazer.nnt3.Generation;
 import ph.adamw.amazer.nnt3.neural.NeuralNetSettings;
 import ph.adamw.amazer.gui.grid.data.DataGrid;
-import ph.adamw.amazer.mazer.entity.MazerEntity;
+import ph.adamw.amazer.agent.entity.MazerEntity;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -57,7 +57,7 @@ public class MazerEvolution extends Evolution<MazerAgent> {
 		final String[] names = getRandomNames(generationSize);
 
 		for(int i = 0; i < generation.getSize(); i ++) {
-			final MazerAgent agent = new MazerAgent(currentSettings, parent, names == null ? "MazerAgent" + offlineNameCount : names[i]);
+			final MazerAgent agent = new MazerAgent(currentSettings, parent, names == null ? "Agent " + offlineNameCount : names[i]);
 			agent.setEntity(new MazerEntity(dataGrid));
 
 			generation.add(agent);
@@ -72,10 +72,10 @@ public class MazerEvolution extends Evolution<MazerAgent> {
 		final String[] ret = new String[size];
 
 		try {
-			URL url = new URL("http://names.drycodes.com/" + ret.length + "?format=text");
-			URLConnection connection = url.openConnection();
+			final URL url = new URL("http://names.drycodes.com/" + ret.length + "?format=text");
+			final URLConnection connection = url.openConnection();
 
-			BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+			final BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 			String l;
 			int c = 0;
 

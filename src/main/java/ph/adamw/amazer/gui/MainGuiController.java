@@ -35,9 +35,9 @@ import lombok.NoArgsConstructor;
 import ph.adamw.amazer.Amazer;
 import ph.adamw.amazer.FileUtils;
 import ph.adamw.amazer.gui.grid.data.DataGrid;
-import ph.adamw.amazer.mazer.MazerAgent;
+import ph.adamw.amazer.agent.MazerAgent;
 import ph.adamw.amazer.gui.grid.LiveGrid;
-import ph.adamw.amazer.mazer.MazerEvolution;
+import ph.adamw.amazer.agent.MazerEvolution;
 
 import java.io.File;
 import java.util.List;
@@ -77,8 +77,6 @@ public class MainGuiController {
 
 	private final LiveGrid grid = new LiveGrid(6, 6);
 
-	private MazerAgent agent;
-
 	@FXML
 	private Slider gridRowsSlider;
 
@@ -109,7 +107,7 @@ public class MainGuiController {
 		// Have we loaded one yet? I.e. via import
 		if(Amazer.getEvolution() == null) {
 			final DataGrid dg = grid.asDataGrid();
-			if (!grid.isValid() || !dg.findPath(new boolean[grid.getCols()][grid.getRows()], dg.getStart().getCol(), dg.getStart().getRow())) {
+			if (!grid.isValid()) {
 				GuiUtils.alert(Alert.AlertType.ERROR,"The current grid form is invalid.", "The grid must contain a start node, a goal node and be possible to solve.");
 				return;
 			}
@@ -175,11 +173,9 @@ public class MainGuiController {
 			return;
 		}
 
-		if(agent != null) {
-			agent.kill();
+		if(grid.isReadyToDrawPath()) {
+			grid.drawAgentPath(e.getAgent());
 		}
-
-		agent = grid.playMazer(e.getAgent(), 100);
 	}
 
 	public void onNextGenPressed(ActionEvent actionEvent) {

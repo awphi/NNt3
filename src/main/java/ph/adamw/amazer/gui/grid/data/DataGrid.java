@@ -27,7 +27,7 @@ package ph.adamw.amazer.gui.grid.data;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import ph.adamw.amazer.gui.grid.GridState;
-import ph.adamw.amazer.mazer.entity.EntityDirection;
+import ph.adamw.amazer.agent.entity.EntityDirection;
 
 import java.io.Serializable;
 
@@ -46,45 +46,14 @@ public class DataGrid implements Serializable {
 	private final DataCell start;
 	private final DataCell goal;
 
-	private final static DataCell DEAD_CELL = new DataCell(-1, -1, null);
+	private final static DataCell OUT_OF_BOUNDS_CELL = new DataCell(-1, -1, null);
 
 	private DataCell getCell(int col, int row) {
 		if(col < 0 || col > getWidth() - 1 || row < 0 || row > getHeight() - 1) {
-			return DEAD_CELL;
+			return OUT_OF_BOUNDS_CELL;
 		}
 
 		return cells[col][row];
-	}
-
-	public boolean findPath(boolean[][] visited, int col, int row) {
-		final DataCell right = getCell(col + 1, row);
-		final DataCell left = getCell(col - 1, row);
-		final DataCell up = getCell(col,row - 1);
-		final DataCell down = getCell(col,row + 1);
-
-		visited[col][row] = true;
-
-		if (right.getState() == GridState.GOAL || up.getState() == GridState.GOAL || left.getState() == GridState.GOAL || down.getState() == GridState.GOAL) {
-			return true;
-		}
-
-		if (right.getState() == GridState.EMPTY && !visited[col + 1][row]) {
-			return findPath(visited,col + 1, row);
-		}
-
-		if (down.getState() == GridState.EMPTY && !visited[col][row + 1]) {
-			return findPath(visited, col, row + 1);
-		}
-
-		if (left.getState() == GridState.EMPTY && !visited[col - 1][row]) {
-			return findPath(visited,col - 1, row);
-		}
-
-		if (up.getState() == GridState.EMPTY && !visited[col][row - 1]) {
-			return findPath(visited, col, row - 1);
-		}
-
-		return false;
 	}
 
 	public int getDistanceToNextObstacle(int col, int row, EntityDirection dir) {

@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package ph.adamw.amazer.mazer.entity;
+package ph.adamw.amazer.agent.entity;
 
 import lombok.Getter;
 

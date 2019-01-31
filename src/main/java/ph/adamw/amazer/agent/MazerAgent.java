@@ -22,16 +22,17 @@
  * SOFTWARE.
  */
 
-package ph.adamw.amazer.mazer;
+package ph.adamw.amazer.agent;
 
 import lombok.Getter;
 import lombok.Setter;
 import ph.adamw.amazer.nnt3.neural.Agent;
 import ph.adamw.amazer.nnt3.neural.NeuralNetSettings;
 import ph.adamw.amazer.nnt3.neural.neuron.ActivationFunction;
-import ph.adamw.amazer.mazer.entity.EntityDirection;
-import ph.adamw.amazer.mazer.entity.MazerEntity;
+import ph.adamw.amazer.agent.entity.EntityDirection;
+import ph.adamw.amazer.agent.entity.MazerEntity;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,8 +40,6 @@ public class MazerAgent extends Agent {
 	@Setter
 	@Getter
 	private transient MazerEntity entity;
-
-	private boolean killed = false;
 
 	private static final int CYCLE_MULTIPLIER = 6;
 	private static final double FITNESS_MULTIPLIER = 100;
@@ -65,21 +64,11 @@ public class MazerAgent extends Agent {
 
 	@Override
 	protected void execute() {
-		killed = false;
-		entity.reset();
-
 		final int maxCycles = ((int) Math.sqrt(entity.getDataGrid().getHeight() * entity.getDataGrid().getWidth())) * CYCLE_MULTIPLIER;
 
 		int cyclesUsed = 0;
 		while(cyclesUsed < maxCycles && !(entity.getCurrentCol() == entity.getDataGrid().getGoal().getCol() && entity.getCurrentRow() == entity.getDataGrid().getGoal().getRow())) {
 			//TODO look into incremental learning - i.e. only give it X cycles increasing by Y every Z generations so it has to master the first X moves first
-
-			// If the thread is halted from an outside thread then exit without modifying the fitness
-			if(killed) {
-				entity.reset();
-				return;
-			}
-
 			final List<Double> inputs = new ArrayList<>();
 
 			// 4-directional inputs
@@ -106,15 +95,13 @@ public class MazerAgent extends Agent {
 			}
 		}
 
-		final double y = -(1 / maxCycles) * cyclesUsed + 1;
+		// 1 = 0 cycles used (never really achieved), 0 = maxCycles used
+		final double cyclesUsedRatio = -(1 / maxCycles) * cyclesUsed + 1;
 		final double distanceFromCurrent = MazerUtils.distanceBetween(entity.getCurrentCol(), entity.getCurrentRow(), entity.getDataGrid().getGoal()) + 1;
 
-		fitness = y * (FITNESS_MULTIPLIER / distanceFromCurrent);
+		fitness = cyclesUsedRatio * (FITNESS_MULTIPLIER / distanceFromCurrent);
 		//TODO look into an elasticity fitness score i.e. increasing tension rewards a little, decreasing tension rewards alot
-	}
 
-	public void kill() {
-		killed = true;
 		entity.reset();
 	}
 }

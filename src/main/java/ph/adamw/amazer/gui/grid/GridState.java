@@ -34,7 +34,7 @@ import java.io.Serializable;
 public enum GridState implements Serializable {
 	EMPTY(Color.TRANSPARENT, null),
 	WALL(Color.BLACK, null),
-	CHARACTER(Color.RED, null),
+	ENTITY(Color.RED, null),
 	START(Color.LIME, new Text("Start")),
 	GOAL(Color.GREEN, new Text("Goal"));
 

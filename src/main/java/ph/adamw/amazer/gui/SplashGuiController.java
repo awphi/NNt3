@@ -33,8 +33,8 @@ import javafx.stage.Stage;
 import lombok.Setter;
 import ph.adamw.amazer.Amazer;
 import ph.adamw.amazer.gui.grid.data.DataGrid;
-import ph.adamw.amazer.mazer.MazerAgent;
-import ph.adamw.amazer.mazer.MazerEvolution;
+import ph.adamw.amazer.agent.MazerAgent;
+import ph.adamw.amazer.agent.MazerEvolution;
 import ph.adamw.amazer.nnt3.neural.NeuralNetSettings;
 
 public class SplashGuiController {
@@ -63,7 +63,7 @@ public class SplashGuiController {
 
 	@FXML
 	private void initialize() {
-		//TODO Find a less ugly way of doing this
+		//TODO Find a less ugly way of doing this perhaps by banding them together into one component
 		GuiUtils.bindIntSliderValueToTextField(hiddenLayersSizeSlider, hiddenLayersSizeTextField);
 		GuiUtils.bindIntSliderValueToTextField(hiddenLayersAmountSlider, hiddenLayersAmountTextField);
 		GuiUtils.bindIntSliderValueToTextField(mutationRateSlider, mutationRateTextField);

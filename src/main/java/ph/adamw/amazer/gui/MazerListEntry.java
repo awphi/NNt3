@@ -26,7 +26,7 @@ package ph.adamw.amazer.gui;
 
 import javafx.scene.text.Text;
 import lombok.Getter;
-import ph.adamw.amazer.mazer.MazerAgent;
+import ph.adamw.amazer.agent.MazerAgent;
 
 import java.text.DecimalFormat;
 

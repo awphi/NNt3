@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package ph.adamw.amazer.mazer.entity;
+package ph.adamw.amazer.agent.entity;
 
 import javafx.application.Platform;
 import lombok.Setter;
@@ -45,7 +45,7 @@ public class DrawingMazerEntity extends MazerEntity {
 		this.liveGrid = liveGrid;
 		this.interval = interval;
 
-		drawState(GridState.CHARACTER);
+		drawState(GridState.ENTITY);
 	}
 
 	private void drawState(GridState state) {
@@ -70,7 +70,7 @@ public class DrawingMazerEntity extends MazerEntity {
 	public void move(Double[] vals) {
 		drawState(getStateBehindCurrent());
 		super.move(vals);
-		drawState(GridState.CHARACTER);
+		drawState(GridState.ENTITY);
 	}
 
 	@Override

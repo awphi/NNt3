@@ -22,11 +22,11 @@
  * SOFTWARE.
  */
 
-package ph.adamw.amazer.mazer.entity;
+package ph.adamw.amazer.agent.entity;
 import lombok.Getter;
 import ph.adamw.amazer.gui.grid.data.DataCell;
 import ph.adamw.amazer.gui.grid.data.DataGrid;
-import ph.adamw.amazer.mazer.MazerAgent;
+import ph.adamw.amazer.agent.MazerAgent;
 
 /*
  * Class to allow the MazerAgent and DataGrid to interface with an entity between them. Also used
@@ -54,7 +54,7 @@ public class MazerEntity {
 
 	public void move(Double[] values) {
 		if (values.length != MazerAgent.OUTPUTS) {
-			throw new RuntimeException("Unexpected number of mazer outputs given to entity! Expected " + MazerAgent.OUTPUTS + " but got: " + values.length + "!");
+			throw new RuntimeException("Unexpected number of agent outputs given to entity! Expected " + MazerAgent.OUTPUTS + " but got: " + values.length + "!");
 		}
 
 		int maxIndex = 0;

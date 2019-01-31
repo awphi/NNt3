@@ -33,8 +33,8 @@ import lombok.Getter;
 import lombok.Setter;
 import ph.adamw.amazer.gui.grid.data.DataCell;
 import ph.adamw.amazer.gui.grid.data.DataGrid;
-import ph.adamw.amazer.mazer.MazerAgent;
-import ph.adamw.amazer.mazer.entity.DrawingMazerEntity;
+import ph.adamw.amazer.agent.MazerAgent;
+import ph.adamw.amazer.agent.entity.DrawingMazerEntity;
 
 public class LiveGrid extends GridPane {
     @Setter
@@ -43,6 +43,9 @@ public class LiveGrid extends GridPane {
 
     private GridState dragOverrideState;
     private GridState nextStartFinish = GridState.START;
+
+    private DrawingMazerEntity entity;
+    private MazerAgent agent;
 
     private static final Insets INSETS_20 = new Insets(20, 20, 0, 20);
 
@@ -234,11 +237,17 @@ public class LiveGrid extends GridPane {
         return ret;
     }
 
-    public MazerAgent playMazer(MazerAgent agent, int interval) {
-        // If we're loading form the same session i.e. we have a DataGrid compiled already don't bother remaking it
-        agent.setEntity(new DrawingMazerEntity(agent.getEntity() == null ? asDataGrid() : agent.getEntity().getDataGrid(), this, interval));
-        agent.start(true);
+    public void drawAgentPath(MazerAgent newAgent) {
+        if(entity == null) {
+            entity = new DrawingMazerEntity(asDataGrid(), this, 50);
+        }
 
-        return agent;
+        this.agent = newAgent;
+        agent.setEntity(entity);
+        agent.start(true);
+    }
+
+    public boolean isReadyToDrawPath() {
+        return agent == null || agent.isDone();
     }
 }

@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package ph.adamw.amazer.mazer;
+package ph.adamw.amazer.agent;
 
 import ph.adamw.amazer.gui.grid.data.DataCell;
 

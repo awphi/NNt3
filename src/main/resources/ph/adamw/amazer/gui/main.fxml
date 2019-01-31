@@ -40,7 +40,7 @@
   ~ SOFTWARE.
   -->
 
-<BorderPane fx:id="borderPane" prefHeight="760.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ph.adamw.amazer.gui.MainGuiController">
+<BorderPane fx:id="borderPane" prefHeight="760.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ph.adamw.amazer.gui.MainGuiController">
    <left>
       <VBox prefHeight="400.0" prefWidth="260.0" style="-fx-alignment: top-center;" BorderPane.alignment="CENTER">
          <children>
@@ -140,7 +140,7 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
             <items>
-              <MenuItem mnemonicParsing="false" onAction="#onAboutMenuPressed" text="About" />
+              <MenuItem mnemonicParsing="false" onAction="#onAboutMenuPressed" text="Guide" />
             </items>
           </Menu>
         </menus>

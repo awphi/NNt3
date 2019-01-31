@@ -34,12 +34,9 @@ import lombok.Getter;
 import ph.adamw.amazer.gui.MainGuiController;
 import ph.adamw.amazer.gui.SplashGuiController;
 import ph.adamw.amazer.gui.grid.data.DataGrid;
-import ph.adamw.amazer.mazer.MazerEvolution;
+import ph.adamw.amazer.agent.MazerEvolution;
 
-import javax.swing.*;
-import java.awt.*;
 import java.io.IOException;
-import java.net.URL;
 
 public class Amazer extends Application {
 	@Getter

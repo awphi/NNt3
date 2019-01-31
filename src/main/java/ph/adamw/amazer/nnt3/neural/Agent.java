@@ -60,6 +60,8 @@ public abstract class Agent implements Runnable, Comparable<Agent>, Serializable
 	@Getter
 	private NeuronLayer outputLayer;
 
+	private Thread thread;
+
 	public Agent(NeuralNetSettings settings, Agent parent, String threadName) {
 		this.settings = settings;
 
@@ -137,7 +139,7 @@ public abstract class Agent implements Runnable, Comparable<Agent>, Serializable
 
 	public void start(boolean threaded) {
 		if (threaded) {
-			Thread thread = new Thread(this, threadName);
+			thread = new Thread(this, threadName);
 			thread.start();
 		} else {
 			run();
@@ -153,10 +155,12 @@ public abstract class Agent implements Runnable, Comparable<Agent>, Serializable
 			flushValues();
 		}
 
+		fitness = 0;
 		execute();
 
 		synchronized (this) {
 			isDone = hasRun = true;
+			thread = null;
 			notifyAll();
 		}
 	}
