@@ -32,7 +32,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import lombok.Setter;
 import ph.adamw.amazer.Amazer;
-import ph.adamw.amazer.gui.grid.data.DataGrid;
+import ph.adamw.amazer.maze.Maze;
 import ph.adamw.amazer.agent.MazerAgent;
 import ph.adamw.amazer.agent.MazerEvolution;
 import ph.adamw.amazer.nnt3.neural.NeuralNetSettings;
@@ -59,7 +59,7 @@ public class SplashGuiController {
 	private Slider generationSizeSlider;
 
 	@Setter
-	private DataGrid grid;
+	private Maze grid;
 
 	@FXML
 	private void initialize() {

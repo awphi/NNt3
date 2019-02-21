@@ -32,7 +32,6 @@ import ph.adamw.amazer.nnt3.neural.neuron.ActivationFunction;
 import ph.adamw.amazer.agent.entity.EntityDirection;
 import ph.adamw.amazer.agent.entity.MazerEntity;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,18 +41,8 @@ public class MazerAgent extends Agent {
 	private transient MazerEntity entity;
 
 	private static final int CYCLE_MULTIPLIER = 6;
-	private static final double FITNESS_MULTIPLIER = 100;
 
-	/*
-	 * STATIC CONSTANTS OF THE MAZER
-	 * 6 INPUTS = * 4-directional distance to closest obstacle (starts from up then goes clockwise)
-	 * 			  * Distance from current position to goal
-	 * 			  * Angle from current position to goal => w/ distance we effectively give it an *as the crow flies* vector to the goal
-	 *
-	 * 4 OUTPUTS = * 4-directional output (starts from up then goes clockwise) (evaluated and acted upon by entity)
-	 *
-	 */
-	public static final int INPUTS = 6;
+	public static final int INPUTS = 5;
 	public static final int OUTPUTS = 4;
 	public static ActivationFunction ACTIVATION_FUNCTION = ActivationFunction.getSigmoid();
 
@@ -64,23 +53,22 @@ public class MazerAgent extends Agent {
 
 	@Override
 	protected void execute() {
-		final int maxCycles = ((int) Math.sqrt(entity.getDataGrid().getHeight() * entity.getDataGrid().getWidth())) * CYCLE_MULTIPLIER;
+		final int maxCycles = ((int) Math.sqrt(entity.getMaze().getHeight() * entity.getMaze().getWidth())) * CYCLE_MULTIPLIER;
 
 		int cyclesUsed = 0;
-		while(cyclesUsed < maxCycles && !(entity.getCurrentCol() == entity.getDataGrid().getGoal().getCol() && entity.getCurrentRow() == entity.getDataGrid().getGoal().getRow())) {
-			//TODO look into incremental learning - i.e. only give it X cycles increasing by Y every Z generations so it has to master the first X moves first
+		while(cyclesUsed < maxCycles && !(entity.getCurrentCol() == entity.getMaze().getGoal().getCol() && entity.getCurrentRow() == entity.getMaze().getGoal().getRow())) {
 			final List<Double> inputs = new ArrayList<>();
 
 			// 4-directional inputs
 			for(EntityDirection dir : EntityDirection.VALUES) {
-				inputs.add((double) entity.getDataGrid().getDistanceToNextObstacle(entity.getCurrentCol(), entity.getCurrentRow(), dir));
+				inputs.add((double) entity.getMaze().getDistanceToNextObstacle(entity.getCurrentCol(), entity.getCurrentRow(), dir));
 			}
 
 			// Distance and bearing (a vector) between entity and the goal
-			inputs.add(MazerUtils.distanceBetween(entity.getCurrentCol(), entity.getCurrentRow(), entity.getDataGrid().getGoal()));
-			inputs.add(MazerUtils.bearing(entity.getCurrentCol(), entity.getCurrentRow(), entity.getDataGrid().getGoal()));
+			//inputs.add(MazerUtils.distanceBetween(entity.getCurrentCol(), entity.getCurrentRow(), entity.getMaze().getGoal()));
+			inputs.add(MazerUtils.bearing(entity.getCurrentCol(), entity.getCurrentRow(), entity.getMaze().getGoal()));
 
-			entity.move(evaluate(inputs).toArray(new Double[OUTPUTS]));
+			entity.move(evaluate(inputs.stream().mapToDouble(i -> i).toArray()));
 
 			cyclesUsed ++;
 
@@ -95,12 +83,7 @@ public class MazerAgent extends Agent {
 			}
 		}
 
-		// 1 = 0 cycles used (never really achieved), 0 = maxCycles used
-		final double cyclesUsedRatio = -(1 / maxCycles) * cyclesUsed + 1;
-		final double distanceFromCurrent = MazerUtils.distanceBetween(entity.getCurrentCol(), entity.getCurrentRow(), entity.getDataGrid().getGoal()) + 1;
-
-		fitness = cyclesUsedRatio * (FITNESS_MULTIPLIER / distanceFromCurrent);
-		//TODO look into an elasticity fitness score i.e. increasing tension rewards a little, decreasing tension rewards alot
+		fitness = entity.getMaze().distanceFromGoal(entity.getCurrentCol(), entity.getCurrentRow());
 
 		entity.reset();
 	}

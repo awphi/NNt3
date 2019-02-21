@@ -57,8 +57,8 @@ public class FileUtils {
 		}
 
 		try {
-			FileOutputStream fout = new FileOutputStream(file);
-			ObjectOutputStream oos = new ObjectOutputStream(fout);
+			FileOutputStream out = new FileOutputStream(file);
+			ObjectOutputStream oos = new ObjectOutputStream(out);
 			oos.writeObject(obj);
 
 			oos.close();

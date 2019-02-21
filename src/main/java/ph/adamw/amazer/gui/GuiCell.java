@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018 awphi
+ * Copyright (c) 2019 awphi
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,28 +22,48 @@
  * SOFTWARE.
  */
 
-package ph.adamw.amazer.gui.grid;
+package ph.adamw.amazer.gui;
 
-import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
+import javafx.geometry.Insets;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Paint;
 import lombok.Getter;
+import static ph.adamw.amazer.maze.CellState.EMPTY;
+import static ph.adamw.amazer.maze.CellState.WALL;
+import ph.adamw.amazer.maze.Cell;
+import ph.adamw.amazer.maze.CellState;
 
-import java.io.Serializable;
+public class GuiCell extends BorderPane {
+	@Getter
+	private final Cell cell;
 
-@Getter
-public enum GridState implements Serializable {
-	EMPTY(Color.TRANSPARENT, null),
-	WALL(Color.BLACK, null),
-	ENTITY(Color.RED, null),
-	START(Color.LIME, new Text("Start")),
-	GOAL(Color.GREEN, new Text("Goal"));
+	private static final Insets INSETS_2 = new Insets(2, 2, 2, 2);
 
-	private final Color color;
+	GuiCell(Cell cell) {
+		this.cell = cell;
 
-	private final Text text;
+		try {
+			drawState(cell.getState());
+		} catch (Exception ignored) {}
+	}
 
-	GridState(Color color, Text text) {
-		this.color = color;
-		this.text = text;
+	void drawState(CellState state) {
+		setBackground(new Background(new BackgroundFill(Paint.valueOf(state.getColor().toString()), CornerRadii.EMPTY, INSETS_2)));
+		setCenter(state.getText());
+	}
+
+	void setState(CellState state) {
+		cell.setState(state);
+		drawState(state);
+	}
+
+	void switchState() {
+		switch (cell.getState()) {
+			case WALL: setState(EMPTY); break;
+			case EMPTY: setState(WALL); break;
+		}
 	}
 }

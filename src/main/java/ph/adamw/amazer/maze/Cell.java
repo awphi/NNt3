@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018 awphi
+ * Copyright (c) 2019 awphi
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,47 +22,31 @@
  * SOFTWARE.
  */
 
-package ph.adamw.amazer.gui.grid;
+package ph.adamw.amazer.maze;
 
-import javafx.geometry.Insets;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.paint.Paint;
 import lombok.Getter;
-import static ph.adamw.amazer.gui.grid.GridState.EMPTY;
-import static ph.adamw.amazer.gui.grid.GridState.WALL;
-import ph.adamw.amazer.gui.grid.data.DataCell;
+import lombok.Setter;
 
-public class CellPane extends BorderPane {
-	@Getter
-	private final DataCell cell;
+import java.io.Serializable;
 
-	private static final Insets INSETS_2 = new Insets(2, 2, 2, 2);
+@Getter
+public class Cell implements Serializable {
+	protected final int col;
 
-	CellPane(DataCell cell) {
-		this.cell = cell;
+	protected final int row;
 
-		try {
-			drawState(cell.getState());
-		} catch (Exception ignored) {}
+	@Setter
+	protected CellState state;
+
+	public Cell(int col, int row, CellState state) {
+		this.col = col;
+		this.row = row;
+
+		setState(state);
 	}
 
-	void drawState(GridState state) {
-		setBackground(new Background(new BackgroundFill(Paint.valueOf(state.getColor().toString()), CornerRadii.EMPTY, INSETS_2)));
-		setCenter(state.getText());
-	}
-
-	void setState(GridState state) {
-		cell.setState(state);
-		drawState(state);
-	}
-
-	void switchState() {
-		switch (cell.getState()) {
-			case WALL: setState(EMPTY); break;
-			case EMPTY: setState(WALL); break;
-		}
+	@Override
+	public String toString() {
+		return "Cell[" + col + "," + row + "]";
 	}
 }

@@ -34,17 +34,17 @@ public class NeuronLayer extends ArrayList<Neuron> {
 		}
 	}
 
-	public List<Double> getValues() {
-		List<Double> values = new ArrayList<>();
-		for (Neuron i : this) {
-			values.add(i.getValue());
+	public double[] getValues() {
+		double[] values = new double[size()];
+		for (int i = 0; i < size(); i ++) {
+			values[i] = get(i).getValue();
 		}
 		return values;
 	}
 
-	public void setValues(List<Double> inputs) {
+	public void setValues(double[] inputs) {
 		for (int i = 0; i < size(); i++) {
-			get(i).setValue(inputs.get(i));
+			get(i).setValue(inputs[i]);
 		}
 	}
 

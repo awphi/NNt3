@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018 awphi
+ * Copyright (c) 2019 awphi
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,29 +22,29 @@
  * SOFTWARE.
  */
 
-package ph.adamw.amazer.agent.entity;
+package ph.adamw.amazer.maze.graph;
 
-import lombok.Getter;
+import java.util.HashSet;
+import java.util.Set;
 
-public enum EntityDirection {
-	UP(0, -1),
-	RIGHT(1, 0),
-	DOWN(0, 1),
-	LEFT(-1, 0);
+public class Graph {
+    private Set<GraphNode> nodes = new HashSet<>();
 
-	@Getter
-	private final int x;
-	@Getter
-	private final int y;
+    public void add(GraphNode node) {
+        nodes.add(node);
+    }
 
-	public static final EntityDirection[] VALUES = values();
+    public GraphNode getNode(String name) {
+        for(GraphNode i : nodes) {
+            if(i.getName().equals(name)) {
+                return i;
+            }
+        }
 
-	EntityDirection(int x, int y) {
-		this.x = x;
-		this.y = y;
-	}
+        return null;
+    }
 
-	public static EntityDirection get(int o) {
-		return VALUES[o];
-	}
+    public int size() {
+        return nodes.size();
+    }
 }

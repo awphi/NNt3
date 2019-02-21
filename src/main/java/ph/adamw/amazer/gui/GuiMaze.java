@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018 awphi
+ * Copyright (c) 2019 awphi
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package ph.adamw.amazer.gui.grid;
+package ph.adamw.amazer.gui;
 
 import javafx.event.EventTarget;
 import javafx.geometry.HPos;
@@ -31,25 +31,26 @@ import javafx.scene.Node;
 import javafx.scene.layout.*;
 import lombok.Getter;
 import lombok.Setter;
-import ph.adamw.amazer.gui.grid.data.DataCell;
-import ph.adamw.amazer.gui.grid.data.DataGrid;
+import ph.adamw.amazer.maze.Cell;
+import ph.adamw.amazer.maze.Maze;
 import ph.adamw.amazer.agent.MazerAgent;
 import ph.adamw.amazer.agent.entity.DrawingMazerEntity;
+import ph.adamw.amazer.maze.CellState;
 
-public class LiveGrid extends GridPane {
+public class GuiMaze extends GridPane {
     @Setter
     @Getter
     private boolean isEditable = true;
 
-    private GridState dragOverrideState;
-    private GridState nextStartFinish = GridState.START;
+    private CellState dragOverrideState;
+    private CellState nextStartFinish = CellState.START;
 
     private DrawingMazerEntity entity;
     private MazerAgent agent;
 
     private static final Insets INSETS_20 = new Insets(20, 20, 0, 20);
 
-    public LiveGrid(int col, int row) {
+    public GuiMaze(int col, int row) {
         super();
         setGridLinesVisible(true);
         setSize(col, row);
@@ -63,17 +64,17 @@ public class LiveGrid extends GridPane {
             final Node hoveredNode = event.getPickResult().getIntersectedNode();
             final EventTarget target = event.getTarget();
 
-            if(!(target instanceof CellPane && hoveredNode instanceof CellPane && isEditable)) {
+            if(!(target instanceof GuiCell && hoveredNode instanceof GuiCell && isEditable)) {
                 return;
             }
 
-            final CellPane hoveredPane = ((CellPane) hoveredNode);
-            final CellPane targetPane = ((CellPane) target);
+            final GuiCell hoveredPane = ((GuiCell) hoveredNode);
+            final GuiCell targetPane = ((GuiCell) target);
 
             if(dragOverrideState == null) {
                 switch (targetPane.getCell().getState()) {
-                    case EMPTY: dragOverrideState = GridState.WALL; break;
-                    case WALL: dragOverrideState = GridState.EMPTY; break;
+                    case EMPTY: dragOverrideState = CellState.WALL; break;
+                    case WALL: dragOverrideState = CellState.EMPTY; break;
                 }
             }
 
@@ -83,16 +84,16 @@ public class LiveGrid extends GridPane {
         });
 
         setOnMousePressed(event -> {
-            if(event.getTarget() instanceof CellPane && isEditable) {
-                final CellPane targetPane = (CellPane) event.getTarget();
+            if(event.getTarget() instanceof GuiCell && isEditable) {
+                final GuiCell targetPane = (GuiCell) event.getTarget();
 
                 switch(event.getButton()) {
                     case PRIMARY: targetPane.switchState(); break;
                     case SECONDARY: {
-                        if(containsState(GridState.GOAL)) {
-                            clearCellWithState(GridState.START);
-                            clearCellWithState(GridState.GOAL);
-                        } else if (targetPane.getCell().getState() == GridState.EMPTY) {
+                        if(containsState(CellState.GOAL)) {
+                            clearCellWithState(CellState.START);
+                            clearCellWithState(CellState.GOAL);
+                        } else if (targetPane.getCell().getState() == CellState.EMPTY) {
                             targetPane.setState(nextRightClickState());
                         }
                     } break;
@@ -104,7 +105,7 @@ public class LiveGrid extends GridPane {
     public void setSize(int cols, int rows) {
         getRowConstraints().clear();
         getColumnConstraints().clear();
-        getChildren().removeIf(node -> node instanceof CellPane);
+        getChildren().removeIf(node -> node instanceof GuiCell);
 
         addCols(cols);
         addRows(rows);
@@ -118,60 +119,60 @@ public class LiveGrid extends GridPane {
         return getColumnConstraints().size();
     }
 
-    private CellPane getCellAt(int col, int row) {
+    private GuiCell getCellAt(int col, int row) {
         for(Node i : getManagedChildren()) {
-            if(!(i instanceof CellPane)) {
+            if(!(i instanceof GuiCell)) {
                 continue;
             }
 
-            final DataCell c = ((CellPane) i).getCell();
+            final Cell c = ((GuiCell) i).getCell();
 
             if(c.getRow() == row && c.getCol() == col) {
-                return (CellPane) i;
+                return (GuiCell) i;
             }
         }
 
         // Relatively safe since
-        return new CellPane(new DataCell(-1, -1, null));
+        return new GuiCell(new Cell(-1, -1, null));
     }
 
-    public void drawStateAt(int col, int row, GridState state) {
+    public void drawStateAt(int col, int row, CellState state) {
         getCellAt(col, row).drawState(state);
     }
 
-    public void clearCellWithState(GridState state) {
-    	final CellPane d = getFirstState(state);
+    public void clearCellWithState(CellState state) {
+    	final GuiCell d = getFirstState(state);
     	if(d != null) {
-			d.setState(GridState.EMPTY);
+			d.setState(CellState.EMPTY);
 		}
     }
 
     public boolean isValid() {
-        return containsState(GridState.GOAL) && containsState(GridState.START);
+        return containsState(CellState.GOAL) && containsState(CellState.START);
     }
 
-    public DataGrid asDataGrid() {
-        final DataCell[][] dataCells = new DataCell[getCols()][getRows()];
+    public Maze asDataGrid() {
+        final Cell[][] cells = new Cell[getCols()][getRows()];
 
         for(Node i : getManagedChildren()) {
-            if(i instanceof CellPane) {
-                final DataCell dc = ((CellPane) i).getCell();
-                dataCells[dc.getCol()][dc.getRow()] = dc;
+            if(i instanceof GuiCell) {
+                final Cell dc = ((GuiCell) i).getCell();
+                cells[dc.getCol()][dc.getRow()] = dc;
             }
         }
 
         if(isValid()) {
             //noinspection ConstantConditions
-            return new DataGrid(getCols(), getRows(), dataCells, getFirstState(GridState.START).getCell(), getFirstState(GridState.GOAL).getCell());
+            return new Maze(getCols(), getRows(), cells, getFirstState(CellState.START).getCell(), getFirstState(CellState.GOAL).getCell());
         }
 
         return null;
     }
 
-    public void loadDataGrid(DataGrid grid) {
+    public void loadDataGrid(Maze grid) {
         setSize(grid.getWidth(), grid.getHeight());
 
-        final DataCell[][] cache = grid.getCells();
+        final Cell[][] cache = grid.getCells();
 
         for(int i = 0; i < getCols(); i ++) {
             for(int j = 0; j < getRows(); j ++) {
@@ -190,9 +191,9 @@ public class LiveGrid extends GridPane {
 
             getRowConstraints().add(n);
 
-            final CellPane[] panes = new CellPane[getCols()];
+            final GuiCell[] panes = new GuiCell[getCols()];
             for(int j = 0; j < panes.length; j ++) {
-                panes[j] = new CellPane(new DataCell(j, getRows() - 1, GridState.EMPTY));
+                panes[j] = new GuiCell(new Cell(j, getRows() - 1, CellState.EMPTY));
                 setHalignment(panes[j], HPos.CENTER);
             }
 
@@ -212,26 +213,26 @@ public class LiveGrid extends GridPane {
         }
     }
 
-    private boolean containsState(GridState state) {
+    private boolean containsState(CellState state) {
         return getFirstState(state) != null;
     }
 
-    private CellPane getFirstState(GridState state) {
+    private GuiCell getFirstState(CellState state) {
         for(Node i : getManagedChildren()) {
-            if(((CellPane) i).getCell().getState() == state) {
-                return ((CellPane) i);
+            if(((GuiCell) i).getCell().getState() == state) {
+                return ((GuiCell) i);
             }
         }
 
         return null;
     }
 
-    private GridState nextRightClickState() {
-        final GridState ret = nextStartFinish;
+    private CellState nextRightClickState() {
+        final CellState ret = nextStartFinish;
 
         switch(ret) {
-            case START: nextStartFinish = GridState.GOAL; break;
-            case GOAL: nextStartFinish = GridState.START; break;
+            case START: nextStartFinish = CellState.GOAL; break;
+            case GOAL: nextStartFinish = CellState.START; break;
         }
 
         return ret;

@@ -24,17 +24,17 @@
 
 package ph.adamw.amazer.agent;
 
-import ph.adamw.amazer.gui.grid.data.DataCell;
+import ph.adamw.amazer.maze.Cell;
 
 class MazerUtils {
-	static double distanceBetween(int col, int row, DataCell other) {
+	static double distanceBetween(int col, int row, Cell other) {
 		final double colDiff = Math.pow((double) col - (double) other.getCol(), 2);
 		final double rowDiff = Math.pow((double) row - (double) other.getRow(), 2);
 
 		return Math.sqrt(colDiff + rowDiff);
 	}
 
-	static double bearing(int col, int row, DataCell other) {
+	static double bearing(int col, int row, Cell other) {
 		final double deltaY = (row - other.getRow());
 		final double deltaX = (other.getCol() - col);
 		return Math.atan2(deltaX, deltaY);

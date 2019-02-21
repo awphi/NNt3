@@ -37,15 +37,7 @@ import java.util.List;
 public class Generation<T extends Agent> implements Serializable {
 	private final HashSet<T> members = new HashSet<>();
 
-	@Getter
-	@Setter
-	public int size = 10;
-
 	public void run(boolean threaded) {
-		if(members.size() != size) {
-			throw new RuntimeException("Generation has been wrongly populated! Expected " + size + " networks but got " + members.size() + "!");
-		}
-
 		for (T network : members) {
 			network.start(threaded);
 		}
@@ -79,5 +71,9 @@ public class Generation<T extends Agent> implements Serializable {
 
 	public void add (T network) {
 		members.add(network);
+	}
+
+	public int size() {
+		return members.size();
 	}
 }

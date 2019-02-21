@@ -24,12 +24,12 @@
 
 package ph.adamw.amazer.agent.entity;
 import lombok.Getter;
-import ph.adamw.amazer.gui.grid.data.DataCell;
-import ph.adamw.amazer.gui.grid.data.DataGrid;
+import ph.adamw.amazer.maze.Cell;
+import ph.adamw.amazer.maze.Maze;
 import ph.adamw.amazer.agent.MazerAgent;
 
 /*
- * Class to allow the MazerAgent and DataGrid to interface with an entity between them. Also used
+ * Class to allow the MazerAgent and Maze to interface with an entity between them. Also used
  * to add ease of switching between a non-drawing and drawing entity.
  */
 public class MazerEntity {
@@ -41,18 +41,20 @@ public class MazerEntity {
 	protected int currentRow;
 
 	@Getter
-	protected final DataGrid dataGrid;
+	protected final Maze maze;
 
-	@Getter
-	private int stationaryCount = 0;
-
-	public MazerEntity(DataGrid dataGrid) {
-		this.dataGrid = dataGrid;
+	public MazerEntity(Maze maze) {
+		this.maze = maze;
 
 		resetPosition();
 	}
 
-	public void move(Double[] values) {
+	/**
+	 * Attempts to move the entity using the weighted array of inputs
+	 * @param values An array of doubles
+	 * @return true if move was successful, false if move was not available (i.e. there was an obstacle)
+	 */
+	public boolean move(double[] values) {
 		if (values.length != MazerAgent.OUTPUTS) {
 			throw new RuntimeException("Unexpected number of agent outputs given to entity! Expected " + MazerAgent.OUTPUTS + " but got: " + values.length + "!");
 		}
@@ -67,13 +69,13 @@ public class MazerEntity {
 		final EntityDirection direction = EntityDirection.get(maxIndex);
 
 		// Collision detection
-		if (dataGrid.getDistanceToNextObstacle(currentCol, currentRow, direction) != 0) {
+		if (maze.getDistanceToNextObstacle(currentCol, currentRow, direction) != 0) {
 			currentCol += direction.getX();
 			currentRow += direction.getY();
 
-			stationaryCount = 0;
+			return true;
 		} else {
-			stationaryCount++;
+			return false;
 		}
 	}
 
@@ -86,7 +88,7 @@ public class MazerEntity {
 	}
 
 	private void resetPosition() {
-		final DataCell c = dataGrid.getStart();
+		final Cell c = maze.getStart();
 		currentCol = c.getCol();
 		currentRow = c.getRow();
 	}

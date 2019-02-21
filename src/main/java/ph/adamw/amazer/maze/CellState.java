@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018 awphi
+ * Copyright (c) 2019 awphi
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,29 +22,28 @@
  * SOFTWARE.
  */
 
-package ph.adamw.amazer.agent.entity;
+package ph.adamw.amazer.maze;
 
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import lombok.Getter;
 
-public enum EntityDirection {
-	UP(0, -1),
-	RIGHT(1, 0),
-	DOWN(0, 1),
-	LEFT(-1, 0);
+import java.io.Serializable;
 
-	@Getter
-	private final int x;
-	@Getter
-	private final int y;
+@Getter
+public enum CellState implements Serializable {
+	EMPTY(Color.TRANSPARENT, null),
+	WALL(Color.BLACK, null),
+	ENTITY(Color.RED, null),
+	START(Color.LIME, new Text("Start")),
+	GOAL(Color.GREEN, new Text("Goal"));
 
-	public static final EntityDirection[] VALUES = values();
+	private final Color color;
 
-	EntityDirection(int x, int y) {
-		this.x = x;
-		this.y = y;
-	}
+	private final Text text;
 
-	public static EntityDirection get(int o) {
-		return VALUES[o];
+	CellState(Color color, Text text) {
+		this.color = color;
+		this.text = text;
 	}
 }
