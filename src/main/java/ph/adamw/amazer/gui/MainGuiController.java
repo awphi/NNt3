@@ -140,8 +140,8 @@ public class MainGuiController {
 		new Thread(task).start();
 	}
 
-	public void loadGrid(Maze gr) {
-		grid.loadDataGrid(gr);
+	public void loadMaze(Maze maze) {
+		grid.loadMaze(maze);
 	}
 
 	public void occupyGenerationList(List<MazerAgent> nn) {
@@ -208,7 +208,7 @@ public class MainGuiController {
 		final Maze dg = FileUtils.readObjectFromFile(file);
 
 		if(dg != null) {
-			grid.loadDataGrid(dg);
+			grid.loadMaze(dg);
 		} else {
 			GuiUtils.alert(Alert.AlertType.ERROR,"Failed to import maze.", "The maze file may have been corrupted or a_mazer does not have the appropriate read permissions to access the given file.");
 		}

@@ -46,7 +46,7 @@ public class Maze implements Serializable {
 	private final Cell start;
 	private final Cell goal;
 
-	private final Graph graph;
+	private final transient Graph graph;
 
 	public Maze(int width, int height, Cell[][] cells, Cell start, Cell goal) {
 		this.width = width;

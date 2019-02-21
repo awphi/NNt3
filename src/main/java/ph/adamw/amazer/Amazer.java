@@ -94,7 +94,7 @@ public class Amazer extends Application {
 
 	public static void loadEvolution(MazerEvolution evo) {
 		gui.setGridEditable(false);
-		gui.loadGrid(evo.getMaze());
+		gui.loadMaze(evo.getMaze());
 
 		evolution = evo;
 

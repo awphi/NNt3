@@ -169,14 +169,14 @@ public class GuiMaze extends GridPane {
         return null;
     }
 
-    public void loadDataGrid(Maze grid) {
-        setSize(grid.getWidth(), grid.getHeight());
+    public void loadMaze(Maze maze) {
+        setSize(maze.getWidth(), maze.getHeight());
 
-        final Cell[][] cache = grid.getCells();
+        final Cell[][] cells = maze.getCells();
 
         for(int i = 0; i < getCols(); i ++) {
             for(int j = 0; j < getRows(); j ++) {
-                getCellAt(i, j).setState(cache[i][j].getState());
+                getCellAt(i, j).setState(cells[i][j].getState());
             }
         }
     }
