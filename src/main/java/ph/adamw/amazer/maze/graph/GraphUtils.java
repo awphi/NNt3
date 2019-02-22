@@ -35,9 +35,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Credit to https://www.baeldung.com/java-dijkstra
- */
 public class GraphUtils {
     public static Graph buildGraph(Maze maze) {
         Graph graph = new Graph();
@@ -70,34 +67,6 @@ public class GraphUtils {
         }
 
         return djikstra(graph, graph.getNode(maze.getGoal().toString()));
-    }
-
-    private static void traverse(Cell current, Maze maze, Graph graph) {
-        final GraphNode node = graph.getNode(current.toString());
-
-        final Cell up = maze.getCellInDirection(current, EntityDirection.UP);
-        final Cell down = maze.getCellInDirection(current, EntityDirection.DOWN);
-        final Cell left = maze.getCellInDirection(current, EntityDirection.LEFT);
-        final Cell right = maze.getCellInDirection(current, EntityDirection.RIGHT);
-
-        for(Cell neighbourCell : new Cell[] {up, down, left, right}) {
-            if(neighbourCell == null || neighbourCell.getState().equals(CellState.WALL)) {
-                continue;
-            }
-
-            GraphNode adjacent = graph.getNode(neighbourCell.toString());
-
-            // If we've found an untraversed neighbour
-            if(adjacent == null) {
-                adjacent = new GraphNode(neighbourCell.toString());
-                graph.add(adjacent);
-
-                node.addAdjacent(adjacent, 1);
-                adjacent.addAdjacent(node, 1);
-
-                traverse(neighbourCell, maze, graph);
-            }
-        }
     }
 
     private static Graph djikstra(Graph graph, GraphNode src) {

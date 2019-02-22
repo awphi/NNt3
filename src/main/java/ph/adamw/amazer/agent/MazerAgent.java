@@ -52,7 +52,7 @@ public class MazerAgent extends Agent {
 	}
 
 	@Override
-	protected void execute() {
+	protected double evaluateFitness() {
 		final int maxCycles = ((int) Math.sqrt(entity.getMaze().getHeight() * entity.getMaze().getWidth())) * CYCLE_MULTIPLIER;
 
 		int cyclesUsed = 0;
@@ -65,10 +65,10 @@ public class MazerAgent extends Agent {
 				inputs.add((double) entity.getMaze().getDistanceToNextObstacle(entity.getCurrentCol(), entity.getCurrentRow(), dir));
 			}
 
-			// Distance and bearing (a vector) between entity and the goal
-			//inputs.add(MazerUtils.distanceBetween(entity.getCurrentCol(), entity.getCurrentRow(), entity.getMaze().getGoal()));
-			inputs.add(MazerUtils.bearing(entity.getCurrentCol(), entity.getCurrentRow(), entity.getMaze().getGoal()));
+			//TODO play around w/ this input
+			inputs.add((double) entity.getMaze().getOptimalDistanceToGoal(entity.getCurrentCol(), entity.getCurrentRow()));
 
+			//TODO test punishment for wall-spamming
 			entity.move(evaluate(inputs.stream().mapToDouble(i -> i).toArray()));
 
 			cyclesUsed ++;
@@ -83,9 +83,10 @@ public class MazerAgent extends Agent {
 			}
 		}
 
-		// Smaller fitness is better, 0 is perfect
-		fitness = entity.getMaze().getOptimalDistanceToGoal(entity.getCurrentCol(), entity.getCurrentRow());
 
+		// Smaller fitness is better, 0 is perfect
+		int cache = entity.getMaze().getOptimalDistanceToGoal(entity.getCurrentCol(), entity.getCurrentRow());
 		entity.reset();
+		return cache;
 	}
 }

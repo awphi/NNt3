@@ -25,6 +25,7 @@
 package ph.adamw.amazer.nnt3.neural;
 
 import lombok.Getter;
+import ph.adamw.amazer.nnt3.Generation;
 import ph.adamw.amazer.nnt3.neural.neuron.Neuron;
 import ph.adamw.amazer.nnt3.neural.neuron.NeuronConnection;
 import ph.adamw.amazer.nnt3.neural.neuron.NeuronLayer;
@@ -38,15 +39,10 @@ public abstract class Agent implements Runnable, Comparable<Agent>, Serializable
 	private final NeuralNetSettings settings;
 
 	@Getter
-	private final List<NeuronLayer> allLayers = new ArrayList<>();
-
-	@Getter
-	protected double fitness = 0;
+	private double fitness = 0;
 
 	@Getter
 	private boolean isDone = false;
-
-	private boolean hasRun = false;
 
 	@Getter
 	private String threadName;
@@ -68,15 +64,12 @@ public abstract class Agent implements Runnable, Comparable<Agent>, Serializable
 		this.threadName = threadName;
 
 		inputLayer = new NeuronLayer(settings.getInputs(), settings.getActivationFunction());
-		allLayers.add(inputLayer);
 
 		for (int i = 0; i < settings.getHiddenLayersAmount(); i++) {
 			hiddenLayers.add(new NeuronLayer(settings.getHiddenLayersSize(), settings.getActivationFunction()));
-			allLayers.add(hiddenLayers.get(hiddenLayers.size() - 1));
 		}
 
 		outputLayer = new NeuronLayer(settings.getOutputs(), settings.getActivationFunction());
-		allLayers.add(outputLayer);
 
 		// Inputs to first hidden layer
 		hiddenLayers.get(0).connectToLayer(inputLayer);
@@ -95,7 +88,7 @@ public abstract class Agent implements Runnable, Comparable<Agent>, Serializable
 	private void randomizeWeights(Agent parent) {
 		if (parent == null) {
 			final Random random = new Random();
-			for (NeuronLayer layer : allLayers) {
+			for (NeuronLayer layer : getAllLayers()) {
 				for (Neuron neuron : layer)
 					for (NeuronConnection connection : neuron.getConnections()) {
 						connection.setWeight(random.nextFloat() * 2 - 1);
@@ -108,8 +101,8 @@ public abstract class Agent implements Runnable, Comparable<Agent>, Serializable
 		// Mutate the weights from the parent if it is not null
 		for (int i = 0; i < getAllLayers().size(); i++) {
 			for (int j = 0; j < getAllLayers().get(i).size(); j++) {
-				Neuron thisNeuron = getAllLayers().get(i).get(j);
-				Neuron parentNeuron = parent.getAllLayers().get(i).get(j);
+				final Neuron thisNeuron = getAllLayers().get(i).get(j);
+				final Neuron parentNeuron = parent.getAllLayers().get(i).get(j);
 
 				for (int k = 0; k < thisNeuron.getConnections().size(); k++) {
 					double w = parentNeuron.getConnections().get(k).getWeight();
@@ -119,6 +112,16 @@ public abstract class Agent implements Runnable, Comparable<Agent>, Serializable
 				}
 			}
 		}
+	}
+
+	private List<NeuronLayer> getAllLayers() {
+		final List<NeuronLayer> layers = new ArrayList<>();
+
+		layers.add(inputLayer);
+		layers.addAll(hiddenLayers);
+		layers.add(outputLayer);
+
+		return layers;
 	}
 
 	protected double[] evaluate(double[] inputs) {
@@ -148,32 +151,31 @@ public abstract class Agent implements Runnable, Comparable<Agent>, Serializable
 
 	@Override
 	public void run() {
-		isDone = false;
-
 		// If the agent is being reused, flush the values so behaviour is consistent
-		if(hasRun) {
+		if(isDone) {
 			flushValues();
 		}
 
-		fitness = 0;
-		execute();
+		isDone = false;
+
+		fitness = evaluateFitness();
 
 		synchronized (this) {
-			isDone = hasRun = true;
+			isDone = true;
 			thread = null;
 			notifyAll();
 		}
 	}
 
 	private void flushValues() {
-		for(NeuronLayer layer : allLayers) {
+		for(NeuronLayer layer : getAllLayers()) {
 			for(Neuron i : layer) {
 				i.setValue(0);
 			}
 		}
 	}
 
-	protected abstract void execute();
+	protected abstract double evaluateFitness();
 
 	public int compareTo(Agent other) {
 		if(fitness == other.fitness) {

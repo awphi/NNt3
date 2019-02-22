@@ -45,6 +45,8 @@ public abstract class Evolution<T extends Agent> implements Serializable {
 			generation = populate(new Generation<>());
 
 			generation.run(threadNetworks);
+
+			// Longest aspect
 			parent = generation.waitForBestPerformer();
 
 			generationCount ++;
