@@ -34,10 +34,9 @@ import javafx.scene.layout.VBox;
 import lombok.NoArgsConstructor;
 import ph.adamw.amazer.Amazer;
 import ph.adamw.amazer.FileUtils;
-import ph.adamw.amazer.gui.grid.data.DataGrid;
-import ph.adamw.amazer.mazer.MazerAgent;
-import ph.adamw.amazer.gui.grid.LiveGrid;
-import ph.adamw.amazer.mazer.MazerEvolution;
+import ph.adamw.amazer.maze.Maze;
+import ph.adamw.amazer.agent.MazerAgent;
+import ph.adamw.amazer.agent.MazerEvolution;
 
 import java.io.File;
 import java.util.List;
@@ -75,9 +74,7 @@ public class MainGuiController {
 	@FXML
 	private MenuBar menuBar;
 
-	private final LiveGrid grid = new LiveGrid(6, 6);
-
-	private MazerAgent agent;
+	private final GuiMaze grid = new GuiMaze(6, 6);
 
 	@FXML
 	private Slider gridRowsSlider;
@@ -108,9 +105,8 @@ public class MainGuiController {
 	private void runGenerations(int amount) {
 		// Have we loaded one yet? I.e. via import
 		if(Amazer.getEvolution() == null) {
-			final DataGrid dg = grid.asDataGrid();
-			if (!grid.isValid() || !dg.findPath(new boolean[grid.getCols()][grid.getRows()], dg.getStart().getCol(), dg.getStart().getRow())) {
-				GuiUtils.alert(Alert.AlertType.ERROR,"The current grid form is invalid.", "The grid must contain a start node, a goal node and be possible to solve.");
+			if (!grid.isValid()) {
+				GuiUtils.alert(Alert.AlertType.ERROR,"The current maze form is invalid.", "The maze must contain a start node, a goal node and be possible to solve.");
 				return;
 			}
 
@@ -124,7 +120,7 @@ public class MainGuiController {
 
 		Task<Boolean> task = new Task<Boolean>() {
 			@Override
-			protected Boolean call() throws Exception {
+			protected Boolean call() {
 				Amazer.getEvolution().run(amount, true);
 				return true;
 			}
@@ -144,13 +140,11 @@ public class MainGuiController {
 		new Thread(task).start();
 	}
 
-	public void loadGrid(DataGrid gr) {
-		grid.loadDataGrid(gr);
+	public void loadMaze(Maze maze) {
+		grid.loadMaze(maze);
 	}
 
 	public void occupyGenerationList(List<MazerAgent> nn) {
-		//TODO (FUN) store the evolutionary path of each winner so we can see a sort of family tree, this could store just names or the Mazers themselves
-		// this would exponentially increase memory usage though
         mazerListView.getItems().clear();
 
 		for(MazerAgent i : nn) {
@@ -160,7 +154,7 @@ public class MainGuiController {
 
 	private void updateSize() {
 		if(!grid.isEditable()) {
-			GuiUtils.alert(Alert.AlertType.WARNING,"The grid is currently locked", "The grid is currently edit-locked. Please reset the program to unlock it.");
+			GuiUtils.alert(Alert.AlertType.WARNING,"The maze is currently locked", "The maze is currently edit-locked. Please reset the program to unlock it.");
 			return;
 		}
 
@@ -175,11 +169,9 @@ public class MainGuiController {
 			return;
 		}
 
-		if(agent != null) {
-			agent.kill();
+		if(grid.isReadyToDrawPath()) {
+			grid.drawAgentPath(e.getAgent());
 		}
-
-		agent = grid.playMazer(e.getAgent(), 100);
 	}
 
 	public void onNextGenPressed(ActionEvent actionEvent) {
@@ -213,10 +205,10 @@ public class MainGuiController {
 			return;
 		}
 
-		final DataGrid dg = FileUtils.readObjectFromFile(file);
+		final Maze dg = FileUtils.readObjectFromFile(file);
 
 		if(dg != null) {
-			grid.loadDataGrid(dg);
+			grid.loadMaze(dg);
 		} else {
 			GuiUtils.alert(Alert.AlertType.ERROR,"Failed to import maze.", "The maze file may have been corrupted or a_mazer does not have the appropriate read permissions to access the given file.");
 		}

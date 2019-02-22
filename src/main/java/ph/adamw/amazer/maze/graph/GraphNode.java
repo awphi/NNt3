@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018 awphi
+ * Copyright (c) 2019 awphi
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,27 +22,36 @@
  * SOFTWARE.
  */
 
-package ph.adamw.amazer.gui.grid.data;
+package ph.adamw.amazer.maze.graph;
 
 import lombok.Getter;
 import lombok.Setter;
-import ph.adamw.amazer.gui.grid.GridState;
 
-import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-@Getter
-public class DataCell implements Serializable {
-	protected final int col;
+public class GraphNode {
+    @Getter
+    private final String name;
 
-	protected final int row;
+    @Getter
+    private Map<GraphNode, Integer> adjacentNodes = new HashMap<>();
 
-	@Setter
-	protected GridState state;
+    @Getter
+    @Setter
+    private List<GraphNode> shortestPathToSource = new ArrayList<>();
 
-	public DataCell(int col, int row, GridState state) {
-		this.col = col;
-		this.row = row;
+    @Getter
+    @Setter
+    private Integer shortestDistanceToSource = Integer.MAX_VALUE;
 
-		setState(state);
-	}
+    public void addAdjacent(GraphNode node, int distance) {
+        adjacentNodes.put(node, distance);
+    }
+
+    public GraphNode(String name) {
+        this.name = name;
+    }
 }

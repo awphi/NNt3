@@ -60,6 +60,8 @@ public abstract class Agent implements Runnable, Comparable<Agent>, Serializable
 	@Getter
 	private NeuronLayer outputLayer;
 
+	private Thread thread;
+
 	public Agent(NeuralNetSettings settings, Agent parent, String threadName) {
 		this.settings = settings;
 
@@ -119,12 +121,12 @@ public abstract class Agent implements Runnable, Comparable<Agent>, Serializable
 		}
 	}
 
-	protected List<Double> evaluate(List<Double> inputs) {
-		if (inputs.size() != inputLayer.size()) {
+	protected double[] evaluate(double[] inputs) {
+		if (inputs.length != inputLayer.size()) {
 			throw new RuntimeException("Input sample size needs to match the size of the input layer!");
 		}
 
-		inputLayer.setValues(new ArrayList<>(inputs));
+		inputLayer.setValues(inputs);
 
 		for (NeuronLayer hiddenLayer : hiddenLayers) {
 			hiddenLayer.feedForward();
@@ -137,7 +139,7 @@ public abstract class Agent implements Runnable, Comparable<Agent>, Serializable
 
 	public void start(boolean threaded) {
 		if (threaded) {
-			Thread thread = new Thread(this, threadName);
+			thread = new Thread(this, threadName);
 			thread.start();
 		} else {
 			run();
@@ -148,15 +150,17 @@ public abstract class Agent implements Runnable, Comparable<Agent>, Serializable
 	public void run() {
 		isDone = false;
 
-		// If the Agent is being reused, flush the values so behaviour is consistent
+		// If the agent is being reused, flush the values so behaviour is consistent
 		if(hasRun) {
 			flushValues();
 		}
 
+		fitness = 0;
 		execute();
 
 		synchronized (this) {
 			isDone = hasRun = true;
+			thread = null;
 			notifyAll();
 		}
 	}
@@ -176,7 +180,7 @@ public abstract class Agent implements Runnable, Comparable<Agent>, Serializable
 			return 0;
 		}
 
-		return fitness < other.fitness ? 1 : -1;
+		return fitness > other.fitness ? 1 : -1;
 	}
 
 	private static class Utils {

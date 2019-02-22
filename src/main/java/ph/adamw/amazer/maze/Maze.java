@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018 awphi
+ * Copyright (c) 2019 awphi
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,69 +22,82 @@
  * SOFTWARE.
  */
 
-package ph.adamw.amazer.gui.grid.data;
+package ph.adamw.amazer.maze;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import ph.adamw.amazer.gui.grid.GridState;
-import ph.adamw.amazer.mazer.entity.EntityDirection;
+import ph.adamw.amazer.agent.entity.EntityDirection;
+import ph.adamw.amazer.maze.graph.Graph;
+import ph.adamw.amazer.maze.graph.GraphNode;
+import ph.adamw.amazer.maze.graph.GraphUtils;
 
 import java.io.Serializable;
 
 /**
- * Serializable data class to store information required to load, save and runOneGeneration game grids. To display a DataGrid
- * in a GUI there also must be a LiveGrid to operate on.
+ * Serializable data class to store information required to load, save and runOneGeneration game grids. To display a Maze
+ * in a GUI there also must be a GuiMaze to operate on.
  */
 @Getter
-@AllArgsConstructor
-public class DataGrid implements Serializable {
+public class Maze implements Serializable {
 	private final int width;
 	private final int height;
 
-	private final DataCell[][] cells;
+	private final Cell[][] cells;
 
-	private final DataCell start;
-	private final DataCell goal;
+	private final Cell start;
+	private final Cell goal;
 
-	private final static DataCell DEAD_CELL = new DataCell(-1, -1, null);
+	private final transient Graph graph;
 
-	private DataCell getCell(int col, int row) {
-		if(col < 0 || col > getWidth() - 1 || row < 0 || row > getHeight() - 1) {
-			return DEAD_CELL;
-		}
-
-		return cells[col][row];
+	public Maze(int width, int height, Cell[][] cells, Cell start, Cell goal) {
+		this.width = width;
+		this.height = height;
+		this.cells = cells;
+		this.start = start;
+		this.goal = goal;
+		this.graph = GraphUtils.buildGraph(this);
 	}
 
-	public boolean findPath(boolean[][] visited, int col, int row) {
-		final DataCell right = getCell(col + 1, row);
-		final DataCell left = getCell(col - 1, row);
-		final DataCell up = getCell(col,row - 1);
-		final DataCell down = getCell(col,row + 1);
+	public int getOptimalDistanceToGoal(int col, int row) {
+		final GraphNode node = graph.getNode(new Cell(col, row, CellState.EMPTY).toString());
+		return node == null ? Integer.MAX_VALUE : node.getShortestDistanceToSource();
+	}
 
-		visited[col][row] = true;
+	public Cell getCellInDirection(Cell cell, EntityDirection dir) {
+		switch(dir) {
+			case UP: {
+				if(cell.getRow() == 0) {
+					break;
+				}
 
-		if (right.getState() == GridState.GOAL || up.getState() == GridState.GOAL || left.getState() == GridState.GOAL || down.getState() == GridState.GOAL) {
-			return true;
+				return cells[cell.getCol()][cell.getRow() - 1];
+			}
+
+			case DOWN: {
+				if(cell.getRow() == height - 1) {
+					break;
+				}
+
+				return cells[cell.getCol()][cell.getRow() + 1];
+			}
+
+			case LEFT: {
+				if(cell.getCol() == 0) {
+					break;
+				}
+
+				return cells[cell.getCol() - 1][cell.getRow()];
+			}
+
+			case RIGHT: {
+				if(cell.getCol() == width - 1) {
+					break;
+				}
+
+				return cells[cell.getCol() + 1][cell.getRow()];
+			}
 		}
 
-		if (right.getState() == GridState.EMPTY && !visited[col + 1][row]) {
-			return findPath(visited,col + 1, row);
-		}
-
-		if (down.getState() == GridState.EMPTY && !visited[col][row + 1]) {
-			return findPath(visited, col, row + 1);
-		}
-
-		if (left.getState() == GridState.EMPTY && !visited[col - 1][row]) {
-			return findPath(visited,col - 1, row);
-		}
-
-		if (up.getState() == GridState.EMPTY && !visited[col][row - 1]) {
-			return findPath(visited, col, row - 1);
-		}
-
-		return false;
+		return null;
 	}
 
 	public int getDistanceToNextObstacle(int col, int row, EntityDirection dir) {
@@ -96,7 +109,7 @@ public class DataGrid implements Serializable {
 		boolean xBoundsReached = false;
 		boolean yBoundsReached = false;
 
-		while(!(xBoundsReached || yBoundsReached || cells[col + x][row + y].getState() == GridState.WALL)) {
+		while(!(xBoundsReached || yBoundsReached || cells[col + x][row + y].getState() == CellState.WALL)) {
 			if(xBased) {
 				x += dir.getX();
 			} else {

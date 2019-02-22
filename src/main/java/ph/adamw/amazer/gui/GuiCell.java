@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018 awphi
+ * Copyright (c) 2019 awphi
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,29 +22,48 @@
  * SOFTWARE.
  */
 
-package ph.adamw.amazer.mazer.entity;
+package ph.adamw.amazer.gui;
 
+import javafx.geometry.Insets;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Paint;
 import lombok.Getter;
+import static ph.adamw.amazer.maze.CellState.EMPTY;
+import static ph.adamw.amazer.maze.CellState.WALL;
+import ph.adamw.amazer.maze.Cell;
+import ph.adamw.amazer.maze.CellState;
 
-public enum EntityDirection {
-	UP(0, -1),
-	RIGHT(1, 0),
-	DOWN(0, 1),
-	LEFT(-1, 0);
-
+public class GuiCell extends BorderPane {
 	@Getter
-	private final int x;
-	@Getter
-	private final int y;
+	private final Cell cell;
 
-	public static final EntityDirection[] VALUES = values();
+	private static final Insets INSETS_2 = new Insets(2, 2, 2, 2);
 
-	EntityDirection(int x, int y) {
-		this.x = x;
-		this.y = y;
+	GuiCell(Cell cell) {
+		this.cell = cell;
+
+		try {
+			drawState(cell.getState());
+		} catch (Exception ignored) {}
 	}
 
-	public static EntityDirection get(int o) {
-		return VALUES[o];
+	void drawState(CellState state) {
+		setBackground(new Background(new BackgroundFill(Paint.valueOf(state.getColor().toString()), CornerRadii.EMPTY, INSETS_2)));
+		setCenter(state.getText());
+	}
+
+	void setState(CellState state) {
+		cell.setState(state);
+		drawState(state);
+	}
+
+	void switchState() {
+		switch (cell.getState()) {
+			case WALL: setState(EMPTY); break;
+			case EMPTY: setState(WALL); break;
+		}
 	}
 }

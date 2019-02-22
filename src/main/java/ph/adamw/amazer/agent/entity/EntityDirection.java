@@ -22,47 +22,29 @@
  * SOFTWARE.
  */
 
-package ph.adamw.amazer.gui.grid;
+package ph.adamw.amazer.agent.entity;
 
-import javafx.geometry.Insets;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.paint.Paint;
 import lombok.Getter;
-import static ph.adamw.amazer.gui.grid.GridState.EMPTY;
-import static ph.adamw.amazer.gui.grid.GridState.WALL;
-import ph.adamw.amazer.gui.grid.data.DataCell;
 
-public class CellPane extends BorderPane {
+public enum EntityDirection {
+	UP(0, -1),
+	RIGHT(1, 0),
+	DOWN(0, 1),
+	LEFT(-1, 0);
+
 	@Getter
-	private final DataCell cell;
+	private final int x;
+	@Getter
+	private final int y;
 
-	private static final Insets INSETS_2 = new Insets(2, 2, 2, 2);
+	public static final EntityDirection[] VALUES = values();
 
-	CellPane(DataCell cell) {
-		this.cell = cell;
-
-		try {
-			drawState(cell.getState());
-		} catch (Exception ignored) {}
+	EntityDirection(int x, int y) {
+		this.x = x;
+		this.y = y;
 	}
 
-	void drawState(GridState state) {
-		setBackground(new Background(new BackgroundFill(Paint.valueOf(state.getColor().toString()), CornerRadii.EMPTY, INSETS_2)));
-		setCenter(state.getText());
-	}
-
-	void setState(GridState state) {
-		cell.setState(state);
-		drawState(state);
-	}
-
-	void switchState() {
-		switch (cell.getState()) {
-			case WALL: setState(EMPTY); break;
-			case EMPTY: setState(WALL); break;
-		}
+	public static EntityDirection get(int o) {
+		return VALUES[o];
 	}
 }

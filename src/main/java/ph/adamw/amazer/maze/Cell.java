@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018 awphi
+ * Copyright (c) 2019 awphi
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,28 +22,31 @@
  * SOFTWARE.
  */
 
-package ph.adamw.amazer.gui.grid;
+package ph.adamw.amazer.maze;
 
-import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 
 @Getter
-public enum GridState implements Serializable {
-	EMPTY(Color.TRANSPARENT, null),
-	WALL(Color.BLACK, null),
-	CHARACTER(Color.RED, null),
-	START(Color.LIME, new Text("Start")),
-	GOAL(Color.GREEN, new Text("Goal"));
+public class Cell implements Serializable {
+	protected final int col;
 
-	private final Color color;
+	protected final int row;
 
-	private final Text text;
+	@Setter
+	protected CellState state;
 
-	GridState(Color color, Text text) {
-		this.color = color;
-		this.text = text;
+	public Cell(int col, int row, CellState state) {
+		this.col = col;
+		this.row = row;
+
+		setState(state);
+	}
+
+	@Override
+	public String toString() {
+		return "Cell[" + col + "," + row + "]";
 	}
 }

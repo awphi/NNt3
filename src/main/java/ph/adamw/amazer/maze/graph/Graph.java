@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018 awphi
+ * Copyright (c) 2019 awphi
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,46 +22,29 @@
  * SOFTWARE.
  */
 
-package ph.adamw.amazer.nnt3.neural.neuron;
+package ph.adamw.amazer.maze.graph;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
-public class NeuronLayer extends ArrayList<Neuron> {
-	public NeuronLayer(int size, ActivationFunction activationFunction) {
-		for (int i = 0; i < size; i++) {
-			add(new Neuron(activationFunction));
-		}
-	}
+public class Graph {
+    private Set<GraphNode> nodes = new HashSet<>();
 
-	public double[] getValues() {
-		double[] values = new double[size()];
-		for (int i = 0; i < size(); i ++) {
-			values[i] = get(i).getValue();
-		}
-		return values;
-	}
+    public void add(GraphNode node) {
+        nodes.add(node);
+    }
 
-	public void setValues(double[] inputs) {
-		for (int i = 0; i < size(); i++) {
-			get(i).setValue(inputs[i]);
-		}
-	}
+    public GraphNode getNode(String name) {
+        for(GraphNode i : nodes) {
+            if(i.getName().equals(name)) {
+                return i;
+            }
+        }
 
-	public void connectToLayer(NeuronLayer other) {
-		for (Neuron t : this) {
-			for (Neuron anOther : other) {
-				// Creates a backwards connection i.e. h0 <- h1
-				// this is then used in h1 to iterate it's connections and pull all the data required
-				// everything works out a lot nicer when a pull architecture is used over a push
-				t.addConnection(new NeuronConnection(anOther));
-			}
-		}
-	}
+        return null;
+    }
 
-	public void feedForward() {
-		for (Neuron i : this) {
-			i.feedForward();
-		}
-	}
+    public int size() {
+        return nodes.size();
+    }
 }

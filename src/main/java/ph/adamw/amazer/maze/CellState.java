@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018 awphi
+ * Copyright (c) 2019 awphi
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,46 +22,28 @@
  * SOFTWARE.
  */
 
-package ph.adamw.amazer.nnt3.neural.neuron;
+package ph.adamw.amazer.maze;
 
-import java.util.ArrayList;
-import java.util.List;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import lombok.Getter;
 
-public class NeuronLayer extends ArrayList<Neuron> {
-	public NeuronLayer(int size, ActivationFunction activationFunction) {
-		for (int i = 0; i < size; i++) {
-			add(new Neuron(activationFunction));
-		}
-	}
+import java.io.Serializable;
 
-	public double[] getValues() {
-		double[] values = new double[size()];
-		for (int i = 0; i < size(); i ++) {
-			values[i] = get(i).getValue();
-		}
-		return values;
-	}
+@Getter
+public enum CellState implements Serializable {
+	EMPTY(Color.TRANSPARENT, null),
+	WALL(Color.BLACK, null),
+	ENTITY(Color.RED, null),
+	START(Color.LIME, new Text("Start")),
+	GOAL(Color.GREEN, new Text("Goal"));
 
-	public void setValues(double[] inputs) {
-		for (int i = 0; i < size(); i++) {
-			get(i).setValue(inputs[i]);
-		}
-	}
+	private final Color color;
 
-	public void connectToLayer(NeuronLayer other) {
-		for (Neuron t : this) {
-			for (Neuron anOther : other) {
-				// Creates a backwards connection i.e. h0 <- h1
-				// this is then used in h1 to iterate it's connections and pull all the data required
-				// everything works out a lot nicer when a pull architecture is used over a push
-				t.addConnection(new NeuronConnection(anOther));
-			}
-		}
-	}
+	private final Text text;
 
-	public void feedForward() {
-		for (Neuron i : this) {
-			i.feedForward();
-		}
+	CellState(Color color, Text text) {
+		this.color = color;
+		this.text = text;
 	}
 }

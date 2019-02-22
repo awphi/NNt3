@@ -22,42 +22,42 @@
  * SOFTWARE.
  */
 
-package ph.adamw.amazer.mazer.entity;
+package ph.adamw.amazer.agent.entity;
 
 import javafx.application.Platform;
 import lombok.Setter;
-import ph.adamw.amazer.gui.grid.GridState;
-import ph.adamw.amazer.gui.grid.data.DataGrid;
-import ph.adamw.amazer.gui.grid.LiveGrid;
+import ph.adamw.amazer.maze.CellState;
+import ph.adamw.amazer.maze.Maze;
+import ph.adamw.amazer.gui.GuiMaze;
 
 /*
- * Overrides MazerEntity's moving method to also draw to a live game grid after moving, used when a single network
+ * Overrides MazerEntity's moving method to also draw to a live game maze after moving, used when a single network
  * is ran in preview mode.
  */
 public class DrawingMazerEntity extends MazerEntity {
-	private final LiveGrid liveGrid;
+	private final GuiMaze guiMaze;
 
 	@Setter
 	private int interval;
 
-	public DrawingMazerEntity(DataGrid dataGrid, LiveGrid liveGrid, int interval) {
-		super(dataGrid);
-		this.liveGrid = liveGrid;
+	public DrawingMazerEntity(Maze maze, GuiMaze guiMaze, int interval) {
+		super(maze);
+		this.guiMaze = guiMaze;
 		this.interval = interval;
 
-		drawState(GridState.CHARACTER);
+		drawState(CellState.ENTITY);
 	}
 
-	private void drawState(GridState state) {
+	private void drawState(CellState state) {
 		// Cache the values for the runLater
 		final int x = currentCol;
 		final int y = currentRow;
 
-		Platform.runLater(() -> liveGrid.drawStateAt(x, y, state));
+		Platform.runLater(() -> guiMaze.drawStateAt(x, y, state));
 	}
 
-	private GridState getStateBehindCurrent() {
-		return dataGrid.getCells()[currentCol][currentRow].getState();
+	private CellState getStateBehindCurrent() {
+		return maze.getCells()[currentCol][currentRow].getState();
 	}
 
 	@Override
@@ -67,10 +67,11 @@ public class DrawingMazerEntity extends MazerEntity {
 	}
 
 	@Override
-	public void move(Double[] vals) {
+	public boolean move(double[] vals) {
 		drawState(getStateBehindCurrent());
-		super.move(vals);
-		drawState(GridState.CHARACTER);
+		final boolean b = super.move(vals);
+		drawState(CellState.ENTITY);
+		return b;
 	}
 
 	@Override
