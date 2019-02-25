@@ -24,8 +24,6 @@
 
 package ph.adamw.amazer.nnt3;
 
-import lombok.Getter;
-import lombok.Setter;
 import ph.adamw.amazer.nnt3.neural.Agent;
 
 import java.io.Serializable;
@@ -49,24 +47,21 @@ public class Generation<T extends Agent> implements Serializable {
 		return sorted;
 	}
 
-	T waitForBestPerformer() {
-		T best = null;
-
+	List<T> waitForSortedAgents() {
 		for (T key : members) {
 			synchronized (key) {
 				if(!key.isDone()) {
 					try {
+						System.out.println("Waiting for: " + key.getThreadName());
 						key.wait();
 					} catch (InterruptedException ignored) {}
 				}
 			}
-
-			if (best == null || key.getFitness() >= best.getFitness()) {
-				best = key;
-			}
 		}
 
-		return best;
+		final List<T> list = new ArrayList<>(members);
+		Collections.sort(list);
+		return list;
 	}
 
 	public void add (T network) {

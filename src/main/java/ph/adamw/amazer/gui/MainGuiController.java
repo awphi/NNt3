@@ -31,6 +31,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import lombok.NoArgsConstructor;
 import ph.adamw.amazer.Amazer;
 import ph.adamw.amazer.FileUtils;

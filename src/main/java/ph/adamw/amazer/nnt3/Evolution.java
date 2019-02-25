@@ -28,9 +28,11 @@ import lombok.Getter;
 import ph.adamw.amazer.nnt3.neural.Agent;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class Evolution<T extends Agent> implements Serializable {
-	protected T parent;
+	private List<T> parents = new ArrayList<>();
 
 	@Getter
 	protected int generationCount = 0;
@@ -47,9 +49,14 @@ public abstract class Evolution<T extends Agent> implements Serializable {
 			generation.run(threadNetworks);
 
 			// Longest aspect
-			parent = generation.waitForBestPerformer();
+			parents.addAll(generation.waitForSortedAgents());
 
 			generationCount ++;
 		}
+	}
+
+	protected T getParent(int i) {
+		//TODO make it so the highest performers get more children on a linear scale so top gets a lot, bottom gets 0 or like 1
+		return parents.size() > 0 ? parents.get(i % parents.size()) : null;
 	}
 }

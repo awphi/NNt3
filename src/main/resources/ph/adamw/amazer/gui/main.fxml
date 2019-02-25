@@ -12,7 +12,6 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
@@ -81,7 +80,7 @@
                   </HBox>
                </children>
             </VBox>
-            <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+             <VBox prefHeight="200.0" prefWidth="425.0" style="-fx-alignment: center;" HBox.hgrow="ALWAYS"/>
             <VBox fx:id="gridSizeControlsBox" prefHeight="200.0" prefWidth="347.0" style="-fx-alignment: center;">
                <children>
                   <HBox prefHeight="100.0" prefWidth="520.0" style="-fx-alignment: center;">

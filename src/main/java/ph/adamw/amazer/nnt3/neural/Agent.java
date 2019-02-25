@@ -98,7 +98,7 @@ public abstract class Agent implements Runnable, Comparable<Agent>, Serializable
 			return;
 		}
 
-		// Mutate the weights from the parent if it is not null
+		// Mutate the weights from the parents if it is not null
 		for (int i = 0; i < getAllLayers().size(); i++) {
 			for (int j = 0; j < getAllLayers().get(i).size(); j++) {
 				final Neuron thisNeuron = getAllLayers().get(i).get(j);
