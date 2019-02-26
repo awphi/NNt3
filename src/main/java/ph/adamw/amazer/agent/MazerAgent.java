@@ -65,10 +65,8 @@ public class MazerAgent extends Agent {
 				inputs.add((double) entity.getMaze().getDistanceToNextObstacle(entity.getCurrentCol(), entity.getCurrentRow(), dir));
 			}
 
-			//TODO play around w/ this input
-			inputs.add((double) entity.getMaze().getOptimalDistanceToGoal(entity.getCurrentCol(), entity.getCurrentRow()));
+			inputs.add(MazerUtils.bearing(entity.getCurrentCol(), entity.getCurrentRow(), entity.getMaze().getGoal()));
 
-			//TODO test punishment for wall-spamming
 			entity.move(evaluate(inputs.stream().mapToDouble(i -> i).toArray()));
 
 			cyclesUsed ++;

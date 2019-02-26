@@ -27,16 +27,12 @@ package ph.adamw.amazer.agent;
 import ph.adamw.amazer.maze.Cell;
 
 class MazerUtils {
-	static double distanceBetween(int col, int row, Cell other) {
-		final double colDiff = Math.pow((double) col - (double) other.getCol(), 2);
-		final double rowDiff = Math.pow((double) row - (double) other.getRow(), 2);
-
-		return Math.sqrt(colDiff + rowDiff);
-	}
-
 	static double bearing(int col, int row, Cell other) {
-		final double deltaY = (row - other.getRow());
-		final double deltaX = (other.getCol() - col);
-		return Math.atan2(deltaX, deltaY);
+		double r = Math.atan2(-other.getRow() - row, other.getCol() - col);
+		float a = (float) Math.toDegrees(r);
+
+		if(a < 0) a += 360;
+
+		return a;
 	}
 }

@@ -52,7 +52,6 @@ public class Generation<T extends Agent> implements Serializable {
 			synchronized (key) {
 				if(!key.isDone()) {
 					try {
-						System.out.println("Waiting for: " + key.getThreadName());
 						key.wait();
 					} catch (InterruptedException ignored) {}
 				}

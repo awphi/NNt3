@@ -54,7 +54,7 @@ public class MazerEntity {
 	 * @param values An array of doubles
 	 * @return true if move was successful, false if move was not available (i.e. there was an obstacle)
 	 */
-	public boolean move(double[] values) {
+	public EntityDirection move(double[] values) {
 		if (values.length != MazerAgent.OUTPUTS) {
 			throw new RuntimeException("Unexpected number of agent outputs given to entity! Expected " + MazerAgent.OUTPUTS + " but got: " + values.length + "!");
 		}
@@ -73,9 +73,9 @@ public class MazerEntity {
 			currentCol += direction.getX();
 			currentRow += direction.getY();
 
-			return true;
+			return direction;
 		} else {
-			return false;
+			return null;
 		}
 	}
 

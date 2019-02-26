@@ -67,9 +67,9 @@ public class DrawingMazerEntity extends MazerEntity {
 	}
 
 	@Override
-	public boolean move(double[] vals) {
+	public EntityDirection move(double[] vals) {
 		drawState(getStateBehindCurrent());
-		final boolean b = super.move(vals);
+		final EntityDirection b = super.move(vals);
 		drawState(CellState.ENTITY);
 		return b;
 	}

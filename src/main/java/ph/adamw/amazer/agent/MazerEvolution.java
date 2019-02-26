@@ -56,7 +56,14 @@ public class MazerEvolution extends Evolution<MazerAgent> {
 		final String[] names = getRandomNames(generationSize);
 
 		for(int i = 0; i < generationSize; i ++) {
-			final MazerAgent agent = new MazerAgent(currentSettings, getParent(i), names == null ? "Agent " + offlineNameCount : names[i]);
+			final MazerAgent parent = getNextParent();
+
+			final MazerAgent agent = new MazerAgent(
+					currentSettings,
+					parent,
+					names == null ? "Agent " + offlineNameCount : names[i]
+			);
+
 			agent.setEntity(new MazerEntity(maze));
 
 			generation.add(agent);
@@ -67,7 +74,7 @@ public class MazerEvolution extends Evolution<MazerAgent> {
 		return generation;
 	}
 
-	private String[] getRandomNames(int size) {
+	private static String[] getRandomNames(int size) {
 		final String[] ret = new String[size];
 
 		try {

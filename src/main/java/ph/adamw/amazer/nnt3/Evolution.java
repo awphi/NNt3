@@ -30,9 +30,14 @@ import ph.adamw.amazer.nnt3.neural.Agent;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.Stack;
+import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class Evolution<T extends Agent> implements Serializable {
 	private List<T> parents = new ArrayList<>();
+
+	private int currentParentIndex = 0;
 
 	@Getter
 	protected int generationCount = 0;
@@ -45,18 +50,24 @@ public abstract class Evolution<T extends Agent> implements Serializable {
 	public void run(int generations, boolean threadNetworks) {
 		for (int i = 0; i < generations; i++) {
 			generation = populate(new Generation<>());
-
 			generation.run(threadNetworks);
-
+			parents.clear();
 			// Longest aspect
 			parents.addAll(generation.waitForSortedAgents());
-
 			generationCount ++;
 		}
 	}
 
-	protected T getParent(int i) {
-		//TODO make it so the highest performers get more children on a linear scale so top gets a lot, bottom gets 0 or like 1
-		return parents.size() > 0 ? parents.get(i % parents.size()) : null;
+	protected T getNextParent() {
+		if(parents.size() == 0) {
+			return null;
+		}
+
+		// TODO play around with these numbers - currently the top perfomer would have a 3/4 chance of producing a child each time this method is invoked
+		if(ThreadLocalRandom.current().nextDouble() > (double) ((parents.size() - currentParentIndex) * 3) / (double) (4 * parents.size())) {
+			currentParentIndex = (currentParentIndex + 1) % parents.size();
+		}
+
+		return parents.get(currentParentIndex);
 	}
 }
