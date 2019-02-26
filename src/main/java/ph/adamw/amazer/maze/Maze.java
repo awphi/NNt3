@@ -120,13 +120,15 @@ public class Maze implements Serializable {
 			yBoundsReached = row + y < 0 || row + y > getHeight() - 1;
 		}
 
+		int result = 0;
+
 		switch (dir) {
-			case UP: return y + 1;
-			case DOWN: return y - 1;
-			case LEFT: return x + 1;
-			case RIGHT: return x - 1;
+			case UP: result = y + 1; break;
+			case DOWN: result = y - 1; break;
+			case LEFT: result = x + 1; break;
+			case RIGHT: result = x - 1; break;
 		}
 
-		return 0;
+		return Math.abs(result);
 	}
 }

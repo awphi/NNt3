@@ -74,7 +74,7 @@ public class Amazer extends Application {
 		final FXMLLoader loader = new FXMLLoader();
 
 		try {
-			splash = loader.load(SplashGuiController.class.getResource("splash.fxml").openStream());
+			splash = loader.load(SplashGuiController.class.getResource("evolution.fxml").openStream());
 		} catch (IOException e) {
 			e.printStackTrace();
 			return;

@@ -27,12 +27,13 @@ package ph.adamw.amazer.agent;
 import ph.adamw.amazer.maze.Cell;
 
 class MazerUtils {
-	static double bearing(int col, int row, Cell other) {
-		double r = Math.atan2(-other.getRow() - row, other.getCol() - col);
-		float a = (float) Math.toDegrees(r);
+	static double bearing(int a1, int a2, Cell other) {
+		// if (a1 = b1 and a2 = b2) throw an error
+		double theta = Math.atan2(other.getCol() - a1, a2 - other.getRow());
+		theta = Math.toDegrees(theta);
 
-		if(a < 0) a += 360;
+		if (theta < 0) theta += 360;
 
-		return a;
+		return theta;
 	}
 }
