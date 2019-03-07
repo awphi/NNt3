@@ -24,6 +24,7 @@
 
 package ph.adamw.amazer.nnt3;
 
+import com.sun.istack.internal.Nullable;
 import lombok.Getter;
 import ph.adamw.amazer.nnt3.neural.Agent;
 
@@ -58,6 +59,7 @@ public abstract class Evolution<T extends Agent> implements Serializable {
 		}
 	}
 
+	@Nullable
 	protected T getNextParent() {
 		if(parents.size() == 0) {
 			return null;

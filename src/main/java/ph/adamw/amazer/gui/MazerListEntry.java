@@ -24,6 +24,7 @@
 
 package ph.adamw.amazer.gui;
 
+import javafx.scene.control.Tooltip;
 import javafx.scene.text.Text;
 import lombok.Getter;
 import ph.adamw.amazer.agent.MazerAgent;
@@ -40,9 +41,23 @@ public class MazerListEntry extends Text {
 		super(formatText(agent));
 
 		this.agent = agent;
+
+		final StringBuilder sb = new StringBuilder();
+		sb.append("Parents: ");
+		if(agent.getFamilyTree().size() <= 0) {
+			sb.append("\n None!");
+		}
+
+		int c = 0;
+		for(String i  : agent.getFamilyTree()) {
+			sb.append("\n  ").append(c).append(": ").append(i);
+			c ++;
+		}
+
+		Tooltip.install(this, new Tooltip(sb.toString()));
 	}
 
 	private static String formatText(MazerAgent agent) {
-		return agent.getThreadName() + " @ " + TWO_DP.format(agent.getFitness()) + " fit";
+		return agent.getThreadName() + " ➤ " + TWO_DP.format(agent.getFitness()) + " fit";
 	}
 }

@@ -47,7 +47,9 @@ public class GuiCell extends BorderPane {
 
 		try {
 			drawState(cell.getState());
-		} catch (Exception ignored) {}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	void drawState(CellState state) {

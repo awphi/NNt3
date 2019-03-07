@@ -53,7 +53,9 @@ public class Generation<T extends Agent> implements Serializable {
 				if(!key.isDone()) {
 					try {
 						key.wait();
-					} catch (InterruptedException ignored) {}
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}

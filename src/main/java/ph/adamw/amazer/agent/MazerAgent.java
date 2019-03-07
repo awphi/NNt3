@@ -24,6 +24,7 @@
 
 package ph.adamw.amazer.agent;
 
+import com.sun.istack.internal.Nullable;
 import lombok.Getter;
 import lombok.Setter;
 import ph.adamw.amazer.nnt3.neural.Agent;
@@ -46,9 +47,16 @@ public class MazerAgent extends Agent {
 	public static final int OUTPUTS = 4;
 	public static final ActivationFunction ACTIVATION_FUNCTION = ActivationFunction.getSigmoid();
 
+	@Getter
+	private final List<String> familyTree = new ArrayList<>();
 
-	public MazerAgent(NeuralNetSettings settings, MazerAgent parent, String name) {
+	public MazerAgent(NeuralNetSettings settings, @Nullable MazerAgent parent, String name) {
 		super(settings, parent, name);
+
+		if(parent != null) {
+			familyTree.addAll(parent.familyTree);
+			familyTree.add(parent.getThreadName());
+		}
 	}
 
 	@Override
@@ -82,7 +90,7 @@ public class MazerAgent extends Agent {
 		}
 
 
-		// Smaller fitness is better, 0 is perfect
+		// Smaller fitness is better, 0 is perfect i.e. agent reach the goal
 		int cache = entity.getMaze().getOptimalDistanceToGoal(entity.getCurrentCol(), entity.getCurrentRow());
 		entity.reset();
 		return cache;
